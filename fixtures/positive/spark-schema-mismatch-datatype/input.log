@@ -1,0 +1,7 @@
+24/10/08 13:05:41 INFO SparkPlan: Applying filter on relation
+24/10/08 13:05:41 ERROR SparkSQLCLIDriver: Statement failed
+org.apache.spark.sql.AnalysisException: [DATATYPE_MISMATCH] Data type mismatch: cannot apply operator to the input types.
+    at org.apache.spark.sql.catalyst.analysis.CheckAnalysis.$anonfun$check$43(CheckAnalysis.scala:315)
+    at org.apache.spark.sql.catalyst.analysis.CheckAnalysis.$anonfun$check$44(CheckAnalysis.scala:320)
+    at scala.collection.Iterator.foreach(Iterator.scala:1007)
+24/10/08 13:05:41 WARN SparkSQLCLIDriver: Query aborted

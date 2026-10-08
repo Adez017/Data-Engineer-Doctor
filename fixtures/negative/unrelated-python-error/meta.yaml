@@ -1,0 +1,9 @@
+name: unrelated-python-error
+kind: negative
+description: >-
+  A plain Python TypeError with no Spark analysis error must not be diagnosed
+  as a schema mismatch (false-positive guard).
+expected:
+  status: insufficient_evidence
+  exit_code: 0
+  diagnosis_ids: []

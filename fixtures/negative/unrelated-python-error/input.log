@@ -1,0 +1,9 @@
+24/10/08 14:01:19 INFO PySparkRunner: Starting load_users job
+Traceback (most recent call last):
+  File "/home/user/jobs/load_users.py", line 42, in <module>
+    main()
+    ^^^^
+  File "/home/user/jobs/load_users.py", line 30, in main
+    count = len(rows) + threshold
+TypeError: unsupported operand type(s) for +: 'int' and 'NoneType'
+24/10/08 14:01:19 ERROR JobMonitor: Job 12 failed with exit code 1

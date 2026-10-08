@@ -1,0 +1,9 @@
+name: truncated-json
+kind: malformed
+description: >-
+  Truncated JSON input must produce a clean input error (exit code 1) with no
+  traceback.
+expected:
+  status: input_error
+  exit_code: 1
+  diagnosis_ids: []

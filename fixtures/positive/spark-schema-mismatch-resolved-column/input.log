@@ -1,0 +1,12 @@
+24/10/08 12:34:56 INFO SparkContext: Starting job: build_orders_agg
+Traceback (most recent call last):
+  File "/home/user/jobs/etl_orders.py", line 87, in <module>
+    result = spark.sql(query)
+             ^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/pyspark/sql/session.py", line 1632, in sql
+    return DataFrame(self._jsparkSession.sql(sqlQuery), self._sparkSession)
+pyspark.sql.utils.AnalysisException: [RESOLVED_COLUMN_NOT_FOUND] Column 'customer_id' cannot be resolved. Did you mean 'customer_di'?
+    at org.apache.spark.sql.AnalysisException.withClassOrigin(AnalysisException.scala:246)
+    at org.apache.spark.sql.catalyst.analysis.CheckAnalysis.check(CheckAnalysis.scala:182)
+    at org.apache.spark.sql.catalyst.analysis.Analyzer.$anonfun$execute$1(Analyzer.scala:118)
+24/10/08 12:34:56 ERROR SparkContext: Error reporting submitJob to SparkListenerBus

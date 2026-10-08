@@ -1,0 +1,10 @@
+name: table-not-found
+kind: negative
+description: >-
+  AnalysisException for a missing table has the same exception type as a
+  schema mismatch, but the table_or_view_not_found negative signal must
+  disqualify DEDOC-SCHEMA-001.
+expected:
+  status: insufficient_evidence
+  exit_code: 0
+  diagnosis_ids: []

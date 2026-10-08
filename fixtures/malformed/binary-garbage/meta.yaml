@@ -1,0 +1,9 @@
+name: binary-garbage
+kind: malformed
+description: >-
+  Binary, non-UTF-8 input must be handled tolerantly (decoded with replacement
+  characters) and must not crash the tool.
+expected:
+  status: insufficient_evidence
+  exit_code: 0
+  diagnosis_ids: []

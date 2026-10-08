@@ -1,0 +1,10 @@
+name: spark-schema-mismatch-resolved-column
+kind: positive
+description: >-
+  PySpark job fails because a referenced column cannot be resolved in the
+  input schema (RESOLVED_COLUMN_NOT_FOUND).
+expected:
+  status: diagnosed
+  exit_code: 0
+  diagnosis_ids:
+    - DEDOC-SCHEMA-001

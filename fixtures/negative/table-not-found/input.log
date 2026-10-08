@@ -1,0 +1,6 @@
+24/10/08 14:22:10 INFO SparkSQLCLIDriver: Running command: SELECT * FROM sales_fact
+24/10/08 14:22:10 ERROR SparkSQLCLIDriver: Statement failed
+org.apache.spark.sql.AnalysisException: [TABLE_OR_VIEW_NOT_FOUND] Table or view 'sales_fact' not found. Did you mean 'sales_facts'?
+    at org.apache.spark.sql.catalyst.analysis.Analyzer.checkAnalysis(Analyzer.scala:149)
+    at org.apache.spark.sql.catalyst.analysis.Analyzer.$anonfun$execute$1(Analyzer.scala:118)
+24/10/08 14:22:10 WARN SparkSQLCLIDriver: Statement aborted

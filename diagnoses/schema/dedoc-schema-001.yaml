@@ -1,0 +1,71 @@
+id: DEDOC-SCHEMA-001
+name: Spark Schema Mismatch
+category: schema.mismatch
+
+severity:
+  default: medium
+
+platforms:
+  - spark
+  - databricks
+
+patterns:
+  exception_types:
+    - AnalysisException
+
+signals:
+  positive:
+    - resolved_column_not_found
+    - datatype_mismatch
+  negative:
+    - table_or_view_not_found
+    - authentication_failure
+    - dns_failure
+    - executor_oom
+
+hypotheses:
+  - missing_column
+  - data_type_mismatch
+  - schema_drift
+
+recommendations:
+  immediate:
+    - >-
+      Confirm the referenced column exists in the source schema
+      (for example df.printSchema() or DESCRIBE TABLE <table>).
+    - >-
+      Check whether spark.sql.caseSensitive is treating a case-only name
+      difference as a missing column.
+  recommended:
+    - >-
+      Compare the expected schema with the actual schema before the failing
+      read, join, or projection.
+    - >-
+      Inspect the failing query plan (for example df.explain(True)) to locate
+      the unresolved attribute.
+  prevention:
+    - >-
+      Add schema contract checks in CI for datasets whose schema is consumed
+      by downstream jobs.
+    - >-
+      Declare or evolve schemas explicitly instead of relying on inference
+      when reading files.
+
+references:
+  - source: official documentation - Spark SQL programming guide
+    url: https://spark.apache.org/docs/latest/sql-programming-guide.html
+  - source: official documentation - Spark configuration (spark.sql.caseSensitive)
+    url: https://spark.apache.org/docs/latest/configuration.html
+  - source: official documentation - PySpark DataFrame.printSchema
+    url: https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.DataFrame.printSchema.html
+
+tests:
+  fixtures:
+    - positive/spark-schema-mismatch-resolved-column
+    - positive/spark-schema-mismatch-datatype
+    - negative/unrelated-python-error
+    - negative/table-not-found
+    - negative/authentication-failure
+    - malformed/truncated-json
+    - malformed/empty-file
+    - malformed/binary-garbage

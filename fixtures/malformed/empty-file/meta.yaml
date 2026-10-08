@@ -1,0 +1,9 @@
+name: empty-file
+kind: malformed
+description: >-
+  An empty file is valid input with no evidence: the tool must abstain
+  (insufficient_evidence, exit code 0) rather than crash.
+expected:
+  status: insufficient_evidence
+  exit_code: 0
+  diagnosis_ids: []

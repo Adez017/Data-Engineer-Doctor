@@ -1,0 +1,7 @@
+24/10/08 15:00:02 INFO HiveSessionImpl: Opening new Hive session
+24/10/08 15:00:02 ERROR HiveClient: Failed to open new session
+org.apache.spark.SparkException: Exception thrown in awaitResult:
+    at org.apache.spark.sql.hive.client.HiveClientImpl.$anonfun$executePlan$1(HiveClientImpl.scala:151)
+Caused by: javax.security.sasl.SaslException: GSS initiate failed [Caused by GSSException: No valid credentials provided (Mechanism level: Failed to find any Kerberos tgt)]
+javax.security.sasl.SaslException: GSS initiate failed: authentication failed for user hive@EXAMPLE.COM
+24/10/08 15:00:02 ERROR Scheduler: Retrying stage 2
