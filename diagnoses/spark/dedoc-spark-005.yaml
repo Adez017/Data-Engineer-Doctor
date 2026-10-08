@@ -1,0 +1,60 @@
+id: DEDOC-SPARK-005
+name: Data Skew
+category: spark.data_skew
+
+severity:
+  default: medium
+
+platforms:
+  - spark
+  - databricks
+
+patterns:
+  exception_types: []
+
+signals:
+  positive:
+    - data_skew
+  negative:
+    - authentication_failure
+    - dns_failure
+
+hypotheses:
+  - skewed_join_keys
+  - skewed_group_by
+  - hot_partition
+
+recommendations:
+  immediate:
+    - >-
+      Identify the skewed stage in the Spark UI (task duration and input size
+      outliers) and the join or group-by key involved.
+    - >-
+      If enabled, confirm AQE skew join handling reports the skew in the
+      query plan.
+  recommended:
+    - >-
+      Mitigate by salting join keys, splitting hot keys, or pre-aggregating
+      the heavy key.
+    - >-
+      Increase shuffle partitions so hot partitions are split across tasks.
+  prevention:
+    - >-
+      Enable spark.sql.adaptive.skewJoin.enabled and monitor skewed stages in
+      scheduled jobs.
+    - >-
+      Track key-distribution metrics for known-skewed dimensions.
+
+references:
+  - source: official documentation - Spark adaptive query execution (skew
+      join handling)
+    url: https://spark.apache.org/docs/latest/sql-performance-tuning.html
+  - source: official documentation - Spark performance tuning (data
+      distribution)
+    url: https://spark.apache.org/docs/latest/tuning.html
+
+tests:
+  fixtures:
+    - positive/spark-data-skew
+    - negative/unrelated-python-error
+    - malformed/truncated-json

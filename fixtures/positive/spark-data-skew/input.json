@@ -1,0 +1,1 @@
+{"timestamp": "2024-10-08T13:26:31Z", "platform": "spark", "service": "AdaptiveSparkPlan", "stage": "14", "severity": "WARN", "error_message": "Data skew detected in stage 14: shuffle partition 7 has 12450333 rows (median 1024). Skewed join keys detected on column customer_id; consider enabling spark.sql.adaptive.skewJoin.enabled."}

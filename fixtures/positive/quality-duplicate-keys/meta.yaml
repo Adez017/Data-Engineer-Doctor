@@ -1,0 +1,11 @@
+name: quality-duplicate-keys
+kind: positive
+description: >-
+  Insert fails because the incoming batch contains duplicate primary keys
+  (Found duplicate keys).
+expected:
+  status: diagnosed
+  exit_code: 0
+  confidence_band: HIGH
+  diagnosis_ids:
+    - DEDOC-QUALITY-002

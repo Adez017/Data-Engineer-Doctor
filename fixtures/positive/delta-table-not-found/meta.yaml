@@ -1,0 +1,10 @@
+name: delta-table-not-found
+kind: positive
+description: >-
+  AnalysisException for a missing table or view (TABLE_OR_VIEW_NOT_FOUND).
+expected:
+  status: diagnosed
+  exit_code: 0
+  confidence_band: HIGH
+  diagnosis_ids:
+    - DEDOC-DELTA-003

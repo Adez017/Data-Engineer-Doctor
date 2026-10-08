@@ -1,0 +1,4 @@
+24/10/08 13:22:55 INFO SparkContext: Running job 4512, stage 12
+org.apache.spark.SparkException: Job aborted due to stage failure: Task 3 in stage 12.0 failed 3 times, most recent failure: Lost task 3.2 in stage 12.0 (TID 190, exec3, java.lang.NumberFormatException: For input string: "N/A")
+    at org.apache.spark.scheduler.DAGScheduler.$anonfun$failJobAndIndependentStages$2(DAGScheduler.scala:1263)
+24/10/08 13:22:56 ERROR DAGScheduler: Job 4512 failed: org.apache.spark.SparkException: Job aborted due to stage failure

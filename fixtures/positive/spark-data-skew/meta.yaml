@@ -1,0 +1,11 @@
+name: spark-data-skew
+kind: positive
+description: >-
+  Adaptive execution reports data skew on a shuffle partition of a join
+  (JSON event with stage metadata).
+expected:
+  status: diagnosed
+  exit_code: 0
+  confidence_band: MEDIUM
+  diagnosis_ids:
+    - DEDOC-SPARK-005

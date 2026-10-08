@@ -1,0 +1,61 @@
+id: DEDOC-SPARK-004
+name: Repeated Task Failure
+category: spark.repeated_task_failure
+
+severity:
+  default: high
+
+platforms:
+  - spark
+  - databricks
+
+patterns:
+  exception_types:
+    - SparkException
+
+signals:
+  positive:
+    - task_failure_repeated
+  negative:
+    - executor_oom
+    - authentication_failure
+    - dns_failure
+
+hypotheses:
+  - poison_pill_record
+  - deterministic_task_failure
+  - missing_input_partition
+
+recommendations:
+  immediate:
+    - >-
+      Open the failed task attempt in the Spark UI and read the underlying
+      exception; the same root cause repeats on every attempt.
+    - >-
+      Isolate the offending partition (task attempt details show input path
+      and row ranges) and test it in isolation.
+  recommended:
+    - >-
+      Increase spark.task.maxFailures only after excluding a deterministic
+      bug; blind retries hide poison-pill data.
+    - >-
+      Check for corrupt records or malformed rows that fail parsing or
+      conversion.
+  prevention:
+    - >-
+      Quarantine corrupt records at ingestion (mode PERMISSIVE with a
+      corrupt-record column).
+    - >-
+      Add partition-level data-quality checks for known-bad ranges.
+
+references:
+  - source: official documentation - Spark SQL error conditions
+    url: https://spark.apache.org/docs/latest/sql-error-conditions.html
+  - source: official documentation - Spark configuration (spark.task.maxFailures)
+    url: https://spark.apache.org/docs/latest/configuration.html
+
+tests:
+  fixtures:
+    - positive/spark-repeated-task-failure
+    - negative/unrelated-python-error
+    - malformed/truncated-json

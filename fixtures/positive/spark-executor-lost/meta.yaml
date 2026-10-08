@@ -1,0 +1,10 @@
+name: spark-executor-lost
+kind: positive
+description: >-
+  Executor 5 is lost due to a heartbeat timeout and the stage stalls.
+expected:
+  status: diagnosed
+  exit_code: 0
+  confidence_band: HIGH
+  diagnosis_ids:
+    - DEDOC-SPARK-003

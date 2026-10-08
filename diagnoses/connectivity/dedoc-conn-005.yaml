@@ -1,0 +1,59 @@
+id: DEDOC-CONN-005
+name: Endpoint Unavailable
+category: connectivity.endpoint_unavailable
+
+severity:
+  default: high
+
+platforms:
+  - spark
+  - databricks
+
+patterns:
+  exception_types:
+    - ConnectException
+
+signals:
+  positive:
+    - endpoint_unavailable
+  negative:
+    - authentication_failure
+    - dns_failure
+    - executor_oom
+
+hypotheses:
+  - downstream_service_down
+  - listener_not_running
+  - proxy_interrupted_connection
+
+recommendations:
+  immediate:
+    - >-
+      Verify the downstream service is up (health endpoint, service status)
+      and listening on the expected port.
+    - >-
+      Connection refused usually means nothing is listening on that
+      host:port; confirm the service restarted or scaled down recently.
+  recommended:
+    - >-
+      Check for proxies or load balancers that reset idle connections
+      mid-request.
+    - >-
+      Look at service logs for a crash or OOM at the same timestamp.
+  prevention:
+    - >-
+      Add health checks and retry logic for downstream integrations.
+    - >-
+      Monitor endpoint availability as part of job telemetry.
+
+references:
+  - source: official documentation - Spark configuration (network settings)
+    url: https://spark.apache.org/docs/latest/configuration.html
+  - source: official documentation - Hadoop network configuration guide
+    url: https://hadoop.apache.org/docs/stable/hadoop-project-dist/hadoop-common/ClusterSetup.html
+
+tests:
+  fixtures:
+    - positive/connectivity-endpoint-unavailable
+    - negative/unrelated-python-error
+    - malformed/truncated-json

@@ -1,0 +1,59 @@
+id: DEDOC-PERF-004
+name: Oversized Broadcast
+category: performance.oversized_broadcast
+
+severity:
+  default: low
+
+platforms:
+  - spark
+  - databricks
+
+patterns:
+  exception_types: []
+
+signals:
+  positive:
+    - broadcast_size_exceeded
+  negative:
+    - authentication_failure
+    - dns_failure
+    - executor_oom
+
+hypotheses:
+  - build_side_exceeds_threshold
+  - forced_broadcast_hint
+  - dimension_table_growth
+
+recommendations:
+    # heuristic diagnosis: driven by cost/profiling signals, not a crash signature
+  immediate:
+    - >-
+      Check the join plan; if the build side exceeds
+      spark.sql.autoBroadcastJoinThreshold the optimizer may choose a shuffle
+      join or the broadcast costs memory.
+    - >-
+      Pre-aggregate or filter the dimension table before the join.
+  recommended:
+    - >-
+      Remove forced broadcast join hints on large tables unless intentional.
+    - >-
+      Raise the threshold only after confirming driver/executor memory can
+      absorb the broadcast.
+  prevention:
+    - >-
+      Monitor broadcast materialization sizes in the SQL UI.
+    - >-
+      Keep dimension tables within known size budgets.
+
+references:
+  - source: official documentation - Spark performance tuning (broadcast)
+    url: https://spark.apache.org/docs/latest/tuning.html
+  - source: official documentation - Spark SQL performance tuning
+    url: https://spark.apache.org/docs/latest/sql-performance-tuning.html
+
+tests:
+  fixtures:
+    - positive/performance-oversized-broadcast
+    - negative/unrelated-python-error
+    - malformed/truncated-json

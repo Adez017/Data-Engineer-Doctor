@@ -1,0 +1,60 @@
+id: DEDOC-SCHEMA-004
+name: Duplicate Column
+category: schema.duplicate_column
+
+severity:
+  default: medium
+
+platforms:
+  - spark
+  - databricks
+
+patterns:
+  exception_types:
+    - AnalysisException
+
+signals:
+  positive:
+    - ambiguous_reference
+  negative:
+    - table_or_view_not_found
+    - resolved_column_not_found
+    - authentication_failure
+    - executor_oom
+
+hypotheses:
+  - duplicate_column_name
+  - ambiguous_join_output
+  - duplicate_field_in_schema
+
+recommendations:
+  immediate:
+    - >-
+      Qualify the ambiguous column with its relation alias
+      (orders.order_id instead of order_id).
+    - >-
+      Rename one side of a join before selecting
+      (df.alias("a"), df.alias("b")).
+  recommended:
+    - >-
+      Deduplicate column names when building DataFrames programmatically,
+      for example after concat or union of overlapping schemas.
+    - >-
+      Check whether a schema literal contains the same field name twice.
+  prevention:
+    - >-
+      Enforce unique column naming conventions in shared models.
+    - >-
+      Avoid SELECT * across joins; project required columns explicitly.
+
+references:
+  - source: official documentation - Spark SQL error conditions (AMBIGUOUS_REFERENCE)
+    url: https://spark.apache.org/docs/latest/sql-error-conditions.html
+  - source: official documentation - PySpark DataFrame.join
+    url: https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.DataFrame.join.html
+
+tests:
+  fixtures:
+    - positive/spark-duplicate-column
+    - negative/unrelated-python-error
+    - malformed/truncated-json

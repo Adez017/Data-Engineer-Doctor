@@ -1,0 +1,11 @@
+name: connectivity-permission-denied
+kind: positive
+description: >-
+  A write path is denied by HDFS access control (AccessControlException /
+  Permission denied).
+expected:
+  status: diagnosed
+  exit_code: 0
+  confidence_band: HIGH
+  diagnosis_ids:
+    - DEDOC-CONN-004

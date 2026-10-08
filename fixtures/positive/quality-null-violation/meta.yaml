@@ -1,0 +1,11 @@
+name: quality-null-violation
+kind: positive
+description: >-
+  Insert into a Delta table with a NOT NULL constraint fails because a NULL
+  value was assigned to customers.customer_id.
+expected:
+  status: diagnosed
+  exit_code: 0
+  confidence_band: HIGH
+  diagnosis_ids:
+    - DEDOC-QUALITY-001

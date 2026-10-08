@@ -1,0 +1,5 @@
+24/10/08 14:29:02 INFO SparkContext: Writing to /user/svc_report/dwh
+org.apache.hadoop.security.AccessControlException: Permission denied: user=svc_report, access=WRITE, inode="/user/svc_report/dwh":hadoop:supergroup:drwxr-xr-x
+    at org.apache.hadoop.hdfs.server.namenode.FSPermissionChecker.check(FSPermissionChecker.java:319)
+    at org.apache.hadoop.hdfs.server.namenode.FSNamesystem.checkPermission(FSNamesystem.java:6817)
+24/10/08 14:29:02 ERROR SparkContext: Job 71 failed: path not writable

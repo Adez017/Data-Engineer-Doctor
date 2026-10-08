@@ -1,0 +1,4 @@
+24/10/08 16:00:00 INFO Scheduler: Pending tasks 0
+24/10/08 16:00:01 WARN MetricReporter: metrics queue backlog of 1048576 bytes
+24/10/08 16:00:02 ERROR Replicator: failed to replicate offset 3021, retrying
+24/10/08 16:00:03 INFO Scheduler: Backoff configured for 30000 ms

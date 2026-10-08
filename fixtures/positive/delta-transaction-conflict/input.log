@@ -1,0 +1,6 @@
+24/10/08 14:16:47 INFO DeltaLog: Attempting optimistic commit on warehouse/orders
+org.apache.spark.sql.delta.ConcurrentTransactionException: A concurrent transaction has written new data since the table was last read. Please try the operation again.
+Caused by: org.apache.spark.sql.delta.MetadataChangedException: The metadata of the Delta table has changed (version 18 -> 19)
+    at org.apache.spark.sql.delta.DeltaLog.completeDelayedCommit(DeltaLog.scala:278)
+    at org.apache.spark.sql.delta.DeltaLog.$anonfun$doOptimisticCommit$2(DeltaLog.scala:311)
+24/10/08 14:16:48 WARN DeltaLog: Transaction conflict; re-reading snapshot

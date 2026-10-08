@@ -1,9 +1,0 @@
-name: authentication-failure
-kind: negative
-description: >-
-  A Kerberos/authentication failure must not be diagnosed as a schema
-  mismatch; the authentication_failure signal is contradictory evidence.
-expected:
-  status: insufficient_evidence
-  exit_code: 0
-  diagnosis_ids: []

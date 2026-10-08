@@ -1,0 +1,5 @@
+24/10/08 14:33:18 INFO SparkContext: Opening JDBC connection to mysql.warehouse.internal:3306
+java.net.ConnectException: Connection refused: host mysql.warehouse.internal:3306
+    at java.net.PlainSocketImpl.socketConnect(PlainSocketImpl.java:354)
+    at java.net.SocksSocketImpl.connect(SocksSocketImpl.java:390)
+24/10/08 14:33:18 ERROR SparkContext: JDBC connection refused: nothing listening on 3306

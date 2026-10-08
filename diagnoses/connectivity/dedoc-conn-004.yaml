@@ -1,0 +1,59 @@
+id: DEDOC-CONN-004
+name: Permission Denied
+category: connectivity.permission_denied
+
+severity:
+  default: high
+
+platforms:
+  - spark
+  - databricks
+
+patterns:
+  exception_types:
+    - AccessControlException
+
+signals:
+  positive:
+    - permission_denied
+  negative:
+    - authentication_failure
+    - dns_failure
+    - executor_oom
+
+hypotheses:
+  - missing_iam_or_rbac_policy
+  - user_not_in_allowed_group
+  - path_scoped_denied_access
+
+recommendations:
+  immediate:
+    - >-
+      Confirm which identity the job runs as and whether it needs a broader
+      data access policy for this path.
+    - >-
+      Check who owns the target path and whether a recent policy change
+      removed the identity.
+  recommended:
+    - >-
+      Compare the denied action and path with the granted scopes (IAM policy,
+      POSIX ACLs, HDFS ACLs).
+    - >-
+      Verify the identity did not get rotated or its group membership changed.
+  prevention:
+    - >-
+      Use scoped, least-privilege policies and audit access regularly.
+    - >-
+      Add a pre-flight permission check before the job reads/writes.
+
+references:
+  - source: official documentation - HDFS permissions guide
+    url: https://hadoop.apache.org/docs/stable/hadoop-project-dist/hadoop-hdfs/HdfsPermissionsGuide.html
+  - source: official documentation - AWS S3 error responses
+    url: https://docs.aws.amazon.com/AmazonS3/latest/API/ErrorResponses.html
+
+tests:
+  fixtures:
+    - positive/connectivity-permission-denied
+    - negative/unrelated-python-error
+    - malformed/truncated-json

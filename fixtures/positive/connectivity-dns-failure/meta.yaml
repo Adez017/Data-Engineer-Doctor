@@ -1,0 +1,11 @@
+name: connectivity-dns-failure
+kind: positive
+description: >-
+  A JDBC hostname cannot be resolved (UnknownHostException / name or service
+  not known).
+expected:
+  status: diagnosed
+  exit_code: 0
+  confidence_band: HIGH
+  diagnosis_ids:
+    - DEDOC-CONN-003

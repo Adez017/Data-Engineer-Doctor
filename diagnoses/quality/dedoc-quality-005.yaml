@@ -1,0 +1,61 @@
+id: DEDOC-QUALITY-005
+name: Referential Integrity Issue
+category: quality.referential_integrity
+
+severity:
+  default: high
+
+platforms:
+  - spark
+  - databricks
+
+patterns:
+  exception_types:
+    - AnalysisException
+
+signals:
+  positive:
+    - merge_cardinality_violation
+  negative:
+    - authentication_failure
+    - dns_failure
+    - executor_oom
+
+hypotheses:
+  - merge_matched_multiple_source_rows
+  - non_unique_join_key
+  - missing_parent_rows
+  - >-
+      foreign-key style violations surface with engine-specific wording; only
+      the MERGE cardinality signature is verified for Spark/Delta
+
+recommendations:
+  immediate:
+    - >-
+      Deduplicate the source by the MERGE key (for example row_number over
+      the join key) so each target row matches at most one source row.
+    - >-
+      Check whether the target key is actually unique.
+  recommended:
+    - >-
+      For parent/child joins, verify referenced parent rows exist before
+      writing children (anti-join and quarantine orphans).
+    - >-
+      Review the MERGE ON clause for missing key predicates.
+  prevention:
+    - >-
+      Enforce uniqueness on join keys with constraints or pre-aggregation.
+    - >-
+      Add anti-join referential checks to the data-quality gate.
+
+references:
+  - source: official documentation - Spark SQL error conditions (MERGE_CARDINALITY_VIOLATION)
+    url: https://spark.apache.org/docs/latest/sql-error-conditions.html
+  - source: official documentation - Delta Lake constraints
+    url: https://docs.delta.io/delta-constraints.html
+
+tests:
+  fixtures:
+    - positive/quality-merge-cardinality
+    - negative/unrelated-python-error
+    - malformed/truncated-json

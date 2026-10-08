@@ -1,0 +1,11 @@
+name: quality-invalid-date
+kind: positive
+description: >-
+  A malformed date string cannot be cast to DATE (CAST_INVALID_INPUT with a
+  date target type).
+expected:
+  status: diagnosed
+  exit_code: 0
+  confidence_band: HIGH
+  diagnosis_ids:
+    - DEDOC-QUALITY-003

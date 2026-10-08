@@ -1,0 +1,59 @@
+id: DEDOC-PERF-001
+name: Small Files Problem
+category: performance.small_files
+
+severity:
+  default: low
+
+platforms:
+  - spark
+  - databricks
+
+patterns:
+  exception_types: []
+
+signals:
+  positive:
+    - small_files
+  negative:
+    - authentication_failure
+    - dns_failure
+    - executor_oom
+
+hypotheses:
+  - many_small_files_in_partition
+  - continuous_append_pattern
+  - expensive_listing_and_reads
+
+recommendations:
+    # heuristic diagnosis: driven by cost/profiling signals, not a crash signature
+  immediate:
+    - >-
+      Inspect file counts and sizes per partition; appends of small batches
+      create many small files over time.
+    - >-
+      Stop the bleeding by compacting existing partitions
+      (OPTIMIZE <table>) and then fixing the write pattern.
+  recommended:
+    - >-
+      Batch writes or apply auto compaction (Delta: AUTO COMPACT) to merge
+      small files on write.
+    - >-
+      Align partition granularity with ingestion volume.
+  prevention:
+    - >-
+      Set small-file ratio alerts per table.
+    - >-
+      Partition by a stable key with predictable cardinality.
+
+references:
+  - source: official documentation - Delta Lake optimize
+    url: https://docs.delta.io/latest/optimizations-oss.html
+  - source: official documentation - Databricks small files recommendations
+    url: https://learn.microsoft.com/en-us/azure/databricks/delta/optimize
+
+tests:
+  fixtures:
+    - positive/performance-small-files
+    - negative/unrelated-python-error
+    - malformed/truncated-json

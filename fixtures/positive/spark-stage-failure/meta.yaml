@@ -1,0 +1,11 @@
+name: spark-stage-failure
+kind: positive
+description: >-
+  Generic umbrella case: the job aborts due to a stage failure with no more
+  specific signature present.
+expected:
+  status: diagnosed
+  exit_code: 0
+  confidence_band: HIGH
+  diagnosis_ids:
+    - DEDOC-SPARK-008

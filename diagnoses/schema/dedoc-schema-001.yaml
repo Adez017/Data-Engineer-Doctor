@@ -1,6 +1,6 @@
 id: DEDOC-SCHEMA-001
-name: Spark Schema Mismatch
-category: schema.mismatch
+name: Missing Column
+category: schema.missing_column
 
 severity:
   default: medium
@@ -16,7 +16,6 @@ patterns:
 signals:
   positive:
     - resolved_column_not_found
-    - datatype_mismatch
   negative:
     - table_or_view_not_found
     - authentication_failure
@@ -25,8 +24,8 @@ signals:
 
 hypotheses:
   - missing_column
-  - data_type_mismatch
   - schema_drift
+  - case_sensitivity_difference
 
 recommendations:
   immediate:
@@ -52,6 +51,8 @@ recommendations:
       when reading files.
 
 references:
+  - source: official documentation - Spark SQL error conditions
+    url: https://spark.apache.org/docs/latest/sql-error-conditions.html
   - source: official documentation - Spark SQL programming guide
     url: https://spark.apache.org/docs/latest/sql-programming-guide.html
   - source: official documentation - Spark configuration (spark.sql.caseSensitive)
@@ -62,10 +63,8 @@ references:
 tests:
   fixtures:
     - positive/spark-schema-mismatch-resolved-column
-    - positive/spark-schema-mismatch-datatype
     - negative/unrelated-python-error
-    - negative/table-not-found
-    - negative/authentication-failure
+    - negative/no-signal-log
     - malformed/truncated-json
     - malformed/empty-file
     - malformed/binary-garbage

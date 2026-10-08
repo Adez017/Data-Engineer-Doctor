@@ -44,8 +44,13 @@ A diagnosis PR must contain:
 4. Documentation, including official references where available.
 
 Every signal name used in a diagnosis YAML must be registered in
-`dedoc/analyzer/signals.py` (`SIGNAL_PATTERNS`); `make validate` rejects
-signals that have no extractor.
+`dedoc/analyzer/signals.py` (`SIGNAL_REGISTRY`, a `SignalDef(pattern, exact)`
+map); `make validate` rejects signals that have no extractor. Mark a signal
+`exact=True` only when its pattern is a verified error signature — exact
+signals score 40 (`ERROR_SIGNATURE`) instead of 15 (`CORRELATED_SIGNAL`).
+A diagnosis with declared positive signals only matches when at least one
+of them is observed (exception-only matches are allowed only when the
+diagnosis declares no positive signals).
 
 ### Fixture layout
 
@@ -71,6 +76,7 @@ description: What failure this fixture represents.
 expected:
   status: diagnosed          # diagnosed | insufficient_evidence | input_error
   exit_code: 0               # 0 for reports, 1 for clean input errors
+  confidence_band: HIGH      # HIGH | MEDIUM (positive fixtures only)
   diagnosis_ids:
     - DEDOC-SCHEMA-001
 ```
@@ -78,7 +84,8 @@ expected:
 Fixture rules (enforced by `tests/unit/test_fixtures.py`):
 
 - Positive fixtures: `status: diagnosed`, `exit_code: 0`, non-empty
-  `diagnosis_ids`.
+  `diagnosis_ids`, and `confidence_band: HIGH|MEDIUM` matching the top
+  match of the report.
 - Negative fixtures: `status: insufficient_evidence`, empty `diagnosis_ids`.
 - Malformed fixtures: `status: input_error` with `exit_code: 1`, or
   `status: insufficient_evidence` with `exit_code: 0`; never a traceback.

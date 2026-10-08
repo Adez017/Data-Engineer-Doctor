@@ -1,0 +1,61 @@
+id: DEDOC-DELTA-003
+name: Table Not Found
+category: delta.table_not_found
+
+severity:
+  default: high
+
+platforms:
+  - spark
+  - databricks
+
+patterns:
+  exception_types:
+    - AnalysisException
+
+signals:
+  positive:
+    - table_or_view_not_found
+    - delta_not_a_table
+  negative:
+    - authentication_failure
+    - dns_failure
+    - executor_oom
+
+hypotheses:
+  - table_or_view_missing
+  - wrong_catalog_or_database
+  - path_is_not_delta_formatted
+
+recommendations:
+  immediate:
+    - >-
+      Verify the table or view name against the catalog
+      (SHOW TABLES IN <schema>; DESCRIBE TABLE <name>).
+    - >-
+      For read paths, confirm the location was written as a Delta table
+      (it is not enough to point the Delta reader at a non-Delta path).
+  recommended:
+    - >-
+      Check for a typo or a case-sensitivity difference, and whether the
+      table was dropped or renamed.
+    - >-
+      Confirm the catalog/database context the job is running under.
+  prevention:
+    - >-
+      Validate table existence in a pre-flight step before the job runs.
+    - >-
+      Document which tables are Delta-formatted and which are external.
+
+references:
+  - source: official documentation - Spark SQL error conditions (TABLE_OR_VIEW_NOT_FOUND)
+    url: https://spark.apache.org/docs/latest/sql-error-conditions.html
+  - source: official documentation - Delta Lake table discovery
+    url: https://docs.delta.io/latest/delta-utility.html
+
+tests:
+  fixtures:
+    - positive/delta-table-not-found
+    - positive/delta-not-a-delta-table
+    - negative/unrelated-python-error
+    - malformed/truncated-json

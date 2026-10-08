@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 from enum import StrEnum
 from pathlib import Path
 from typing import Annotated
@@ -11,6 +12,7 @@ import typer
 from dedoc import __version__
 from dedoc.core.errors import DEDocError
 from dedoc.core.pipeline import diagnose_file
+from dedoc.diagnosis.loader import load_diagnoses
 from dedoc.formatters import render
 from dedoc.parser.input_parser import InputFormat
 
@@ -26,6 +28,11 @@ class OutputFormat(StrEnum):
     TEXT = "text"
     JSON = "json"
     MARKDOWN = "markdown"
+
+
+class ListFormat(StrEnum):
+    TEXT = "text"
+    JSON = "json"
 
 
 def _version_callback(value: bool) -> None:
@@ -79,6 +86,41 @@ def diagnose(
         typer.echo(f"error: {exc}", err=True)
         raise typer.Exit(code=1) from exc
     typer.echo(render(report, output_format.value))
+
+
+@app.command(name="list-diagnoses")
+def list_diagnoses_command(
+    output_format: Annotated[
+        ListFormat, typer.Option("--format", "-f", help="Output format.")
+    ] = ListFormat.TEXT,
+    diagnoses_path: Annotated[
+        Path | None, typer.Option("--diagnoses-path", help="Override the diagnoses directory.")
+    ] = None,
+) -> None:
+    """List available diagnosis definitions (id, name, category, severity)."""
+    try:
+        diagnoses = load_diagnoses(diagnoses_path)
+    except DEDocError as exc:
+        typer.echo(f"error: {exc}", err=True)
+        raise typer.Exit(code=1) from exc
+    if output_format is ListFormat.JSON:
+        rows = [
+            {
+                "id": d.id,
+                "name": d.name,
+                "category": d.category,
+                "severity": d.severity.default,
+                "platforms": list(d.platforms),
+            }
+            for d in diagnoses.values()
+        ]
+        typer.echo(json.dumps(rows, indent=2))
+        return
+    header = f"{'ID':<18} {'CATEGORY':<28} {'SEVERITY':<10} NAME"
+    typer.echo(header)
+    typer.echo("-" * len(header))
+    for d in diagnoses.values():
+        typer.echo(f"{d.id:<18} {d.category:<28} {d.severity.default:<10} {d.name}")
 
 
 if __name__ == "__main__":

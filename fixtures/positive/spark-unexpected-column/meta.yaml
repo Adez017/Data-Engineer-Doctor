@@ -1,0 +1,11 @@
+name: spark-unexpected-column
+kind: positive
+description: >-
+  Append fails because the input contains a column (region) that does not
+  exist in the target table (TOO_MANY_DATA_COLUMNS).
+expected:
+  status: diagnosed
+  exit_code: 0
+  confidence_band: HIGH
+  diagnosis_ids:
+    - DEDOC-SCHEMA-003

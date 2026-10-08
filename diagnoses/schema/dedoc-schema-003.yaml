@@ -1,0 +1,61 @@
+id: DEDOC-SCHEMA-003
+name: Unexpected Column
+category: schema.unexpected_column
+
+severity:
+  default: medium
+
+platforms:
+  - spark
+  - databricks
+
+patterns:
+  exception_types:
+    - AnalysisException
+
+signals:
+  positive:
+    - unexpected_column
+  negative:
+    - table_or_view_not_found
+    - resolved_column_not_found
+    - authentication_failure
+    - executor_oom
+
+hypotheses:
+  - extra_column_in_input
+  - column_order_mismatch
+  - upstream_added_column
+
+recommendations:
+  immediate:
+    - >-
+      Compare the input columns against the target table columns
+      (df.columns versus DESCRIBE TABLE <table>).
+    - >-
+      Project the expected columns explicitly
+      (SELECT order_id, customer_id FROM ...) instead of SELECT *.
+  recommended:
+    - >-
+      Check whether an upstream producer recently added a column and whether
+      the change should be propagated via schema evolution.
+    - >-
+      For INSERT statements, list target columns explicitly so arity cannot drift.
+  prevention:
+    - >-
+      Define written column lists in all INSERT/append code paths.
+    - >-
+      Add schema contract checks in CI for datasets with fixed targets.
+
+references:
+  - source: official documentation - Spark SQL error conditions (TOO_MANY_DATA_COLUMNS)
+    url: https://spark.apache.org/docs/latest/sql-error-conditions.html
+  - source: official documentation - Spark SQL programming guide
+    url: https://spark.apache.org/docs/latest/sql-programming-guide.html
+
+tests:
+  fixtures:
+    - positive/spark-unexpected-column
+    - negative/unrelated-python-error
+    - negative/no-signal-log
+    - malformed/truncated-json

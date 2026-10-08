@@ -1,0 +1,11 @@
+name: delta-concurrent-modification
+kind: positive
+description: >-
+  Writing to a Delta table fails with ConcurrentAppendException because a
+  concurrent writer committed first (write-write conflict).
+expected:
+  status: diagnosed
+  exit_code: 0
+  confidence_band: HIGH
+  diagnosis_ids:
+    - DEDOC-DELTA-001

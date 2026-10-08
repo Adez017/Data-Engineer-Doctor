@@ -1,0 +1,64 @@
+id: DEDOC-SCHEMA-002
+name: Data Type Mismatch
+category: schema.type_mismatch
+
+severity:
+  default: medium
+
+platforms:
+  - spark
+  - databricks
+
+patterns:
+  exception_types:
+    - AnalysisException
+
+signals:
+  positive:
+    - datatype_mismatch
+  negative:
+    - table_or_view_not_found
+    - authentication_failure
+    - dns_failure
+    - executor_oom
+
+hypotheses:
+  - data_type_mismatch
+  - unsafe_cast
+  - schema_drift
+
+recommendations:
+  immediate:
+    - >-
+      Compare source and target types for the failing expression
+      (df.printSchema() versus the expected schema).
+    - >-
+      Add an explicit cast where the conversion is intended and lossless
+      (for example col("x").cast("decimal(18,2)")).
+  recommended:
+    - >-
+      Check whether the upstream producer changed a column type
+      (for example string to timestamp) without notifying consumers.
+    - >-
+      Review spark.sql.ansi.enabled: ANSI mode turns silent casts into errors.
+  prevention:
+    - >-
+      Enforce schema contracts in CI so type changes fail fast before
+      production jobs.
+    - >-
+      Prefer explicit casts over implicit inference when reading files.
+
+references:
+  - source: official documentation - Spark SQL error conditions (DATATYPE_MISMATCH)
+    url: https://spark.apache.org/docs/latest/sql-error-conditions.html
+  - source: official documentation - Spark SQL programming guide
+    url: https://spark.apache.org/docs/latest/sql-programming-guide.html
+  - source: official documentation - Spark configuration (spark.sql.ansi.enabled)
+    url: https://spark.apache.org/docs/latest/configuration.html
+
+tests:
+  fixtures:
+    - positive/spark-schema-mismatch-datatype
+    - negative/unrelated-python-error
+    - negative/no-signal-log
+    - malformed/truncated-json

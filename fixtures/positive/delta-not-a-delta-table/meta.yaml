@@ -1,0 +1,11 @@
+name: delta-not-a-delta-table
+kind: positive
+description: >-
+  A Delta reader points at a location that is not a Delta table
+  (DELTA_NOT_A_DELTA_TABLE).
+expected:
+  status: diagnosed
+  exit_code: 0
+  confidence_band: MEDIUM
+  diagnosis_ids:
+    - DEDOC-DELTA-003

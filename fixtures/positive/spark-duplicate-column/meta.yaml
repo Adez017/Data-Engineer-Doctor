@@ -1,0 +1,11 @@
+name: spark-duplicate-column
+kind: positive
+description: >-
+  A join produces two columns named order_id and the projection fails with an
+  ambiguous reference (duplicate column name).
+expected:
+  status: diagnosed
+  exit_code: 0
+  confidence_band: HIGH
+  diagnosis_ids:
+    - DEDOC-SCHEMA-004

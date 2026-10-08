@@ -1,0 +1,11 @@
+name: delta-schema-mismatch
+kind: positive
+description: >-
+  A Delta write fails because a field cannot be merged (DELTA_FAILED_TO_MERGE_FIELDS):
+  incompatible types for the same field name.
+expected:
+  status: diagnosed
+  exit_code: 0
+  confidence_band: HIGH
+  diagnosis_ids:
+    - DEDOC-DELTA-002

@@ -1,0 +1,5 @@
+24/10/08 13:34:19 INFO SparkContext: Broadcasting task result
+java.lang.OutOfMemoryError: Not enough memory to build and broadcast the table
+    at org.apache.spark.sql.execution.adaptive.BroadcastQueryStageExec.$anonfun$materialize$1(BroadcastQueryStageExec.scala:84)
+    at org.apache.spark.sql.execution.adaptive.AdaptiveSparkPlanExec.$anonfun$newQueryStage$1(AdaptiveSparkPlanExec.scala:189)
+24/10/08 13:34:19 ERROR TaskSetManager: Task 11 in stage 18.0 failed: java.lang.OutOfMemoryError while building broadcast

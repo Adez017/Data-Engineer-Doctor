@@ -1,0 +1,58 @@
+id: DEDOC-PERF-002
+name: Excessive Shuffle
+category: performance.excessive_shuffle
+
+severity:
+  default: low
+
+platforms:
+  - spark
+  - databricks
+
+patterns:
+  exception_types: []
+
+signals:
+  positive:
+    - excessive_shuffle
+  negative:
+    - authentication_failure
+    - dns_failure
+    - executor_oom
+
+hypotheses:
+  - oversized_shuffle_data
+  - poor_partitioning
+  - missing_broadcast_opportunity
+
+recommendations:
+    # heuristic diagnosis: driven by cost/profiling signals, not a crash signature
+  immediate:
+    - >-
+      Identify the stage with the largest shuffle write and the join or
+      group-by feeding it.
+    - >-
+      Increase shuffle partitions so each task moves less data
+      (spark.sql.shuffle.partitions).
+  recommended:
+    - >-
+      Reuse a broadcast join when the build side is small enough.
+    - >-
+      Pre-aggregate (and salting) before the wide dependency.
+  prevention:
+    - >-
+      Track shuffle bytes per stage and alert on anomalies.
+    - >-
+      Enforce join strategy hints in critical pipelines.
+
+references:
+  - source: official documentation - Spark performance tuning
+    url: https://spark.apache.org/docs/latest/tuning.html
+  - source: official documentation - Apache Spark SQL adaptive performance tuning
+    url: https://spark.apache.org/docs/latest/sql-performance-tuning.html
+
+tests:
+  fixtures:
+    - positive/performance-excessive-shuffle
+    - negative/unrelated-python-error
+    - malformed/truncated-json

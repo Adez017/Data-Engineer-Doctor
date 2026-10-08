@@ -1,0 +1,9 @@
+name: no-signal-log
+kind: negative
+description: >-
+  A log with no recognized error signals must produce insufficient evidence
+  (false-positive guard for every diagnosis).
+expected:
+  status: insufficient_evidence
+  exit_code: 0
+  diagnosis_ids: []

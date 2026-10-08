@@ -1,0 +1,11 @@
+name: spark-executor-oom
+kind: positive
+description: >-
+  Executor task dies with java.lang.OutOfMemoryError: Java heap space while
+  sorting a large partition.
+expected:
+  status: diagnosed
+  exit_code: 0
+  confidence_band: HIGH
+  diagnosis_ids:
+    - DEDOC-SPARK-001

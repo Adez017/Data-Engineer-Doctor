@@ -1,0 +1,11 @@
+name: quality-merge-cardinality
+kind: positive
+description: >-
+  MERGE fails because one target row matched multiple source rows
+  (MERGE_CARDINALITY_VIOLATION), indicating a non-unique join key.
+expected:
+  status: diagnosed
+  exit_code: 0
+  confidence_band: HIGH
+  diagnosis_ids:
+    - DEDOC-QUALITY-005

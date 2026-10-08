@@ -1,0 +1,60 @@
+id: DEDOC-QUALITY-001
+name: Null Constraint Violation
+category: quality.null_violation
+
+severity:
+  default: high
+
+platforms:
+  - spark
+  - databricks
+
+patterns:
+  exception_types:
+    - InvariantViolationException
+
+signals:
+  positive:
+    - null_constraint_violated
+  negative:
+    - authentication_failure
+    - dns_failure
+    - executor_oom
+
+hypotheses:
+  - null_in_non_nullable_column
+  - upstream_producer_emitted_null
+  - check_constraint_violation
+
+recommendations:
+  immediate:
+    - >-
+      Identify offending rows (the error names the column or constraint) and
+      decide whether to reject, default, or quarantine them.
+    - >-
+      Check the upstream producer for the window where nulls first appeared.
+  recommended:
+    - >-
+      Add explicit null handling upstream (coalesce, filter, or a quarantine
+      table) instead of relying on the sink to reject.
+    - >-
+      Verify joins: dropped left joins commonly introduce nulls in keys.
+  prevention:
+    - >-
+      Add data-quality checks that fail the job before the sink rejects the
+      whole batch.
+    - >-
+      Declare NOT NULL constraints on critical columns so violations surface
+      early.
+
+references:
+  - source: official documentation - Spark SQL error conditions (NOT_NULL_CONSTRAINT_VIOLATION)
+    url: https://spark.apache.org/docs/latest/sql-error-conditions.html
+  - source: official documentation - Delta Lake constraints
+    url: https://docs.delta.io/delta-constraints.html
+
+tests:
+  fixtures:
+    - positive/quality-null-violation
+    - negative/unrelated-python-error
+    - malformed/truncated-json

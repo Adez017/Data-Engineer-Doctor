@@ -1,0 +1,5 @@
+24/10/08 12:56:02 INFO InsertIntoTable: inserting into default.orders
+org.apache.spark.sql.AnalysisException: [DUPLICATE_KEY] Found duplicate keys order_id: 1001, 1001, 1002
+    at org.apache.spark.sql.catalyst.analysis.CheckAnalysis.$anonfun$check$1(CheckAnalysis.scala:118)
+    at org.apache.spark.sql.execution.command.InsertIntoTableCommand.runCommand(InsertIntoTableCommand.scala:74)
+24/10/08 12:56:02 WARN InsertIntoTable: statement failed

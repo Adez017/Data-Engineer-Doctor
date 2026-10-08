@@ -1,0 +1,60 @@
+id: DEDOC-SCHEMA-006
+name: Nested Schema Mismatch
+category: schema.nested_mismatch
+
+severity:
+  default: medium
+
+platforms:
+  - spark
+  - databricks
+
+patterns:
+  exception_types:
+    - AnalysisException
+
+signals:
+  positive:
+    - nested_schema_field_unresolved
+  negative:
+    - table_or_view_not_found
+    - resolved_column_not_found
+    - authentication_failure
+    - executor_oom
+
+hypotheses:
+  - nested_field_missing
+  - struct_shape_drift
+  - wrong_struct_path
+
+recommendations:
+  immediate:
+    - >-
+      Print the nested schema (df.printSchema()) and verify the struct path
+      used in the expression (for example col("payment.card_number")).
+    - >-
+      Check whether the upstream struct gained or lost a field.
+  recommended:
+    - >-
+      Use get_field / field accessors with explicit existence checks when the
+      nested shape may vary.
+    - >-
+      Review JSON ingestion options (dropMalformed JSON, primitivesAsString)
+      that alter inferred struct shapes.
+  prevention:
+    - >-
+      Contract-test nested schemas, not just top-level columns.
+    - >-
+      Prefer explicit StructType schemas over inference for JSON sources.
+
+references:
+  - source: official documentation - Spark SQL error conditions (UNRESOLVED_FIELD)
+    url: https://spark.apache.org/docs/latest/sql-error-conditions.html
+  - source: official documentation - Spark SQL programming guide
+    url: https://spark.apache.org/docs/latest/sql-programming-guide.html
+
+tests:
+  fixtures:
+    - positive/spark-nested-schema-field
+    - negative/unrelated-python-error
+    - malformed/truncated-json

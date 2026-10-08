@@ -1,0 +1,11 @@
+name: delta-transaction-conflict
+kind: positive
+description: >-
+  An optimistic concurrency commit fails because a concurrent transaction
+  (or a metadata change) moved the table forward first.
+expected:
+  status: diagnosed
+  exit_code: 0
+  confidence_band: HIGH
+  diagnosis_ids:
+    - DEDOC-DELTA-005

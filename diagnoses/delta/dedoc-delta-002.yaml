@@ -1,0 +1,62 @@
+id: DEDOC-DELTA-002
+name: Delta Schema Mismatch
+category: delta.schema_mismatch
+
+severity:
+  default: high
+
+platforms:
+  - spark
+  - databricks
+
+patterns:
+  exception_types:
+    - AnalysisException
+
+signals:
+  positive:
+    - delta_merge_fields_failed
+  negative:
+    - table_or_view_not_found
+    - authentication_failure
+    - dns_failure
+    - executor_oom
+
+hypotheses:
+  - cannot_merge_incompatible_fields
+  - added_field_without_merge_schema
+  - incompatible_column_type_change
+
+recommendations:
+  immediate:
+    - >-
+      Compare the failing field names shown in the error
+      (for example field 'A' of type string vs field 'B' of type long).
+    - >-
+      If the new field is intended, enable schema evolution
+      (.option("mergeSchema", "true") or
+      spark.databricks.delta.schema.autoMerge.enabled=true).
+  recommended:
+    - >-
+      If the types are incompatible, decide which producer is wrong and fix
+      the data or the table.
+    - >-
+      Check whether the error happens on read or write and whether a recent
+      schema change explains it.
+  prevention:
+    - >-
+      Contract-test Delta table schemas in CI before applying schema changes.
+    - >-
+      Prefer explicit, versioned schemas for Delta tables.
+
+references:
+  - source: official documentation - Delta Lake schema evolution
+    url: https://docs.delta.io/latest/versioning.html
+  - source: official documentation - Spark SQL error conditions
+    url: https://spark.apache.org/docs/latest/sql-error-conditions.html
+
+tests:
+  fixtures:
+    - positive/delta-schema-mismatch
+    - negative/unrelated-python-error
+    - malformed/truncated-json

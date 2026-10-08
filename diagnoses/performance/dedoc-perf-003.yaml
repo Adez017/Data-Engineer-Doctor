@@ -1,0 +1,60 @@
+id: DEDOC-PERF-003
+name: Missing Partition Pruning
+category: performance.partition_pruning
+
+severity:
+  default: low
+
+platforms:
+  - spark
+  - databricks
+
+patterns:
+  exception_types: []
+
+signals:
+  positive:
+    - missing_partition_pruning
+  negative:
+    - authentication_failure
+    - dns_failure
+    - executor_oom
+
+hypotheses:
+  - predicate_not_pushed_down
+  - partition_column_not_used
+  - scan_includes_all_partitions
+
+recommendations:
+    # heuristic diagnosis: driven by cost/profiling signals, not a crash signature
+  immediate:
+    - >-
+      Check the physical plan for the table scan: a full scan with the
+      partition predicate present on top means pruning is not happening.
+    - >-
+      Put the partition filter directly on the table scan (early filters in a
+      CTE) instead of after aggregations.
+  recommended:
+    - >-
+      Verify the filtered column is actually a partition column
+      (SHOW PARTITIONS <table>).
+    - >-
+      Avoid functions on the partition column in the predicate
+      (date(from_unixtime(dt)) prevents pruning).
+  prevention:
+    - >-
+      Review physical plans in CI for scans without pruning.
+    - >-
+      Keep partition predicates literal and column-pure.
+
+references:
+  - source: official documentation - Delta Lake optimization (partition pruning)
+    url: https://docs.delta.io/latest/optimizations-oss.html
+  - source: official documentation - Spark SQL performance tuning
+    url: https://spark.apache.org/docs/latest/sql-performance-tuning.html
+
+tests:
+  fixtures:
+    - positive/performance-missing-partition-pruning
+    - negative/unrelated-python-error
+    - malformed/truncated-json

@@ -1,0 +1,1 @@
+{"timestamp": "2024-10-08T14:37:01Z", "platform": "spark", "service": "SparkPlan", "stage": "9", "severity": "WARN", "error_message": "Excessive shuffle detected: shuffle data size is high (14.2 TB) for stage 9 join; consider increasing spark.sql.shuffle.partitions."}

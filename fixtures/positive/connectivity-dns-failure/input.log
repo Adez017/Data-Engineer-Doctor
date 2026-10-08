@@ -1,0 +1,5 @@
+24/10/08 14:25:31 INFO SparkContext: Resolving host dm-warehouse.lan
+java.net.UnknownHostException: dm-warehouse.lan: Name or service not known
+    at java.net.Inet6AddressImpl.lookupAllHostAddr(Inet6AddressImpl.java:144)
+    at java.net.InetAddress.getAllByName(InetAddress.java:1441)
+24/10/08 14:25:31 ERROR SparkContext: Failed to resolve host for jdbc connect

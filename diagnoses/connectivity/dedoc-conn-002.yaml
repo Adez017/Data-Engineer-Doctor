@@ -1,0 +1,59 @@
+id: DEDOC-CONN-002
+name: Connection Timeout
+category: connectivity.connection_timeout
+
+severity:
+  default: high
+
+platforms:
+  - spark
+  - databricks
+
+patterns:
+  exception_types:
+    - ConnectTimeoutException
+
+signals:
+  positive:
+    - connection_timeout
+  negative:
+    - authentication_failure
+    - dns_failure
+    - executor_oom
+
+hypotheses:
+  - firewall_or_security_group_block
+  - overloaded_endpoint
+  - wrong_network_path
+
+recommendations:
+  immediate:
+    - >-
+      Verify the endpoint is reachable from the compute environment
+      (firewall, security groups, VPC peering, private endpoints).
+    - >-
+      Check latency and load on the downstream service; connect timeouts are
+      common when the endpoint is saturated.
+  recommended:
+    - >-
+      Increase client timeout only after confirming the service is healthy;
+      longer timeouts delay failure detection.
+    - >-
+      Test connectivity from the same host/container the job runs on.
+  prevention:
+    - >-
+      Document required network paths for each external service.
+    - >-
+      Add connectivity checks as a pre-deployment step.
+
+references:
+  - source: official documentation - Spark configuration (network timeouts)
+    url: https://spark.apache.org/docs/latest/configuration.html
+  - source: official documentation - Hadoop network configuration guide
+    url: https://hadoop.apache.org/docs/stable/hadoop-project-dist/hadoop-common/ClusterSetup.html
+
+tests:
+  fixtures:
+    - positive/connectivity-connection-timeout
+    - negative/unrelated-python-error
+    - malformed/truncated-json

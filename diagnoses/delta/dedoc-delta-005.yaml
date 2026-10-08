@@ -1,0 +1,64 @@
+id: DEDOC-DELTA-005
+name: Transaction Conflict
+category: delta.transaction_conflict
+
+severity:
+  default: medium
+
+platforms:
+  - spark
+  - databricks
+
+patterns:
+  exception_types:
+    - ConcurrentTransactionException
+
+signals:
+  positive:
+    - delta_concurrent_transaction
+    - delta_metadata_changed
+    - delta_protocol_changed
+  negative:
+    - authentication_failure
+    - dns_failure
+    - executor_oom
+
+hypotheses:
+  - concurrent_transaction_wrote_new_data
+  - table_metadata_changed_mid_job
+  - protocol_version_upgrade_during_job
+
+recommendations:
+  immediate:
+    - >-
+      The table was modified after this transaction started; re-read the
+      latest snapshot and retry the operation.
+    - >-
+      Check whether a concurrent job performed a schema or protocol change
+      while this job was running.
+  recommended:
+    - >-
+      Move reads to a consistent snapshot (time travel) when full consistency
+      with writes is required.
+    - >-
+      Complete schema/protocol changes in maintenance windows rather than
+      mid-ingestion.
+  prevention:
+    - >-
+      Serialize DDL (schema/protocol changes) with data writes through a
+      change-management process.
+    - >-
+      Monitor Delta operation history for overlapping DDL and long-running
+      jobs.
+
+references:
+  - source: official documentation - Delta Lake concurrency control
+    url: https://docs.delta.io/latest/concurrency-control.html
+  - source: official documentation - Delta Lake versioning
+    url: https://docs.delta.io/latest/versioning.html
+
+tests:
+  fixtures:
+    - positive/delta-transaction-conflict
+    - negative/unrelated-python-error
+    - malformed/truncated-json

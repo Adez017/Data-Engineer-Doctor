@@ -1,0 +1,6 @@
+24/10/08 13:30:07 INFO SparkContext: Fetching shuffle blocks from exec7
+org.apache.spark.FetchFailedException: Failed to connect to exec7:7337
+    at org.apache.spark.network.client.TransportClientFactory.createClient(TransportClientFactory.java:341)
+    at org.apache.spark.shuffle.BlockStoreShuffleClient.$anonfun$fetchBlocks$1(BlockStoreShuffleClient.scala:108)
+24/10/08 13:30:07 WARN BlockStoreShuffleClient: Missing an output location for shuffle 3
+24/10/08 13:30:08 ERROR ShuffleBlockFetcherIterator: Failed to fetch shuffle blocks from exec7

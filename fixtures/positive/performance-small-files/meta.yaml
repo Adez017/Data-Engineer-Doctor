@@ -1,0 +1,11 @@
+name: performance-small-files
+kind: positive
+description: >-
+  Heuristic cost signal reported by Spark planning/profiling metadata
+  (JSON event) for performance small files.
+expected:
+  status: diagnosed
+  exit_code: 0
+  confidence_band: MEDIUM
+  diagnosis_ids:
+    - DEDOC-PERF-001

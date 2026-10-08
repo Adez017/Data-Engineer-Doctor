@@ -1,6 +1,26 @@
-"""Data Engineer Doctor (DEDoc) — evidence-driven diagnosis for data engineering failures."""
+"""Data Engineer Doctor (DEDoc) — evidence-driven diagnosis for data engineering failures.
 
-__all__ = ["__version__"]
+Public Python SDK. Everything in ``dedoc.*`` other than the names in
+``__all__`` is an internal implementation detail; the CLI is ``dedoc diagnose``.
+"""
+
+from __future__ import annotations
+
+from pathlib import Path
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from dedoc.models.diagnosis import Diagnosis
+    from dedoc.models.report import DiagnosisReport
+    from dedoc.parser.input_parser import InputFormat
+
+__all__ = [
+    "__version__",
+    "Diagnosis",
+    "DiagnosisReport",
+    "diagnose",
+    "list_diagnoses",
+]
 
 
 def _read_version() -> str:
@@ -13,3 +33,42 @@ def _read_version() -> str:
 
 
 __version__ = _read_version()
+
+
+def list_diagnoses(diagnoses_path: str | Path | None = None) -> list[Diagnosis]:
+    """Return all loaded diagnosis definitions, sorted by id (BUILD_PLAN.md §6)."""
+    from dedoc.diagnosis.loader import load_diagnoses
+
+    return list(load_diagnoses(diagnoses_path).values())
+
+
+def diagnose(
+    source: str | Path,
+    *,
+    diagnoses_path: str | Path | None = None,
+    input_format: InputFormat | None = None,
+) -> DiagnosisReport:
+    """Run the deterministic diagnosis pipeline on a failure log file.
+
+    Args:
+        source: path to a failure log (TXT, JSON, or JSONL).
+        diagnoses_path: optional override for the diagnoses directory.
+        input_format: optional ``InputFormat`` override (defaults to auto-detect).
+
+    Returns:
+        An evidence-backed ``DiagnosisReport`` (matches, score, confidence band).
+
+    Raises:
+        InputError: if the input file is missing or malformed.
+        DiagnosisLoadError: if diagnosis knowledge cannot be loaded.
+    """
+    from dedoc.core.pipeline import diagnose_file
+    from dedoc.parser.input_parser import InputFormat
+
+    if input_format is None:
+        input_format = InputFormat.AUTO
+    return diagnose_file(
+        Path(source),
+        diagnoses_path=diagnoses_path,
+        input_format=input_format,
+    )

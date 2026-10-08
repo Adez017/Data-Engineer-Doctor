@@ -1,0 +1,5 @@
+24/10/08 13:02:44 INFO DeltaLog: Optimistically committing MERGE into sales.targets
+org.apache.spark.sql.AnalysisException: [MERGE_CARDINALITY_VIOLATION] The ON search condition of the MERGE statement matched a single row from the target table with multiple rows of the source table. This could result in the target row being operated on more than once with an update or delete operation and is not allowed.
+    at org.apache.spark.sql.delta.commands.MergeIntoCommand.merge(MergeIntoCommand.scala:608)
+    at org.apache.spark.sql.delta.commands.MergeIntoCommand.run(MergeIntoCommand.scala:148)
+24/10/08 13:02:45 WARN DeltaLog: Aborting MERGE

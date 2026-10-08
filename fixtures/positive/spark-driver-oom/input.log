@@ -1,0 +1,8 @@
+24/10/08 13:14:02 INFO SparkContext: Starting job: collect at main.py:88
+pyspark.errors.exceptions.captured.OutOfMemoryError: Java heap space
+    at org.apache.spark.api.python.PythonRDD.collectAndServe(PythonRDD.scala:195)
+    at org.apache.spark.SparkContext.runJob(SparkContext.scala:2313)
+Driver stack trace:
+    at org.apache.spark.api.python.PythonRDD.collectAndServe(PythonRDD.scala:195)
+    at org.apache.spark.SparkContext.runJob(SparkContext.scala:2313)
+24/10/08 13:14:03 ERROR SparkContext: Job 4421 failed: driver out of memory while collecting results

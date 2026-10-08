@@ -1,0 +1,5 @@
+24/10/08 14:13:29 INFO SparkSession: INSERT INTO warehouse.web_logs PARTITION (year, month)
+org.apache.spark.sql.AnalysisException: [INVALID_PARTITION_COLUMN_DATA_TYPE] Cannot use string for partition column: 'src_filename'. Please use a long, numeric, date, timestamp, or boolean type.
+    at org.apache.spark.sql.execution.command.ParsePartitionUtil.validateTypes(ParsePartitionUtil.scala:118)
+    at org.apache.spark.sql.catalyst.analysis.CheckAnalysis.$anonfun$check$1(CheckAnalysis.scala:118)
+24/10/08 14:13:29 WARN SparkSQLCLIDriver: Statement aborted

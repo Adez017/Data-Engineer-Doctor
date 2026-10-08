@@ -1,0 +1,5 @@
+24/10/08 13:18:44 INFO SparkContext: Scheduler backend received executor losses
+org.apache.spark.ExecutorLostFailure: Executor 5 is gone due to heartbeat timeout.
+    at org.apache.spark.ExecutorAllocationManager.onExecutorLost(ExecutorAllocationManager.scala:344)
+    at org.apache.spark.scheduler.cluster.CoarseGrainedSchedulerBackend.removeExecutor(CoarseGrainedSchedulerBackend.scala:268)
+24/10/08 13:18:44 WARN TaskSetManager: Not scheduling stage 9 because executor 5 was lost

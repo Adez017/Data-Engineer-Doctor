@@ -1,0 +1,10 @@
+name: connectivity-auth-failure
+kind: positive
+description: >-
+  A Kerberos/authentication failure while connecting (GSS initiate failed).
+expected:
+  status: diagnosed
+  exit_code: 0
+  confidence_band: HIGH
+  diagnosis_ids:
+    - DEDOC-CONN-001

@@ -1,0 +1,63 @@
+id: DEDOC-SPARK-007
+name: Broadcast Failure
+category: spark.broadcast
+
+severity:
+  default: high
+
+platforms:
+  - spark
+  - databricks
+
+patterns:
+  exception_types:
+    - OutOfMemoryError
+    - BroadcastTimeoutException
+
+signals:
+  positive:
+    - broadcast_timeout
+    - broadcast_oom
+  negative:
+    - authentication_failure
+    - dns_failure
+
+hypotheses:
+  - broadcast_build_oom
+  - broadcast_timeout_exceeded
+  - oversized_broadcast_table
+
+recommendations:
+  immediate:
+    - >-
+      Check the size of the broadcast table; a large dimension table can
+      exceed driver or executor memory during broadcast build.
+    - >-
+      For timeouts, raise spark.sql.broadcastTimeout or investigate slow
+      executors on the receiving side.
+  recommended:
+    - >-
+      Prefer shuffle joins over broadcast joins when the build side exceeds
+      the autoBroadcastJoinThreshold.
+    - >-
+      Filter or pre-aggregate the dimension table before broadcasting.
+  prevention:
+    - >-
+      Keep spark.sql.autoBroadcastJoinThreshold conservative for known-large
+      tables.
+    - >-
+      Monitor broadcast sizes in the Spark SQL UI.
+
+references:
+  - source: official documentation - Spark performance tuning (broadcasting
+      tables)
+    url: https://spark.apache.org/docs/latest/tuning.html
+  - source: official documentation - Spark configuration
+      (spark.sql.broadcastTimeout)
+    url: https://spark.apache.org/docs/latest/configuration.html
+
+tests:
+  fixtures:
+    - positive/spark-broadcast-failure
+    - negative/unrelated-python-error
+    - malformed/truncated-json

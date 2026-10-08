@@ -1,0 +1,5 @@
+24/10/08 14:06:11 INFO SparkSession: Writing DataFrame to table warehouse.events
+org.apache.spark.sql.AnalysisException: [DELTA_FAILED_TO_MERGE_FIELDS] Failed to merge fields 'region' and 'region'. This is not a valid schema adjustment: the types 'integer' and 'string' are not compatible.
+    at org.apache.spark.sql.delta.schema.SchemaMergingUtils.mergeSchemas(SchemaMergingUtils.scala:52)
+    at org.apache.spark.sql.delta.commands.WriteIntoDelta.run(WriteIntoDelta.scala:92)
+24/10/08 14:06:11 WARN DeltaLog: Aborting transaction

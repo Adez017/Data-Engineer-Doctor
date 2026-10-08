@@ -1,0 +1,5 @@
+24/10/08 12:50:11 INFO SparkSession: Resolving nested field access
+org.apache.spark.sql.AnalysisException: [UNRESOLVED_FIELD] A field with name payment.card_number cannot be resolved with the struct-type column order. Did you mean one of the following? [payment_method].
+    at org.apache.spark.sql.catalyst.analysis.Analyzer$ResolveReferences.$anonfun$resolve$1(Analyzer.scala:137)
+    at org.apache.spark.sql.catalyst.analysis.CheckAnalysis.$anonfun$check$1(CheckAnalysis.scala:118)
+24/10/08 12:50:11 WARN SparkSQLCLIDriver: Query aborted

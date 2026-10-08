@@ -1,0 +1,60 @@
+id: DEDOC-DELTA-004
+name: Invalid Partition Column
+category: delta.invalid_partition
+
+severity:
+  default: medium
+
+platforms:
+  - spark
+  - databricks
+
+patterns:
+  exception_types:
+    - AnalysisException
+
+signals:
+  positive:
+    - invalid_partition
+  negative:
+    - table_or_view_not_found
+    - authentication_failure
+    - dns_failure
+    - executor_oom
+
+hypotheses:
+  - unsupported_partition_column_type
+  - nested_partition_column
+  - partition_column_not_in_table
+
+recommendations:
+  immediate:
+    - >-
+      Inspect the partition column in the error and compare it with the
+      table schema; partition columns must be sortable primitive types.
+    - >-
+      If the column is an unsupported type, cast it before using it as a
+      partition column.
+  recommended:
+    - >-
+      Nested struct fields cannot be partition columns; flatten the field
+      into a top-level column first.
+    - >-
+      Verify the partition column exists exactly once in the schema.
+  prevention:
+    - >-
+      Enforce allowed partition-column types at table creation time.
+    - >-
+      Document partition keys per table for data producers.
+
+references:
+  - source: official documentation - Spark SQL error conditions (INVALID_PARTITION_COLUMN_DATA_TYPE)
+    url: https://spark.apache.org/docs/latest/sql-error-conditions.html
+  - source: official documentation - Databricks Delta partitioned table limits
+    url: https://learn.microsoft.com/en-us/azure/databricks/delta/delta-batch
+
+tests:
+  fixtures:
+    - positive/delta-invalid-partition
+    - negative/unrelated-python-error
+    - malformed/truncated-json

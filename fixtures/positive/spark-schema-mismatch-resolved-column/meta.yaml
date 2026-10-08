@@ -6,5 +6,6 @@ description: >-
 expected:
   status: diagnosed
   exit_code: 0
+  confidence_band: HIGH
   diagnosis_ids:
     - DEDOC-SCHEMA-001

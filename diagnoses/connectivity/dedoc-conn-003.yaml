@@ -1,0 +1,57 @@
+id: DEDOC-CONN-003
+name: DNS Failure
+category: connectivity.dns_failure
+
+severity:
+  default: high
+
+platforms:
+  - spark
+  - databricks
+
+patterns:
+  exception_types:
+    - UnknownHostException
+
+signals:
+  positive:
+    - dns_failure
+  negative:
+    - authentication_failure
+    - executor_oom
+
+hypotheses:
+  - hostname_typo_or_renamed
+  - internal_dns_not_resolvable
+  - dns_provider_outage
+
+recommendations:
+  immediate:
+    - >-
+      Confirm the hostname is spelled correctly and resolves from the compute
+      environment (nslookup / getent from the same network).
+    - >-
+      If the hostname was renamed, update the job configuration.
+  recommended:
+    - >-
+      Check whether the DNS server (for example the private zone) is
+      reachable from the job VNet/VPC.
+    - >-
+      Verify hosts file overrides or search domains used by the job.
+  prevention:
+    - >-
+      Use service discovery instead of hard-coded hostnames where possible.
+    - >-
+      Add DNS resolution checks in pre-flight jobs.
+
+references:
+  - source: official documentation - Spark configuration (network settings)
+    url: https://spark.apache.org/docs/latest/configuration.html
+  - source: official documentation - Hadoop network configuration guide
+    url: https://hadoop.apache.org/docs/stable/hadoop-project-dist/hadoop-common/ClusterSetup.html
+
+tests:
+  fixtures:
+    - positive/connectivity-dns-failure
+    - negative/unrelated-python-error
+    - malformed/truncated-json

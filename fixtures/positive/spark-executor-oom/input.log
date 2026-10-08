@@ -1,0 +1,7 @@
+24/10/08 13:10:11 INFO SparkContext: Running Spark version 3.5.1
+24/10/08 13:10:12 INFO TaskSetManager: Starting task 42.0 in stage 7.0 (TID 210, exec5, partition 42, NODE_LOCAL, 12450333 bytes)
+java.lang.OutOfMemoryError: Java heap space
+    at java.util.Arrays.copyOf(Arrays.java:3512)
+    at org.apache.spark.util.collection.unsafe.sort.UnsafeExternalSorter.spillToDisk(UnsafeExternalSorter.java:658)
+    at org.apache.spark.util.collection.unsafe.sort.UnsafeExternalSorter.acquireNewPage(UnsafeExternalSorter.java:244)
+24/10/08 13:10:13 ERROR TaskSetManager: Task 42.0 in stage 7.0 failed with java.lang.OutOfMemoryError; aborting task set

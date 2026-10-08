@@ -1,0 +1,6 @@
+24/10/08 12:41:02 INFO SparkContext: Starting job: load_orders
+py4j.protocol.Py4JJavaError: An error occurred while calling o123.write.
+: org.apache.spark.sql.AnalysisException: [TOO_MANY_DATA_COLUMNS] too many data columns: Table columns: [order_id, customer_id]. Data columns: [order_id, customer_id, region].
+    at org.apache.spark.sql.execution.datasources.InsertIntoHadoopFsRelationCommand.run(InsertIntoHadoopFsRelationCommand.scala:120)
+    at org.apache.spark.sql.execution.command.InsertIntoDataSourceCommand.runCommand(datasourceCommand.scala:152)
+24/10/08 12:41:03 ERROR SparkContext: Error reporting submitJob to SparkListenerBus

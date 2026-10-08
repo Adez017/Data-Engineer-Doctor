@@ -1,0 +1,11 @@
+name: connectivity-endpoint-unavailable
+kind: positive
+description: >-
+  A JDBC endpoint rejects the connection because nothing is listening
+  (Connection refused).
+expected:
+  status: diagnosed
+  exit_code: 0
+  confidence_band: HIGH
+  diagnosis_ids:
+    - DEDOC-CONN-005

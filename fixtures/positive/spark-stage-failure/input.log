@@ -1,0 +1,5 @@
+24/10/08 13:38:52 INFO SparkContext: Job 4601 submitted
+org.apache.spark.SparkException: Job aborted due to stage failure: stage 21.0 cancelled because the stage failed
+    at org.apache.spark.scheduler.DAGScheduler.$anonfun$failJobAndIndependentStages$2(DAGScheduler.scala:1263)
+    at org.apache.spark.scheduler.DAGScheduler.abortStage(DAGScheduler.scala:1266)
+24/10/08 13:38:53 ERROR DAGScheduler: Job 4601 failed: org.apache.spark.SparkException: Job aborted due to stage failure

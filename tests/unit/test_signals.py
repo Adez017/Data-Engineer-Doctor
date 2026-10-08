@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from dedoc.analyzer.signals import (
-    SIGNAL_PATTERNS,
+    SIGNAL_REGISTRY,
     detect_platform,
     events_to_text,
     extract_exception_types,
@@ -62,7 +62,9 @@ def test_signal_table_or_view_not_found() -> None:
 
 def test_signal_authentication_failure() -> None:
     assert "authentication_failure" in extract_signals("Authentication failed for user alice")
-    assert "authentication_failure" in extract_signals("Permission denied: /warehouse")
+    assert "permission_denied" not in extract_signals("Authentication failed for user alice")
+    assert "permission_denied" in extract_signals("Permission denied: /warehouse")
+    assert "authentication_failure" not in extract_signals("Permission denied: /warehouse")
 
 
 def test_signal_dns_failure() -> None:
@@ -76,8 +78,23 @@ def test_signal_executor_oom() -> None:
 def test_signal_registry_names_are_valid() -> None:
     from dedoc.models.diagnosis import SIGNAL_NAME_PATTERN
 
-    for name in SIGNAL_PATTERNS:
+    for name in SIGNAL_REGISTRY:
         assert SIGNAL_NAME_PATTERN.match(name), name
+
+
+def test_signal_registry_exact_flags() -> None:
+    assert SIGNAL_REGISTRY["resolved_column_not_found"].exact is True
+    assert SIGNAL_REGISTRY["datatype_mismatch"].exact is True
+    assert SIGNAL_REGISTRY["table_or_view_not_found"].exact is True
+    assert SIGNAL_REGISTRY["dns_failure"].exact is True
+    assert SIGNAL_REGISTRY["executor_oom"].exact is True
+    assert SIGNAL_REGISTRY["authentication_failure"].exact is True
+    assert SIGNAL_REGISTRY["permission_denied"].exact is True
+    assert SIGNAL_REGISTRY["connection_timeout"].exact is True
+    assert SIGNAL_REGISTRY["driver_oom"].exact is False
+    assert SIGNAL_REGISTRY["data_skew"].exact is False
+    assert SIGNAL_REGISTRY["broadcast_size_exceeded"].exact is False
+    assert SIGNAL_REGISTRY["stacktrace_present"].exact is False
 
 
 def test_events_to_text() -> None:

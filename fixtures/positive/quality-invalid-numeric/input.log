@@ -1,0 +1,5 @@
+24/10/08 13:01:27 INFO SparkSQLCLIDriver: Running command: INSERT INTO billing.invoices
+org.apache.spark.sql.AnalysisException: [CAST_OVERFLOW] The value '999999999999999999999' of the type STRING cannot be cast to DECIMAL(10,2) due to an overflow. Use try_cast to tolerate overflow and return NULL instead.
+    at org.apache.spark.sql.catalyst.expressions.Cast.cast(Cast.scala:1000)
+    at org.apache.spark.sql.catalyst.analysis.CheckAnalysis.$anonfun$check$1(CheckAnalysis.scala:118)
+24/10/08 13:01:27 WARN SparkSQLCLIDriver: Query aborted

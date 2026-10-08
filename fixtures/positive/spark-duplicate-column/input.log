@@ -1,0 +1,5 @@
+24/10/08 12:44:10 INFO SparkSession: Created Spark session with appName join_orders
+org.apache.spark.sql.AnalysisException: [AMBIGUOUS_REFERENCE] Reference 'order_id' is ambiguous, could be: orders.order_id, customers.order_id.
+    at org.apache.spark.sql.catalyst.analysis.DisambiguateReferences$.$anonfun$resolve$1(DisambiguateReferences.scala:84)
+    at org.apache.spark.sql.catalyst.analysis.CheckAnalysis.$anonfun$check$1(CheckAnalysis.scala:118)
+24/10/08 12:44:10 WARN SparkSQLCLIDriver: Query aborted

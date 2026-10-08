@@ -1,0 +1,11 @@
+name: quality-invalid-numeric
+kind: positive
+description: >-
+  A numeric string overflows the target decimal type on insert
+  (CAST_OVERFLOW).
+expected:
+  status: diagnosed
+  exit_code: 0
+  confidence_band: HIGH
+  diagnosis_ids:
+    - DEDOC-QUALITY-004

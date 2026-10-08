@@ -1,0 +1,61 @@
+id: DEDOC-SPARK-002
+name: Driver Out of Memory
+category: spark.driver_oom
+
+severity:
+  default: critical
+
+platforms:
+  - spark
+  - databricks
+
+patterns:
+  exception_types:
+    - OutOfMemoryError
+
+signals:
+  positive:
+    - driver_oom
+  negative:
+    - authentication_failure
+    - dns_failure
+
+hypotheses:
+  - driver_memory_exhausted
+  - collect_to_driver
+  - broadcast_accumulator_growth
+
+recommendations:
+  immediate:
+    - >-
+      Check for collect(), toPandas(), or driver-side iteration over large
+      datasets and replace them with lazy DataFrame operations.
+    - >-
+      Increase spark.driver.memory only after confirming the driver is not
+      holding an unbounded result set.
+  recommended:
+    - >-
+      Review broadcast variables and accumulators for unbounded growth on the
+      driver.
+    - >-
+      Limit results returned to the driver (take, limit, or aggregated
+      summaries instead of full collect).
+  prevention:
+    - >-
+      Code-review rules that ban collect() on large DataFrames in production
+      jobs.
+    - >-
+      Monitor driver heap usage and set spark.driver.memoryOverhead
+      appropriately.
+
+references:
+  - source: official documentation - Spark configuration (spark.driver.memory)
+    url: https://spark.apache.org/docs/latest/configuration.html
+  - source: official documentation - Spark performance tuning
+    url: https://spark.apache.org/docs/latest/tuning.html
+
+tests:
+  fixtures:
+    - positive/spark-driver-oom
+    - negative/unrelated-python-error
+    - malformed/truncated-json

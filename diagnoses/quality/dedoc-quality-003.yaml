@@ -1,0 +1,60 @@
+id: DEDOC-QUALITY-003
+name: Invalid Date Value
+category: quality.invalid_date
+
+severity:
+  default: medium
+
+platforms:
+  - spark
+  - databricks
+
+patterns:
+  exception_types:
+    - AnalysisException
+
+signals:
+  positive:
+    - date_parse_failure
+  negative:
+    - authentication_failure
+    - dns_failure
+    - executor_oom
+
+hypotheses:
+  - malformed_date_string
+  - wrong_date_format
+  - locale_or_timezone_mismatch
+
+recommendations:
+  immediate:
+    - >-
+      Inspect the malformed value shown in the error and compare it with the
+      declared date format (for example yyyy-MM-dd).
+    - >-
+      If the value is legitimately invalid, quarantine those rows instead of
+      failing the batch.
+  recommended:
+    - >-
+      Use try_to_date / try_cast where partial data should tolerate bad rows.
+    - >-
+      Standardize date formats at ingestion (explicit format strings, not
+      inference).
+  prevention:
+    - >-
+      Validate date ranges in upstream data-quality checks.
+    - >-
+      Pin explicit formats in schema definitions for all date/timestamp
+      columns.
+
+references:
+  - source: official documentation - Spark SQL error conditions (CONVERSION_INVALID_INPUT)
+    url: https://spark.apache.org/docs/latest/sql-error-conditions.html
+  - source: official documentation - Spark SQL programming guide
+    url: https://spark.apache.org/docs/latest/sql-programming-guide.html
+
+tests:
+  fixtures:
+    - positive/quality-invalid-date
+    - negative/unrelated-python-error
+    - malformed/truncated-json

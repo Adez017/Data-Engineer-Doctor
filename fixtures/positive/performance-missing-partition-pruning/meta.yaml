@@ -1,0 +1,11 @@
+name: performance-missing-partition-pruning
+kind: positive
+description: >-
+  Heuristic cost signal reported by Spark planning/profiling metadata
+  (JSON event) for performance missing partition pruning.
+expected:
+  status: diagnosed
+  exit_code: 0
+  confidence_band: MEDIUM
+  diagnosis_ids:
+    - DEDOC-PERF-003

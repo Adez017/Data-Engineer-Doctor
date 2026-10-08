@@ -1,0 +1,5 @@
+24/10/08 14:21:05 INFO SparkContext: Connecting to kafka.cluster.internal:9092
+java.net.ConnectTimeoutException: connect timed out: host kafka.cluster.internal:9092
+    at org.apache.spark.network.client.TransportClientFactory.createClient(TransportClientFactory.java:341)
+    at org.apache.spark.network.client.TransportClientFactory.createClient(TransportClientFactory.java:197)
+24/10/08 14:21:05 ERROR SparkContext: Job 33 failed: failed to connect to kafka.cluster.internal

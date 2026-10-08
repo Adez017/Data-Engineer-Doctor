@@ -1,0 +1,11 @@
+name: delta-invalid-partition
+kind: positive
+description: >-
+  Partitioning by a column with an unsupported type fails
+  (INVALID_PARTITION_COLUMN_DATA_TYPE).
+expected:
+  status: diagnosed
+  exit_code: 0
+  confidence_band: HIGH
+  diagnosis_ids:
+    - DEDOC-DELTA-004

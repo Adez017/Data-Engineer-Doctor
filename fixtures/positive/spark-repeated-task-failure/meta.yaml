@@ -1,0 +1,11 @@
+name: spark-repeated-task-failure
+kind: positive
+description: >-
+  A task fails deterministically (NumberFormatException on N/A) and aborts
+  the job after 3 attempts.
+expected:
+  status: diagnosed
+  exit_code: 0
+  confidence_band: HIGH
+  diagnosis_ids:
+    - DEDOC-SPARK-004

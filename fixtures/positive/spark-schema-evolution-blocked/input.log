@@ -1,0 +1,12 @@
+24/10/08 12:47:33 INFO DeltaLog: Starting transaction with 1 updated files
+org.apache.spark.sql.AnalysisException: A schema mismatch detected when writing to the Delta table (Table ID: 5f2c9a1e-7f0b-4d3e-9c8a-1b2d3e4f5a6b). To enable schema migration using DataFrameWriter or DataStreamWriter, please set: '.option("mergeSchema", "true")'. For other operations, set the session configuration spark.databricks.delta.schema.autoMerge.enabled to "true".
+Table schema: root
+ -- order_id: long (nullable = true)
+ -- customer_id: string (nullable = true)
+Data schema: root
+ -- order_id: long (nullable = true)
+ -- customer_id: string (nullable = true)
+ -- region: string (nullable = true)
+    at org.apache.spark.sql.delta.commands.WriteIntoDelta.run(WriteIntoDelta.scala:92)
+    at org.apache.spark.sql.delta.commands.WriteIntoDelta.$anonfun$run$2(WriteIntoDelta.scala:70)
+24/10/08 12:47:34 WARN DeltaLog: Aborting transaction

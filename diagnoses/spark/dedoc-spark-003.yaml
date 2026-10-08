@@ -1,0 +1,62 @@
+id: DEDOC-SPARK-003
+name: Executor Lost
+category: spark.executor_lost
+
+severity:
+  default: high
+
+platforms:
+  - spark
+  - databricks
+
+patterns:
+  exception_types:
+    - ExecutorLostFailure
+
+signals:
+  positive:
+    - executor_lost
+  negative:
+    - executor_oom
+    - authentication_failure
+    - dns_failure
+
+hypotheses:
+  - executor_preempted_or_evicted
+  - executor_heartbeat_timeout
+  - node_failure
+
+recommendations:
+  immediate:
+    - >-
+      Check the Spark UI event log for the executor-loss reason (preemption,
+      eviction, heartbeat timeout, or node failure).
+    - >-
+      Re-run the job; transient node failures often succeed on retry.
+  recommended:
+    - >-
+      Increase spark.executor.heartbeatInterval and lower
+      spark.network.timeout if heartbeats are timing out.
+    - >-
+      On ephemeral clusters, check for spot/preemption events at the failure
+      time.
+  prevention:
+    - >-
+      Enable dynamic allocation with sufficient slack so lost executors can
+      be replaced.
+    - >-
+      Distribute critical state across executors instead of single-executor
+      caches.
+
+references:
+  - source: official documentation - Spark configuration (timeouts and
+      dynamic allocation)
+    url: https://spark.apache.org/docs/latest/configuration.html
+  - source: official documentation - Spark performance tuning
+    url: https://spark.apache.org/docs/latest/tuning.html
+
+tests:
+  fixtures:
+    - positive/spark-executor-lost
+    - negative/unrelated-python-error
+    - malformed/truncated-json

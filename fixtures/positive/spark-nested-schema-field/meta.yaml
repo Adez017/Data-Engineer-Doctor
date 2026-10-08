@@ -1,0 +1,11 @@
+name: spark-nested-schema-field
+kind: positive
+description: >-
+  A nested struct field reference (payment.card_number) cannot be resolved
+  against the struct-type column (UNRESOLVED_FIELD).
+expected:
+  status: diagnosed
+  exit_code: 0
+  confidence_band: HIGH
+  diagnosis_ids:
+    - DEDOC-SCHEMA-006

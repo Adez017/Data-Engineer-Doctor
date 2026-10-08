@@ -1,0 +1,64 @@
+id: DEDOC-SPARK-008
+name: Stage Failure
+category: spark.stage_failure
+
+severity:
+  default: high
+
+platforms:
+  - spark
+  - databricks
+
+patterns:
+  exception_types:
+    - SparkException
+
+signals:
+  positive:
+    - stage_failure
+  negative:
+    - task_failure_repeated
+    - executor_lost
+    - executor_oom
+    - broadcast_oom
+    - shuffle_fetch_failed
+    - authentication_failure
+    - dns_failure
+
+hypotheses:
+  - task_failure_caused_job_abort
+  - resource_exhaustion
+  - configuration_error
+
+recommendations:
+  immediate:
+    - >-
+      Open the Spark UI (or event log) for the failed job and identify the
+      first failed task; its exception is the actionable root cause.
+    - >-
+      Read the executor and driver logs for the failing stage attempt.
+  recommended:
+    - >-
+      Correlate with cluster events (node loss, preemption, throttling) at
+      the failure timestamp.
+    - >-
+      Re-run once to distinguish transient from deterministic failures.
+  prevention:
+    - >-
+      Capture Spark event logs for every scheduled job so post-mortems are
+      possible.
+    - >-
+      Alert on stage failure rate and task retry counts.
+
+references:
+  - source: official documentation - Spark programming guide (monitoring and
+      event logs)
+    url: https://spark.apache.org/docs/latest/monitoring.html
+  - source: official documentation - Spark performance tuning
+    url: https://spark.apache.org/docs/latest/tuning.html
+
+tests:
+  fixtures:
+    - positive/spark-stage-failure
+    - negative/unrelated-python-error
+    - malformed/truncated-json

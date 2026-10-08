@@ -1,0 +1,66 @@
+id: DEDOC-SCHEMA-005
+name: Schema Evolution Failure
+category: schema.evolution_failure
+
+severity:
+  default: high
+
+platforms:
+  - spark
+  - databricks
+
+patterns:
+  exception_types:
+    - AnalysisException
+
+signals:
+  positive:
+    - schema_evolution_blocked
+  negative:
+    - table_or_view_not_found
+    - resolved_column_not_found
+    - authentication_failure
+    - executor_oom
+
+hypotheses:
+  - schema_enforcement_rejected_write
+  - merge_schema_not_enabled
+  - upstream_added_column
+
+recommendations:
+  immediate:
+    - >-
+      If the new column is expected, enable schema evolution for the write:
+      .option("mergeSchema", "true") or set
+      spark.databricks.delta.schema.autoMerge.enabled=true.
+    - >-
+      If the new column is not expected, project the target schema explicitly
+      before writing.
+  recommended:
+    - >-
+      Compare table schema and data schema (shown in the error) and decide
+      which side is wrong before rerunning the job.
+    - >-
+      Review whether a scheduled upstream schema change should be accepted
+      or rolled back.
+  prevention:
+    - >-
+      Version schemas explicitly and gate producer changes behind contract
+      tests.
+    - >-
+      Decide per table whether schema evolution is allowed and encode that in
+      the write configuration.
+
+references:
+  - source: official documentation - Delta schema enforcement (Databricks KB)
+    url: https://kb.databricks.com/delta/analysisexception-error-due-to-a-schema-mismatch
+  - source: official documentation - Delta Lake schema evolution (Microsoft Fabric)
+    url: https://learn.microsoft.com/en-us/fabric/data-engineering/delta-lake-schema-evolution
+  - source: official documentation - Spark SQL error conditions
+    url: https://spark.apache.org/docs/latest/sql-error-conditions.html
+
+tests:
+  fixtures:
+    - positive/spark-schema-evolution-blocked
+    - negative/unrelated-python-error
+    - malformed/truncated-json

@@ -1,0 +1,60 @@
+id: DEDOC-QUALITY-004
+name: Invalid Numeric Value
+category: quality.invalid_numeric
+
+severity:
+  default: medium
+
+platforms:
+  - spark
+  - databricks
+
+patterns:
+  exception_types:
+    - AnalysisException
+
+signals:
+  positive:
+    - invalid_numeric_value
+  negative:
+    - authentication_failure
+    - dns_failure
+    - executor_oom
+
+hypotheses:
+  - malformed_numeric_string
+  - precision_or_scale_overflow
+  - non_numeric_token_in_numeric_column
+
+recommendations:
+  immediate:
+    - >-
+      Inspect the offending value and the target type shown in the error; fix
+      the source value or widen the target type.
+    - >-
+      For overflow, widen precision/scale (for example decimal(18,2)) instead
+      of truncating.
+  recommended:
+    - >-
+      Use try_cast where bad rows should be quarantined rather than fail the
+      batch.
+    - >-
+      Check whether a producer change (for example cents vs. dollars)
+      caused the range shift.
+  prevention:
+    - >-
+      Add range and format data-quality checks upstream of typed sinks.
+    - >-
+      Choose numeric types with headroom for expected growth.
+
+references:
+  - source: official documentation - Spark SQL error conditions (CAST_INVALID_INPUT)
+    url: https://spark.apache.org/docs/latest/sql-error-conditions.html
+  - source: official documentation - Spark SQL programming guide
+    url: https://spark.apache.org/docs/latest/sql-programming-guide.html
+
+tests:
+  fixtures:
+    - positive/quality-invalid-numeric
+    - negative/unrelated-python-error
+    - malformed/truncated-json

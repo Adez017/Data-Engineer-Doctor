@@ -63,6 +63,14 @@ def test_all_fixtures_via_cli(cli: CliRunner, fixtures_dir: Path) -> None:
         matched_ids = [m["id"] for m in payload["matches"]]
         if matched_ids != expected["diagnosis_ids"]:
             problems.append(f"{label}: matches {matched_ids} != {expected['diagnosis_ids']}")
+        band = expected.get("confidence_band")
+        if band and payload.get("top_confidence_band") != band:
+            problems.append(
+                f"{label}: top_confidence_band {payload.get('top_confidence_band')!r} != {band!r}"
+            )
+        for match in payload["matches"]:
+            if match["score"] < 40:
+                problems.append(f"{label}: match {match['id']} score {match['score']} < 40")
     assert not problems, "\n".join(problems)
 
 
@@ -75,7 +83,7 @@ def test_markdown_output(cli: CliRunner, fixtures_dir: Path) -> None:
 
 
 def test_text_output(cli: CliRunner, fixtures_dir: Path) -> None:
-    input_file = fixtures_dir / "negative" / "table-not-found" / "input.log"
+    input_file = fixtures_dir / "negative" / "unrelated-python-error" / "input.log"
     result = cli.invoke(app, ["diagnose", str(input_file)])
     assert result.exit_code == 0
     assert "insufficient_evidence" in result.output
@@ -84,10 +92,33 @@ def test_text_output(cli: CliRunner, fixtures_dir: Path) -> None:
 def test_custom_diagnoses_path(cli: CliRunner, fixtures_dir: Path, tmp_path: Path) -> None:
     empty = tmp_path / "empty-diagnoses"
     empty.mkdir()
-    input_file = fixtures_dir / "negative" / "table-not-found" / "input.log"
+    input_file = fixtures_dir / "negative" / "unrelated-python-error" / "input.log"
     result = cli.invoke(
         app,
         ["diagnose", str(input_file), "--diagnoses-path", str(empty), "--format", "json"],
     )
     assert result.exit_code == 1
     assert "no diagnosis YAML files" in all_output(result)
+
+
+def test_list_diagnoses_text(cli: CliRunner) -> None:
+    result = cli.invoke(app, ["list-diagnoses"])
+    assert result.exit_code == 0
+    assert "DEDOC-SCHEMA-001" in result.output
+    assert "Missing Column" in result.output
+
+
+def test_list_diagnoses_json(cli: CliRunner) -> None:
+    result = cli.invoke(app, ["list-diagnoses", "--format", "json"])
+    assert result.exit_code == 0
+    rows = json.loads(result.output)
+    assert len(rows) == 33
+    assert rows[0]["id"] == "DEDOC-CONN-001"
+    assert {row["category"].split(".")[0] for row in rows} == {
+        "schema",
+        "quality",
+        "spark",
+        "delta",
+        "connectivity",
+        "performance",
+    }

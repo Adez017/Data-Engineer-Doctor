@@ -1,0 +1,11 @@
+name: spark-shuffle-fetch-failure
+kind: positive
+description: >-
+  A reduce task cannot fetch shuffle blocks from another executor
+  (FetchFailedException / missing shuffle output location).
+expected:
+  status: diagnosed
+  exit_code: 0
+  confidence_band: HIGH
+  diagnosis_ids:
+    - DEDOC-SPARK-006

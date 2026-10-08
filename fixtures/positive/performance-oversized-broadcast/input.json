@@ -1,0 +1,1 @@
+{"timestamp": "2024-10-08T14:37:03Z", "platform": "spark", "service": "AdaptiveSparkPlan", "stage": "4", "severity": "WARN", "error_message": "Oversized broadcast: join on dimension table dim_customer materializes a broadcast of 2.8 GB, exceeding autoBroadcastJoinThreshold (10 MB)."}

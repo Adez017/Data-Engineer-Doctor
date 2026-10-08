@@ -1,0 +1,60 @@
+id: DEDOC-CONN-001
+name: Authentication Failure
+category: connectivity.authentication
+
+severity:
+  default: high
+
+platforms:
+  - spark
+  - databricks
+
+patterns:
+  exception_types:
+    - SaslException
+
+signals:
+  positive:
+    - authentication_failure
+  negative:
+    - table_or_view_not_found
+    - dns_failure
+    - executor_oom
+
+hypotheses:
+  - expired_or_invalid_credentials
+  - kerberos_ticket_issue
+  - missing_or_rotated_secret
+
+recommendations:
+  immediate:
+    - >-
+      Check the credentials referenced by the job (service account, keytab,
+      token, or secret) and confirm they are still valid and not rotated.
+    - >-
+      For Kerberos, verify the keytab exists and the principal has not been
+      renamed or revoked.
+  recommended:
+    - >-
+      Check whether the secret store value changed recently (secret manager
+      rotation) without the job being updated.
+    - >-
+      Confirm clocks are synchronized; Kerberos authentication fails on clock
+      skew.
+  prevention:
+    - >-
+      Automate credential rotation with validation before rollout.
+    - >-
+      Add pre-flight auth checks to jobs that connect to external systems.
+
+references:
+  - source: official documentation - Hadoop security authentication
+    url: https://hadoop.apache.org/docs/stable/hadoop-auth/index.html
+  - source: official documentation - Spark configuration (Hadoop auth settings)
+    url: https://spark.apache.org/docs/latest/configuration.html
+
+tests:
+  fixtures:
+    - positive/connectivity-auth-failure
+    - negative/unrelated-python-error
+    - malformed/truncated-json

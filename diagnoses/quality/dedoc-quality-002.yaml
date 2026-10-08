@@ -1,0 +1,58 @@
+id: DEDOC-QUALITY-002
+name: Duplicate Keys
+category: quality.duplicates
+
+severity:
+  default: high
+
+platforms:
+  - spark
+  - databricks
+
+patterns:
+  exception_types:
+    - AnalysisException
+
+signals:
+  positive:
+    - duplicate_keys
+  negative:
+    - authentication_failure
+    - dns_failure
+    - executor_oom
+
+hypotheses:
+  - duplicate_source_rows
+  - repeated_ingestion
+  - join_caused_row_multiplication
+
+recommendations:
+  immediate:
+    - >-
+      Confirm whether the duplicate keys are genuine upstream duplicates or a
+      rerun of the same batch.
+    - >-
+      For reruns, make the write idempotent (deduplicate by key or use
+      MERGE/replace semantics).
+  recommended:
+    - >-
+      Check joins for one-to-many fan-out before the failing write.
+    - >-
+      Inspect the ingestion watermark to rule out overlapping windows.
+  prevention:
+    - >-
+      Enforce unique constraints or use MERGE with deterministic keys.
+    - >-
+      Add a duplicate-rate data-quality check that quarantines bad batches.
+
+references:
+  - source: official documentation - Spark SQL error conditions (DUPLICATE_KEY)
+    url: https://spark.apache.org/docs/latest/sql-error-conditions.html
+  - source: official documentation - Delta Lake constraints
+    url: https://docs.delta.io/delta-constraints.html
+
+tests:
+  fixtures:
+    - positive/quality-duplicate-keys
+    - negative/unrelated-python-error
+    - malformed/truncated-json

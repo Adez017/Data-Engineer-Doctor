@@ -1,0 +1,11 @@
+name: spark-driver-oom
+kind: positive
+description: >-
+  Driver dies with OutOfMemoryError while collecting results to the driver
+  (collectAndServe).
+expected:
+  status: diagnosed
+  exit_code: 0
+  confidence_band: MEDIUM
+  diagnosis_ids:
+    - DEDOC-SPARK-002

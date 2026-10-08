@@ -1,0 +1,5 @@
+24/10/08 12:58:15 INFO SparkSQLCLIDriver: Running command: INSERT INTO events
+org.apache.spark.sql.AnalysisException: [CAST_INVALID_INPUT] The value '2024-13-45' of the type STRING cannot be cast to DATE because it is malformed. Correct the value as per the syntax, or change its target type. Use try_cast to tolerate malformed input and return NULL instead.
+    at org.apache.spark.sql.catalyst.expressions.Cast.cast(Cast.scala:1000)
+    at org.apache.spark.sql.catalyst.analysis.CheckAnalysis.$anonfun$check$1(CheckAnalysis.scala:118)
+24/10/08 12:58:15 WARN SparkSQLCLIDriver: Query aborted

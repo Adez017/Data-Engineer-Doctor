@@ -15,7 +15,13 @@ def test_json_round_trip(fixtures_dir: Path) -> None:
     report = diagnose_file(fixture)
     parsed = json.loads(format_json(report))
     assert parsed["status"] == "diagnosed"
+    assert parsed["scoring_model_version"] == "1"
+    assert parsed["report_schema_version"] == "2"
     assert parsed["matches"][0]["id"] == "DEDOC-SCHEMA-001"
+    assert parsed["matches"][0]["confidence_band"] == "HIGH"
+    assert 40 <= parsed["matches"][0]["score"] <= 100
+    assert parsed["matches"][0]["evidence"]
+    assert parsed["top_confidence_band"] == "HIGH"
     DiagnosisReport.model_validate(parsed)
 
 
@@ -25,6 +31,8 @@ def test_markdown_contains_diagnosis(fixtures_dir: Path) -> None:
     assert "# Data Engineer Doctor Report" in markdown
     assert "DEDOC-SCHEMA-001" in markdown
     assert "Matched signals" in markdown
+    assert "Evidence:" in markdown
+    assert "Confidence:" in markdown
     assert "References" in markdown
 
 

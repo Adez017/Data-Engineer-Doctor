@@ -1,0 +1,61 @@
+id: DEDOC-SPARK-001
+name: Executor Out of Memory
+category: spark.executor_oom
+
+severity:
+  default: critical
+
+platforms:
+  - spark
+  - databricks
+
+patterns:
+  exception_types:
+    - OutOfMemoryError
+
+signals:
+  positive:
+    - executor_oom
+  negative:
+    - driver_oom
+    - broadcast_oom
+    - authentication_failure
+    - dns_failure
+
+hypotheses:
+  - executor_memory_exhausted
+  - data_skew_caused_oom
+  - oversized_partition
+
+recommendations:
+  immediate:
+    - >-
+      Identify the failing task and stage; a single large partition or a skew
+      often causes the failure.
+    - >-
+      Retry with more executor memory (spark.executor.memory and
+      spark.executor.memoryOverhead) after checking whether data volume grew.
+  recommended:
+    - >-
+      Increase parallelism (spark.sql.shuffle.partitions) so tasks process
+      less data per partition.
+    - >-
+      Look for collection operators (collect, toPandas, broadcast joins) that
+      materialize large data inside a task.
+  prevention:
+    - >-
+      Enable and review AQE skew join optimization for joins on skewed keys.
+    - >-
+      Set partition-size targets and monitor task input sizes in the Spark UI.
+
+references:
+  - source: official documentation - Spark performance tuning
+    url: https://spark.apache.org/docs/latest/tuning.html
+  - source: official documentation - Spark configuration (memory settings)
+    url: https://spark.apache.org/docs/latest/configuration.html
+
+tests:
+  fixtures:
+    - positive/spark-executor-oom
+    - negative/unrelated-python-error
+    - malformed/truncated-json

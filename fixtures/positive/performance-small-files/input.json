@@ -1,0 +1,1 @@
+{"timestamp": "2024-10-08T14:37:00Z", "platform": "spark", "service": "DeltaFileIndex", "stage": "3", "severity": "WARN", "error_message": "Too many small files detected: partition dt=2024-10-08 has 4120 files averaging 4 KB; consider OPTIMIZE and auto compaction."}

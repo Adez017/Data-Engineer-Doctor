@@ -1,0 +1,5 @@
+24/10/08 12:53:40 INFO WriteCommand: Executing INSERT INTO default.customers
+org.apache.spark.sql.delta.InvariantViolationException: [NOT_NULL_CONSTRAINT_VIOLATION] Assigning a NULL is not allowed here. The failing column is customers.customer_id.
+    at org.apache.spark.sql.delta.constraints.InvariantChecker.$anonfun$check$1(InvariantChecker.scala:74)
+    at org.apache.spark.sql.catalyst.analysis.CheckAnalysis.$anonfun$check$1(CheckAnalysis.scala:118)
+24/10/08 12:53:41 WARN WriteCommand: Transaction aborted

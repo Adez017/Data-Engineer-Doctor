@@ -1,0 +1,62 @@
+id: DEDOC-DELTA-001
+name: Concurrent Modification
+category: delta.concurrent_modification
+
+severity:
+  default: high
+
+platforms:
+  - spark
+  - databricks
+
+patterns:
+  exception_types:
+    - ConcurrentAppendException
+
+signals:
+  positive:
+    - delta_concurrent_conflict
+  negative:
+    - authentication_failure
+    - dns_failure
+    - delta_metadata_changed
+    - delta_protocol_changed
+    - delta_concurrent_transaction
+
+hypotheses:
+  - concurrent_writer_on_same_table
+  - overlapping_stream_or_batch
+  - unauthorized_parallel_job
+
+recommendations:
+  immediate:
+    - >-
+      Check for other jobs writing to the same Delta table at the same time
+      (job history, stream queries, ad-hoc writes).
+    - >-
+      Delta uses optimistic concurrency; the transaction can usually be
+      retried once the competing writer finishes.
+  recommended:
+    - >-
+      Coordinate writers via a single job or use managed Delta (Delta
+      Sharing / managed tables) that serializes commits.
+    - >-
+      Reduce write frequency or partition collision by writing to separate
+      partition folders.
+  prevention:
+    - >-
+      Prevent overlapping scheduled writes to the same table across teams.
+    - >-
+      Monitor the Delta transaction log for repeated concurrent commits.
+
+references:
+  - source: official documentation - Delta Lake concurrency control
+    url: https://docs.delta.io/latest/concurrency-control.html
+  - source: official documentation - Delta Lake table protocol
+    url: https://docs.delta.io/latest/versioning.html
+
+tests:
+  fixtures:
+    - positive/delta-concurrent-modification
+    - negative/unrelated-python-error
+    - malformed/truncated-json

@@ -1,0 +1,26 @@
+site_name: Data Engineer Doctor (DEDoc)
+site_description: Open-source, evidence-driven diagnosis for modern data engineering failures
+site_author: Data Engineer Doctor contributors
+repo_name: data-engineer-doctor
+copyright: Copyright &copy; Data Engineer Doctor contributors
+
+theme:
+  name: readthedocs
+  highlightjs: true
+
+markdown_extensions:
+  - tables
+  - admonition
+  - fenced_code
+  - toc:
+      permalink: true
+
+nav:
+  - Home: index.md
+  - Usage: usage.md
+  - Diagnosis reference: diagnosis-reference.md
+  - Python SDK: sdk.md
+  - Contributing: contributing.md
+  - Security: security.md
+
+strict: true

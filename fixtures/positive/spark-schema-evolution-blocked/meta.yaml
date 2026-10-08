@@ -1,0 +1,11 @@
+name: spark-schema-evolution-blocked
+kind: positive
+description: >-
+  A Delta write is rejected by schema enforcement because the data schema
+  contains a new column and mergeSchema is not enabled.
+expected:
+  status: diagnosed
+  exit_code: 0
+  confidence_band: HIGH
+  diagnosis_ids:
+    - DEDOC-SCHEMA-005

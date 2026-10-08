@@ -49,4 +49,8 @@ def test_diagnosis_ids_are_stable(fixtures_dir: Path) -> None:
 
     diagnoses = load_diagnoses()
     assert "DEDOC-SCHEMA-001" in diagnoses
-    assert diagnoses["DEDOC-SCHEMA-001"].name == "Spark Schema Mismatch"
+    assert diagnoses["DEDOC-SCHEMA-001"].name == "Missing Column"
+    assert "DEDOC-SCHEMA-002" in diagnoses
+    assert diagnoses["DEDOC-SCHEMA-002"].name == "Data Type Mismatch"
+    assert "DEDOC-QUALITY-001" in diagnoses
+    assert len(diagnoses) == 33

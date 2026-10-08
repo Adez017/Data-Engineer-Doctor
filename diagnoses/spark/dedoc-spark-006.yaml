@@ -1,0 +1,63 @@
+id: DEDOC-SPARK-006
+name: Shuffle Fetch Failure
+category: spark.shuffle
+
+severity:
+  default: high
+
+platforms:
+  - spark
+  - databricks
+
+patterns:
+  exception_types:
+    - FetchFailedException
+
+signals:
+  positive:
+    - shuffle_fetch_failed
+  negative:
+    - authentication_failure
+    - dns_failure
+
+hypotheses:
+  - remote_block_lost
+  - executor_restarted_during_shuffle
+  - network_or_disk_failure
+
+recommendations:
+  immediate:
+    - >-
+      Check whether an executor was lost around the same time; shuffle map
+      output disappears with it.
+    - >-
+      Re-run the stage; transient fetch failures often succeed on retry.
+    - >-
+      Inspect disk health and free space on executor nodes.
+  recommended:
+    - >-
+      Increase spark.network.timeout and review
+      spark.shuffle.io.maxRetries / spark.shuffle.io.retryWait for slow
+      networks.
+    - >-
+      Enable external shuffle spill monitoring to detect disk pressure.
+  prevention:
+    - >-
+      Keep executors stable during jobs (avoid aggressive dynamic-allocation
+      shrinkage mid-shuffle).
+    - >-
+      Monitor shuffle write sizes and plan capacity accordingly.
+
+references:
+  - source: official documentation - Spark performance tuning (shuffle
+      behavior)
+    url: https://spark.apache.org/docs/latest/tuning.html
+  - source: official documentation - Spark configuration (shuffle and
+      network settings)
+    url: https://spark.apache.org/docs/latest/configuration.html
+
+tests:
+  fixtures:
+    - positive/spark-shuffle-fetch-failure
+    - negative/unrelated-python-error
+    - malformed/truncated-json

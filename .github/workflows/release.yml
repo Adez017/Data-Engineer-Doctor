@@ -1,0 +1,50 @@
+name: release
+
+# PREPARE-ONLY release workflow.
+#
+# Pushing a tag like v0.1.0 verifies and builds the release artifacts and
+# creates a DRAFT GitHub Release. It does NOT publish anything to PyPI:
+# there are no credentials or publish steps wired up in this repository.
+# Publishing is intentionally a manual, future decision (BUILD_PLAN.md §21).
+
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  prepare:
+    name: prepare release
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+        with:
+          python-version: "3.12"
+          enable-cache: true
+      - name: Setup environment
+        run: make setup
+        env:
+          UV_PYTHON: "3.12"
+      - name: Verify (authoritative pipeline)
+        run: make verify
+      - name: Build package artifacts
+        run: python -m build
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/
+      - name: Create draft release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "$GITHUB_REF_NAME" \
+            dist/*.tar.gz dist/*.whl \
+            --draft \
+            --title "$GITHUB_REF_NAME" \
+            --notes "See CHANGELOG.md for this release. Draft created by the prepare-only release workflow — publishing is not enabled."
+
+# NOTE: a real publish step (e.g. `twine upload`) is intentionally absent.

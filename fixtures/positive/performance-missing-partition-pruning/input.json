@@ -1,0 +1,1 @@
+{"timestamp": "2024-10-08T14:37:02Z", "platform": "spark", "service": "SparkPlan", "stage": "2", "severity": "WARN", "error_message": "Missing partition pruning: full table scan detected on table warehouse.events; predicate on partition column dt was not pushed down."}

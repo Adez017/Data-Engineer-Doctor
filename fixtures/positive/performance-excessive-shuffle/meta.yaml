@@ -1,0 +1,11 @@
+name: performance-excessive-shuffle
+kind: positive
+description: >-
+  Heuristic cost signal reported by Spark planning/profiling metadata
+  (JSON event) for performance excessive shuffle.
+expected:
+  status: diagnosed
+  exit_code: 0
+  confidence_band: MEDIUM
+  diagnosis_ids:
+    - DEDOC-PERF-002

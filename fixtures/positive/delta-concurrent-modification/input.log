@@ -1,0 +1,5 @@
+24/10/08 14:02:40 INFO SparkContext: Committing write to warehouse/sales/_delta_log
+org.apache.spark.sql.delta.ConcurrentAppendException: Concurrent append detected on target table default.sales. This transaction could not be committed. Please retry the operation.
+    at org.apache.spark.sql.delta.commands.WriteIntoDelta.$anonfun$logAndTransaction$1(WriteIntoDelta.scala:103)
+    at org.apache.spark.sql.delta.DeltaLog.tryCommit(DeltaLog.scala:240)
+24/10/08 14:02:41 WARN DeltaLog: Transaction failed with ConcurrentAppendException; a concurrent writer committed first
