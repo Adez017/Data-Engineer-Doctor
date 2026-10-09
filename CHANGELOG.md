@@ -14,6 +14,11 @@ The format is adapted from [Keep a Changelog](https://keepachangelog.com/).
   actions for the top candidate, with compact one-liners for the alternatives.
 - **MkDocs site on Material for MkDocs**: modern navigation tabs, instant search
   with highlighting, code-copy buttons, and a light/dark theme toggle.
+- **n8n-inspired docs theme**: Inter + IBM Plex Mono typography, orange-red
+  accent, dark rounded code blocks, a launcher-style card grid on the homepage,
+  and a creator attribution block in the footer and homepage.
+- **GitHub Pages hosting**: a `docs` workflow builds the strict MkDocs site and
+  deploys it to https://Adez017.github.io/Data-Engineer-Doctor/.
 - **Contextual evidence excerpts**: each excerpt shows the matched line plus one
   line of surrounding context (redacted, clamped, labeled `line A-B`).
 - **Per-evidence excerpts**: signature evidence cites the signal line and

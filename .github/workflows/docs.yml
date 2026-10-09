@@ -1,0 +1,56 @@
+name: docs
+
+# Builds the MkDocs site (Material theme) with the authoritative pipeline and
+# deploys it to GitHub Pages from a workflow. `configure-pages` with
+# `enablement: true` auto-enables Pages (source: GitHub Actions) on the first run.
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    name: deploy docs
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/setup-uv@v5
+        with:
+          python-version: "3.11"
+          enable-cache: true
+
+      - name: Setup environment
+        run: make setup
+        env:
+          UV_PYTHON: "3.11"
+
+      - name: Build documentation (strict)
+        run: make docs
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+        with:
+          enablement: true
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+      - name: Deploy to Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
