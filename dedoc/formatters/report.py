@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 
+from dedoc.agents.models import InvestigationRecord
 from dedoc.evidence.models import ConfidenceBand
 from dedoc.models.report import DiagnosisReport, MatchedDiagnosis
 
@@ -77,6 +78,47 @@ def _recommendation_lines(match: MatchedDiagnosis, style: str) -> list[str]:
     return lines
 
 
+def _investigation_markdown(record: InvestigationRecord) -> list[str]:
+    lines = [
+        "",
+        "## Investigation",
+        "",
+        f"- **Status:** {record.status.value}",
+        f"- **Iterations:** {record.iterations} (budget {record.max_iterations})",
+        f"- **Tool calls:** {record.tool_calls} (budget {record.max_tool_calls})",
+        f"- **Reason:** {record.reason}",
+    ]
+    for finding in record.findings:
+        lines.append(f"- **{finding.kind.value} finding** ({finding.tool}): {finding.description}")
+    for contradiction in record.contradictions:
+        lines.append(f"- **Contradiction:** {contradiction.description}")
+    if record.calls:
+        lines.append("*Tool calls:*")
+        for call in record.calls:
+            lines.append(f"- `{call.tool}` -> `{call.status.value}`: {call.summary}")
+    lines.append("")
+    return lines
+
+
+def _investigation_text(record: InvestigationRecord) -> list[str]:
+    lines = [
+        "",
+        f"Investigation: {record.status.value}",
+        f"  Iterations: {record.iterations} (budget {record.max_iterations})"
+        f" | Tool calls: {record.tool_calls} (budget {record.max_tool_calls})",
+        f"  Reason: {record.reason}",
+    ]
+    for finding in record.findings:
+        lines.append(f"  [finding: {finding.kind.value}] ({finding.tool}) {finding.description}")
+    for contradiction in record.contradictions:
+        lines.append(f"  [contradiction] {contradiction.description}")
+    if record.calls:
+        lines.append("  Tool calls:")
+        for call in record.calls:
+            lines.append(f"    - {call.tool}: {call.status.value} — {call.summary}")
+    return lines
+
+
 def format_markdown(report: DiagnosisReport) -> str:
     lines = [
         "# Data Engineer Doctor Report",
@@ -110,6 +152,8 @@ def format_markdown(report: DiagnosisReport) -> str:
             lines.append("**References**")
             lines.extend(f"- [{ref.source}]({ref.url})" for ref in match.references)
             lines.append("")
+    if report.investigation is not None:
+        lines += _investigation_markdown(report.investigation)
     return "\n".join(lines).rstrip()
 
 
@@ -165,6 +209,8 @@ def format_text(report: DiagnosisReport) -> str:
             lines.append(
                 f"    - {match.id} {match.name} — {match.confidence_band.value} ({match.score}/100)"
             )
+    if report.investigation is not None:
+        lines += _investigation_text(report.investigation)
     return "\n".join(lines).rstrip()
 
 

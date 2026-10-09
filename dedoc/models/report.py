@@ -7,6 +7,7 @@ from enum import StrEnum
 
 from pydantic import BaseModel, Field
 
+from dedoc.agents.models import InvestigationRecord
 from dedoc.evidence.models import SCORING_MODEL_VERSION, ConfidenceBand, Evidence
 from dedoc.models.diagnosis import (
     DiagnosisSeverity,
@@ -42,7 +43,7 @@ class DiagnosisReport(BaseModel):
     """Structured result of one diagnosis run."""
 
     dedoc_version: str
-    report_schema_version: str = "2"
+    report_schema_version: str = "3"
     scoring_model_version: str = SCORING_MODEL_VERSION
     generated_at: datetime = Field(default_factory=lambda: datetime.now(UTC))
     input_source: str
@@ -53,3 +54,4 @@ class DiagnosisReport(BaseModel):
     error_types: list[str] = Field(default_factory=list)
     matches: list[MatchedDiagnosis] = Field(default_factory=list)
     message: str = ""
+    investigation: InvestigationRecord | None = None

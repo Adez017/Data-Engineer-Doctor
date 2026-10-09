@@ -17,7 +17,7 @@ def test_json_round_trip(fixtures_dir: Path) -> None:
     parsed = json.loads(format_json(report))
     assert parsed["status"] == "diagnosed"
     assert parsed["scoring_model_version"] == "1"
-    assert parsed["report_schema_version"] == "2"
+    assert parsed["report_schema_version"] == "3"
     assert parsed["matches"][0]["id"] == "DEDOC-SCHEMA-001"
     assert parsed["matches"][0]["confidence_band"] == "HIGH"
     assert 40 <= parsed["matches"][0]["score"] <= 100

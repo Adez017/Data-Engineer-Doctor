@@ -9,6 +9,20 @@ The format is adapted from [Keep a Changelog](https://keepachangelog.com/).
 
 ### Added
 
+- **Bounded investigation agent (Phase 4)**: optional, deterministic inspection
+  of structured runtime context (runs, schemas, metrics, query plan, logs)
+  through a read-only allowlisted tool layer, with independent contradiction
+  and corroboration detection. No AI, no API key.
+- **12 read-only investigation tools** (`dedoc/tools/library.py`): get/search
+  logs, pipeline runs and comparisons, schema inspect/compare, metrics and
+  stage/executor metrics, query-plan inspection, and knowledge-base search.
+- **Hard limits enforcement**: tool timeouts, allowlist deny, and agent budgets
+  (default 8 iterations / 20 tool calls / 10 s deadline), all configurable via
+  `AgentConfig`; abstention (`insufficient_context`) instead of guessing.
+- **CLI**: `dedoc diagnose --investigate --context <file>` accepts YAML/JSON
+  structured context.
+- **Report schema v3** (`report_schema_version: "3"`): adds an `investigation`
+  section rendered in text/markdown/JSON formats.
 - **Readable text reports**: when multiple diagnosis rules match, the text
   report leads with a ranked candidate scoreboard and renders full evidence and
   actions for the top candidate, with compact one-liners for the alternatives.
@@ -29,6 +43,7 @@ The format is adapted from [Keep a Changelog](https://keepachangelog.com/).
 
 ### Changed
 
+- **Report schema** moved from `"2"` to `"3"` (adds `investigation`).
 - **Diagnostic knowledge base (33 diagnoses)** across six categories:
   - Schema (`DEDOC-SCHEMA-001`–`006`): missing column, data type mismatch,
     unexpected column, duplicate column, schema evolution failure, nested

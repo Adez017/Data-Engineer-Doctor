@@ -1,10 +1,13 @@
-"""End-to-end deterministic pipeline (§9, without step 6 — agent investigation is Phase 4)."""
+"""End-to-end diagnosis pipeline (§9): deterministic engine plus the optional
+bounded investigation agent (step 6) over structured context (Phase 4)."""
 
 from __future__ import annotations
 
 from pathlib import Path
 
 from dedoc import __version__
+from dedoc.agents.config import AgentConfig
+from dedoc.agents.orchestrator import run_investigation
 from dedoc.analyzer.signals import events_to_text, extract_exception_types
 from dedoc.core.errors import InputError
 from dedoc.diagnosis.engine import RuleMatch, match_rules, resolve_platform
@@ -15,6 +18,7 @@ from dedoc.models.diagnosis import severity_rank
 from dedoc.models.failure import FailureEvent
 from dedoc.models.report import DiagnosisReport, MatchedDiagnosis, ReportStatus
 from dedoc.parser.input_parser import InputFormat, parse_input
+from dedoc.tools.context import InvestigationContext
 
 _NO_MATCH_MESSAGE = (
     "No diagnosis matched the available evidence. "
@@ -89,8 +93,16 @@ def diagnose_file(
     *,
     diagnoses_path: str | Path | None = None,
     input_format: InputFormat = InputFormat.AUTO,
+    investigate: bool = False,
+    context: InvestigationContext | None = None,
+    agent_config: AgentConfig | None = None,
 ) -> DiagnosisReport:
     """Run the deterministic diagnosis pipeline on an input file.
+
+    When ``investigate`` is enabled and the file yields at least one matched
+    diagnosis, the bounded investigation agent (§11) inspects the optional
+    ``context`` through the read-only tool layer and attaches its findings to
+    the report.
 
     Raises:
         InputError: if the input file is missing or malformed.
@@ -112,6 +124,14 @@ def diagnose_file(
     ranked = sorted((_score_rule(rule) for rule in rules), key=_rank_key)
     status, top_band, message = _build_status(ranked)
 
+    investigation = None
+    if investigate and ranked and (top := diagnoses.get(ranked[0][0].id)) is not None:
+        investigation = run_investigation(
+            top,
+            context if context is not None else InvestigationContext(events=events, text=text),
+            config=agent_config,
+        )
+
     return DiagnosisReport(
         dedoc_version=__version__,
         input_source=str(input_path),
@@ -122,4 +142,5 @@ def diagnose_file(
         error_types=error_types,
         matches=[matched for matched, _ in ranked],
         message=message,
+        investigation=investigation,
     )

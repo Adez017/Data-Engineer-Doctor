@@ -15,11 +15,15 @@ Deterministic MVP **v0.1** — active:
   connectivity, and performance, with enforced fixture coverage.
 - Deterministic pipeline: platform detection → exception/signal extraction →
   rule matching → evidence scoring → confidence bands (HIGH/MEDIUM).
+- **Bounded investigation agent**: optional `--investigate` mode that inspects
+  structured context (runs, schema, metrics, query plan, logs) through
+  read-only allowlisted tools, enforces hard limits, and either corroborates
+  the top diagnosis or reports a contradiction — fully deterministic, no AI.
 - CLI + Python SDK + GitHub Actions CI on Python 3.11 and 3.12.
 - Apache-2.0 licensed with a full open-source toolkit (docs, code of conduct,
   templates, changelog) and a prepare-only release workflow.
 
-AI/agentic investigation is a later, optional layer per [BUILD_PLAN.md](BUILD_PLAN.md).
+AI providers are a later, optional layer per [BUILD_PLAN.md](BUILD_PLAN.md).
 
 ## Requirements
 
@@ -38,6 +42,7 @@ pip install -e ".[dev]"
 dedoc diagnose path/to/error.log
 dedoc diagnose path/to/error.log --format json
 dedoc diagnose path/to/error.log --format markdown
+dedoc diagnose path/to/error.log --investigate --context context.yaml
 dedoc list-diagnoses            # every bundled diagnosis definition
 ```
 

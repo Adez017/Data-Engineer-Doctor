@@ -10,11 +10,12 @@ from typing import Annotated
 import typer
 
 from dedoc import __version__
-from dedoc.core.errors import DEDocError
+from dedoc.core.errors import DEDocError, InputError
 from dedoc.core.pipeline import diagnose_file
 from dedoc.diagnosis.loader import load_diagnoses
 from dedoc.formatters import render
 from dedoc.parser.input_parser import InputFormat
+from dedoc.tools.context import InvestigationContext, context_from_mapping
 
 app = typer.Typer(
     name="dedoc",
@@ -39,6 +40,23 @@ def _version_callback(value: bool) -> None:
     if value:
         typer.echo(f"dedoc {__version__}")
         raise typer.Exit()
+
+
+def _load_context(path: Path) -> InvestigationContext:
+    """Read a YAML/JSON context file into an InvestigationContext."""
+    import yaml
+
+    try:
+        raw_text = path.read_text(encoding="utf-8")
+    except OSError as exc:
+        raise InputError(f"cannot read investigation context: {path}: {exc}") from exc
+    try:
+        data = yaml.safe_load(raw_text)
+    except yaml.YAMLError as exc:
+        raise InputError(f"invalid investigation context YAML/JSON: {path}: {exc}") from exc
+    if not isinstance(data, dict):
+        raise InputError("investigation context must be a mapping")
+    return context_from_mapping(data)
 
 
 @app.callback()
@@ -70,6 +88,21 @@ def diagnose(
     diagnoses_path: Annotated[
         Path | None, typer.Option("--diagnoses-path", help="Override the diagnoses directory.")
     ] = None,
+    investigate: Annotated[
+        bool,
+        typer.Option(
+            "--investigate",
+            help="Run the bounded investigation agent over optional structured context.",
+        ),
+    ] = False,
+    context_file: Annotated[
+        Path | None,
+        typer.Option(
+            "--context",
+            "-c",
+            help="Structured context file (YAML/JSON): runs, schemas, metrics, query plan, logs.",
+        ),
+    ] = None,
 ) -> None:
     """Diagnose a failure log and print an evidence-backed report.
 
@@ -77,10 +110,13 @@ def diagnose(
     1 = input or configuration error.
     """
     try:
+        context = _load_context(context_file) if context_file is not None else None
         report = diagnose_file(
             file,
             diagnoses_path=diagnoses_path,
             input_format=input_format,
+            investigate=investigate,
+            context=context,
         )
     except DEDocError as exc:
         typer.echo(f"error: {exc}", err=True)

@@ -13,6 +13,8 @@ Diagnose a failure log and print an evidence-backed report.
 | `--format`, `-f` | Output format: `text` (default), `json`, or `markdown`. |
 | `--input-format` | Override input detection: `auto` (default), `text`, `json`, `jsonl`. |
 | `--diagnoses-path` | Override the diagnosis YAML directory (for custom forks/experiments). |
+| `--investigate` | Run the bounded investigation agent over optional structured context. |
+| `--context`, `-c` | Structured context file (YAML/JSON): runs, schemas, metrics, query plan, logs. |
 | `--version`, `-V` | Print the version and exit. |
 
 **Input types**
@@ -98,3 +100,48 @@ The JSON output of `diagnose` contains:
   `hypotheses`, `recommendations`, and `references`
 
 The excerpt is always redacted before rendering.
+
+## Optional structured investigation (Phase 4)
+
+The deterministic engine works on the log file alone. When structured runtime
+context is available — pipeline runs, schema snapshots, metrics, a query plan,
+or additional logs — the **bounded investigation agent** inspects it through a
+read-only tool layer and attaches its findings to the report:
+
+```bash
+$ dedoc diagnose spark-failure.log --investigate --context context.yaml
+```
+
+The context file is YAML or JSON. Example:
+
+```yaml
+current_run: { run_id: "run-2026-10-09-01", status: failed, stage: "stage-7" }
+previous_runs:
+  - run_id: "run-2026-10-09-00"
+    status: succeeded
+schemas:
+  customer:
+    columns: [id, name, email]
+metrics:
+  executor.memory.used: { value: 0.92, labels: { executor: exec5 } }
+query_plan: "Exchange LogSink: output row count 1200"
+logs:
+  - "24/10/08 13:10:12 WARN Adding partitioning column for full scan"
+```
+
+The agent is **deterministic** — there is no AI and no API key. It:
+
+- selects probes based on the top hypothesis and the data actually present
+- invokes only read-only, allowlisted tools (`get_metrics`, `get_schema`,
+  `compare_runs`, `inspect_query_plan`, `search_logs`, `search_knowledge_base`, ...)
+- stops at the first **contradiction**: a negative signal of the top diagnosis
+  observed in structured context
+- records corroborating signals as *supporting* findings
+- abstains (`insufficient_context`) when no context is provided
+- enforces hard limits: default **8 iterations**, **20 tool calls**, and a
+  **10 second** wall-clock deadline — every limit is configurable
+
+The text/markdown report gains an **Investigation** section; JSON output adds an
+`investigation` object (`status`, `iterations`, `tool_calls`, `reason`,
+`findings`, `contradictions`, `calls`). Tools never mutate production state and
+all log-derived text is redacted before it appears in a report.
