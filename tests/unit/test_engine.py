@@ -34,9 +34,9 @@ def test_positive_resolved_column(fixtures_dir: Path) -> None:
     assert "resolved_column_not_found" in rule.matched_signals
     assert rule.exact_signals == ["resolved_column_not_found"]
     assert rule.platform_match
-    assert rule.excerpt is not None
-    assert re.match(r"line \d+: ", rule.excerpt)
-    assert "RESOLVED_COLUMN_NOT_FOUND" in rule.excerpt
+    assert rule.signal_excerpt is not None
+    assert re.match(r"line \d+: ", rule.signal_excerpt)
+    assert "RESOLVED_COLUMN_NOT_FOUND" in rule.signal_excerpt
 
     bundle = score_match(rule)
     assert bundle.confidence_band is ConfidenceBand.HIGH
@@ -124,3 +124,48 @@ def test_negative_signal_disqualifies(fixtures_dir: Path, tmp_path: Path) -> Non
     matched_ids = {r.diagnosis.id for r in rules}
     assert "DEDOC-SCHEMA-001" not in matched_ids  # disqualified by table_or_view_not_found negative
     assert "DEDOC-DELTA-003" in matched_ids  # table-not-found still matches its own diagnosis
+
+
+def test_excerpt_includes_surrounding_context() -> None:
+    """Evidence excerpts show the matched line plus one line of context each side."""
+    from dedoc.models.failure import FailureEvent
+
+    event = FailureEvent(
+        source="log",
+        raw_payload=(
+            "line one of context\n"
+            "AnalysisException: Column 'b' cannot be resolved [RESOLVED_COLUMN_NOT_FOUND]\n"
+            "line three of context\n"
+        ),
+    )
+    rules = match_rules([event], _diagnoses(), "unknown")
+    matched = [rule for rule in rules if rule.diagnosis.id == "DEDOC-SCHEMA-001"]
+    assert matched
+    excerpt = matched[0].signal_excerpt
+    assert excerpt is not None
+    assert "line 1: line one of context" in excerpt
+    assert "line 2: AnalysisException" in excerpt
+    assert "line 3: line three of context" in excerpt
+
+
+def test_exception_excerpt_skips_stack_frames_when_picking_target() -> None:
+    """The excerpt target is the exception message line, not the first `at ...` frame."""
+    from dedoc.models.failure import FailureEvent
+
+    event = FailureEvent(
+        source="log",
+        raw_payload=(
+            "    at org.apache.spark.sql.catalyst.analysis.Analyzer.check(Analyzer.scala:1)\n"
+            "    at org.apache.spark.sql.catalyst.analysis.Analyzer.resolve(Analyzer.scala:2)\n"
+            "org.apache.spark.sql.AnalysisException: [RESOLVED_COLUMN_NOT_FOUND] "
+            "Column 'c' cannot be resolved.\n"
+            "    at org.apache.spark.sql.catalyst.analysis.Analyzer.execute(Analyzer.scala:190)\n"
+        ),
+    )
+    rules = match_rules([event], _diagnoses(), "unknown")
+    matched = [rule for rule in rules if rule.diagnosis.id == "DEDOC-SCHEMA-001"]
+    assert matched
+    excerpt = matched[0].exception_excerpt
+    assert excerpt is not None
+    assert "line 3: org.apache.spark.sql.AnalysisException" in excerpt
+    assert not excerpt.startswith("line 1:")

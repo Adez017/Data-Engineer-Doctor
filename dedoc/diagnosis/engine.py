@@ -8,6 +8,7 @@ declared signals matches on its exception types alone.
 
 from __future__ import annotations
 
+import re
 from collections.abc import Mapping
 from dataclasses import dataclass
 
@@ -23,6 +24,9 @@ from dedoc.models.diagnosis import Diagnosis
 from dedoc.models.failure import FailureEvent
 
 _EXCERPT_MAX = 200
+#: Context lines on each side of the matched line, so an excerpt shows the
+#: surrounding failure frame rather than one isolated line.
+_EXCERPT_CONTEXT = 1
 
 
 @dataclass
@@ -37,7 +41,8 @@ class RuleMatch:
     exact_signals: list[str]
     has_stacktrace_evidence: bool
     has_metadata: bool
-    excerpt: str | None
+    signal_excerpt: str | None
+    exception_excerpt: str | None
 
 
 def _exception_matches(declared: str, observed: str) -> bool:
@@ -70,13 +75,50 @@ def resolve_platform(events: list[FailureEvent], text: str) -> str:
     return "unknown"
 
 
-def _find_excerpt(
+def _excerpt_block(lines: list[tuple[int, str]], index: int | None) -> str | None:
+    """Redact and clamp a context window around the matched line."""
+    if index is None:
+        return None
+    start = max(0, index - _EXCERPT_CONTEXT)
+    end = min(len(lines), index + _EXCERPT_CONTEXT + 1)
+    block = " | ".join(f"line {no}: {redact(line)}" for no, line in lines[start:end])
+    if len(block) > _EXCERPT_MAX:
+        block = block[: _EXCERPT_MAX - 3] + "..."
+    return block
+
+
+def _signal_line_index(
+    lines: list[tuple[int, str]], signal_patterns: list[re.Pattern[str]]
+) -> int | None:
+    for index, (_, line) in enumerate(lines):
+        if any(pattern.search(line) for pattern in signal_patterns):
+            return index
+    return None
+
+
+def _exception_line_index(
+    lines: list[tuple[int, str]], matched_exceptions: list[str]
+) -> int | None:
+    """First exception-message line, skipping stack frames; fall back to any."""
+    for index, (_, line) in enumerate(lines):
+        if line.startswith("at "):
+            continue
+        if any(exception in line for exception in matched_exceptions):
+            return index
+    for index, (_, line) in enumerate(lines):
+        if any(exception in line for exception in matched_exceptions):
+            return index
+    return None
+
+
+def _find_excerpts(
     text: str, matched_signals: list[str], matched_exceptions: list[str]
-) -> str | None:
-    """Best supporting line, redacted and clamped.
+) -> tuple[str | None, str | None]:
+    """Best supporting blocks, redacted and clamped: (signal, exception).
 
     Priority: a line matching a declared signal, then an exception message
     line (not a stack frame), then any line mentioning the exception type.
+    The two excerpts let each evidence item cite the line most relevant to it.
     """
     lines = [
         (line_no, line.strip())
@@ -88,18 +130,10 @@ def _find_excerpt(
         for name in matched_signals
         if (definition := SIGNAL_REGISTRY.get(name)) is not None
     ]
-    for line_no, line in lines:
-        if any(pattern.search(line) for pattern in signal_patterns):
-            return f"line {line_no}: {redact(line)[:_EXCERPT_MAX]}"
-    for line_no, line in lines:
-        if line.startswith("at "):
-            continue
-        if any(exception in line for exception in matched_exceptions):
-            return f"line {line_no}: {redact(line)[:_EXCERPT_MAX]}"
-    for line_no, line in lines:
-        if any(exception in line for exception in matched_exceptions):
-            return f"line {line_no}: {redact(line)[:_EXCERPT_MAX]}"
-    return None
+    return (
+        _excerpt_block(lines, _signal_line_index(lines, signal_patterns)),
+        _excerpt_block(lines, _exception_line_index(lines, matched_exceptions)),
+    )
 
 
 def _has_metadata(events: list[FailureEvent]) -> bool:
@@ -145,6 +179,9 @@ def match_rules(
         if set(diagnosis.signals.negative) & signals:
             continue
 
+        signal_excerpt, exception_excerpt = _find_excerpts(
+            text, matched_signals, matched_exceptions
+        )
         matches.append(
             RuleMatch(
                 diagnosis=diagnosis,
@@ -155,7 +192,8 @@ def match_rules(
                 exact_signals=[s for s in matched_signals if is_exact_signal(s)],
                 has_stacktrace_evidence=has_stacktrace,
                 has_metadata=has_metadata,
-                excerpt=_find_excerpt(text, matched_signals, matched_exceptions),
+                signal_excerpt=signal_excerpt,
+                exception_excerpt=exception_excerpt,
             )
         )
     return sorted(matches, key=lambda match: match.diagnosis.id)

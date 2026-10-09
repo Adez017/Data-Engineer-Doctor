@@ -21,6 +21,20 @@ class DiagnosisSeverity(StrEnum):
     CRITICAL = "critical"
 
 
+#: Ascending rank used to break score ties (critical first).
+_SEVERITY_RANK: dict[DiagnosisSeverity, int] = {
+    DiagnosisSeverity.CRITICAL: 0,
+    DiagnosisSeverity.HIGH: 1,
+    DiagnosisSeverity.MEDIUM: 2,
+    DiagnosisSeverity.LOW: 3,
+}
+
+
+def severity_rank(severity: DiagnosisSeverity) -> int:
+    """Return a sort rank for a severity (critical=0 ... low=3)."""
+    return _SEVERITY_RANK[severity]
+
+
 class SeveritySpec(BaseModel):
     default: DiagnosisSeverity = DiagnosisSeverity.MEDIUM
 

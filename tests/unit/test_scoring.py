@@ -42,7 +42,8 @@ def _rule(**overrides: object) -> RuleMatch:
         "exact_signals": ["resolved_column_not_found"],
         "has_stacktrace_evidence": True,
         "has_metadata": False,
-        "excerpt": "line 4: AnalysisException: boom",
+        "signal_excerpt": "line 3: before | line 4: RESOLVED_COLUMN_NOT_FOUND | line 5: after",
+        "exception_excerpt": "line 4: AnalysisException: boom",
     }
     kwargs.update(overrides)
     return RuleMatch(**kwargs)  # type: ignore[arg-type]
@@ -118,7 +119,8 @@ def test_score_capped_at_100() -> None:
         exact_signals=["resolved_column_not_found", "datatype_mismatch"],
         has_stacktrace_evidence=True,
         has_metadata=True,
-        excerpt=None,
+        signal_excerpt=None,
+        exception_excerpt=None,
     )
     assert score_match(rule).score == 100
 
@@ -133,6 +135,29 @@ def test_real_fixture_evidence_has_excerpt(fixtures_dir: Path) -> None:
     assert any(item.excerpt for item in bundle.evidence)
     assert bundle.score >= 70
     assert bundle.confidence_band is ConfidenceBand.HIGH
+
+
+def test_each_evidence_type_carries_its_own_excerpt() -> None:
+    """Signature evidence cites the signal line; stacktrace evidence the exception line."""
+    rule = _rule()
+    bundle = score_match(rule)
+    signature = next(item for item in bundle.evidence if item.type is EvidenceType.ERROR_SIGNATURE)
+    stacktrace = next(item for item in bundle.evidence if item.type is EvidenceType.STACKTRACE)
+    assert signature.excerpt == (
+        "line 3: before | line 4: RESOLVED_COLUMN_NOT_FOUND | line 5: after"
+    )
+    assert stacktrace.excerpt == "line 4: AnalysisException: boom"
+
+
+def test_platform_evidence_reuses_best_available_excerpt() -> None:
+    """Non-line evidence falls back to the most relevant citation instead of dropping it."""
+    bundle = score_match(_rule(exception_excerpt=None))
+    platform = next(item for item in bundle.evidence if item.type is EvidenceType.PLATFORM_MATCH)
+    assert platform.excerpt == (
+        "line 3: before | line 4: RESOLVED_COLUMN_NOT_FOUND | line 5: after"
+    )
+    bundle = score_match(_rule(signal_excerpt=None, exception_excerpt=None))
+    assert all(item.excerpt is None for item in bundle.evidence)
 
 
 def test_diagnosis_type_smoke() -> None:

@@ -11,6 +11,7 @@ from dedoc.diagnosis.engine import RuleMatch, match_rules, resolve_platform
 from dedoc.diagnosis.loader import load_diagnoses
 from dedoc.evidence import MIN_SCORE_FOR_DIAGNOSIS, score_match
 from dedoc.evidence.models import ConfidenceBand, EvidenceBundle
+from dedoc.models.diagnosis import severity_rank
 from dedoc.models.failure import FailureEvent
 from dedoc.models.report import DiagnosisReport, MatchedDiagnosis, ReportStatus
 from dedoc.parser.input_parser import InputFormat, parse_input
@@ -21,6 +22,12 @@ _NO_MATCH_MESSAGE = (
 )
 
 ScoredMatch = tuple[MatchedDiagnosis, EvidenceBundle]
+
+
+def _rank_key(scored: ScoredMatch) -> tuple[int, int, str]:
+    """Score desc, then severity (critical first), then stable id."""
+    matched, _ = scored
+    return (-matched.score, severity_rank(matched.severity), matched.id)
 
 
 def _annotate_events(events: list[FailureEvent], platform: str, text: str) -> list[str]:
@@ -102,7 +109,7 @@ def diagnose_file(
     error_types = _annotate_events(events, platform, text)
 
     rules = match_rules(events, diagnoses, platform)
-    ranked = sorted((_score_rule(rule) for rule in rules), key=lambda p: (-p[0].score, p[0].id))
+    ranked = sorted((_score_rule(rule) for rule in rules), key=_rank_key)
     status, top_band, message = _build_status(ranked)
 
     return DiagnosisReport(

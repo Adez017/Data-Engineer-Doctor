@@ -44,17 +44,16 @@ def band_for_score(score: int) -> ConfidenceBand:
     return ConfidenceBand.LOW
 
 
+def _best_excerpt(match: RuleMatch) -> str | None:
+    """Give non-line evidence the most relevant available citation."""
+    return match.exception_excerpt or match.signal_excerpt
+
+
 def score_match(match: RuleMatch) -> EvidenceBundle:
     """Derive a 0-100 score, confidence band, and evidence list for a rule match."""
     evidence: list[Evidence] = []
-    excerpt_used = False
 
-    def add(etype: EvidenceType, description: str, source: str) -> None:
-        nonlocal excerpt_used
-        excerpt = None
-        if not excerpt_used and match.excerpt:
-            excerpt = match.excerpt
-            excerpt_used = True
+    def add(etype: EvidenceType, description: str, source: str, excerpt: str | None) -> None:
         evidence.append(
             Evidence(
                 type=etype,
@@ -70,6 +69,7 @@ def score_match(match: RuleMatch) -> EvidenceBundle:
             EvidenceType.ERROR_SIGNATURE,
             f"Exact error signature matched: {signal}",
             f"signal:{signal}",
+            match.signal_excerpt,
         )
     for signal in match.matched_signals:
         if signal not in match.exact_signals:
@@ -77,6 +77,7 @@ def score_match(match: RuleMatch) -> EvidenceBundle:
                 EvidenceType.CORRELATED_SIGNAL,
                 f"Supporting signal observed: {signal}",
                 f"signal:{signal}",
+                match.signal_excerpt,
             )
     if match.matched_exception_types:
         where = "stack trace" if match.has_stacktrace_evidence else "failure text"
@@ -84,6 +85,7 @@ def score_match(match: RuleMatch) -> EvidenceBundle:
             EvidenceType.STACKTRACE,
             f"Declared exception observed in {where}: " + ", ".join(match.matched_exception_types),
             "exception:" + ",".join(match.matched_exception_types),
+            match.exception_excerpt,
         )
     if match.platform_match:
         add(
@@ -91,12 +93,14 @@ def score_match(match: RuleMatch) -> EvidenceBundle:
             f"Platform detected: {match.platform}"
             f" (diagnosis supports: {', '.join(match.diagnosis.platforms)})",
             "platform:detect",
+            _best_excerpt(match),
         )
     if match.has_metadata:
         add(
             EvidenceType.SUPPORTING_METADATA,
             "Runtime metadata present (job/stage/service/attributes)",
             "metadata:event",
+            _best_excerpt(match),
         )
 
     raw_score = sum(item.weight for item in evidence)

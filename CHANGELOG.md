@@ -9,6 +9,16 @@ The format is adapted from [Keep a Changelog](https://keepachangelog.com/).
 
 ### Added
 
+- **Contextual evidence excerpts**: each excerpt shows the matched line plus one
+  line of surrounding context (redacted, clamped, labeled `line A-B`).
+- **Per-evidence excerpts**: signature evidence cites the signal line and
+  stacktrace evidence cites the exception message line, instead of one shared
+  excerpt; platform/metadata evidence reuse the most relevant citation.
+- **Severity-aware ranking**: report matches are ordered by score, then severity
+  (critical first), then stable diagnosis id.
+
+### Changed
+
 - **Diagnostic knowledge base (33 diagnoses)** across six categories:
   - Schema (`DEDOC-SCHEMA-001`–`006`): missing column, data type mismatch,
     unexpected column, duplicate column, schema evolution failure, nested
