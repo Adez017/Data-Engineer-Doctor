@@ -6,6 +6,7 @@ import json
 from pathlib import Path
 
 from dedoc.core.pipeline import diagnose_file
+from dedoc.evidence.models import ConfidenceBand
 from dedoc.formatters import format_json, format_markdown, format_text, render
 from dedoc.models.report import DiagnosisReport, ReportStatus
 
@@ -41,6 +42,32 @@ def test_text_contains_diagnosis(fixtures_dir: Path) -> None:
     text = format_text(diagnose_file(fixture))
     assert "Data Engineer Doctor" in text
     assert "DEDOC-SCHEMA-001" in text
+    # A single candidate gets full detail without a scoreboard or alternates list.
+    assert "Candidate scoreboard:" not in text
+    assert "Other candidates considered:" not in text
+
+
+def _multi_match_report(fixtures_dir: Path) -> DiagnosisReport:
+    fixture = fixtures_dir / "positive" / "spark-schema-mismatch-resolved-column" / "input.log"
+    report = diagnose_file(fixture)
+    top = report.matches[0].model_copy()
+    second = top.model_copy()
+    second.id = "DEDOC-SCHEMA-002"
+    second.name = "Data Type Mismatch"
+    second.score = 40
+    second.confidence_band = ConfidenceBand.MEDIUM
+    return report.model_copy(update={"matches": [top, second]})
+
+
+def test_text_scoreboard_and_top_only(fixtures_dir: Path) -> None:
+    text = format_text(_multi_match_report(fixtures_dir))
+    assert "Candidate scoreboard:" in text
+    assert "#1" in text and "#2" in text
+    # Full evidence detail is rendered only for the top candidate.
+    assert "Evidence:" in text
+    assert text.count("Evidence:") == 1
+    assert "Other candidates considered:" in text
+    assert "- DEDOC-SCHEMA-002 Data Type Mismatch — MEDIUM (40/100)" in text
 
 
 def test_abstention_output(fixtures_dir: Path) -> None:

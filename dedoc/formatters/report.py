@@ -113,6 +113,20 @@ def format_markdown(report: DiagnosisReport) -> str:
     return "\n".join(lines).rstrip()
 
 
+def _text_scoreboard(report: DiagnosisReport) -> list[str]:
+    """Ranked one-liner for every candidate (only when ranking matters)."""
+    if len(report.matches) < 2:
+        return []
+    name_width = max(len(match.name) for match in report.matches)
+    lines = ["Candidate scoreboard:"]
+    for rank, match in enumerate(report.matches, start=1):
+        lines.append(
+            f"  #{rank}  {match.id:<18} {match.name:<{name_width}} "
+            f"{match.confidence_band.value:<6} {match.score:>3}/100"
+        )
+    return lines + [""]
+
+
 def format_text(report: DiagnosisReport) -> str:
     lines = [
         "Data Engineer Doctor",
@@ -127,19 +141,30 @@ def format_text(report: DiagnosisReport) -> str:
     ]
     if report.error_types:
         lines.append(f"Observed error types: {', '.join(report.error_types)}")
-    for match in report.matches:
-        lines += [
-            "",
-            f"[{match.id}] {match.name}",
-            f"  Category: {match.category} | Severity: {match.severity.value} "
-            f"| Platforms: {', '.join(match.platforms)}",
-            *_matched_sections(match, style="text"),
-            *_evidence_lines(match, style="text"),
-        ]
-        lines += _recommendation_lines(match, style="text")
-        if match.references:
-            lines.append("  References:")
-            lines.extend(f"    - {ref.source}: {ref.url}" for ref in match.references)
+    lines += _text_scoreboard(report)
+    if not report.matches:
+        return "\n".join(lines).rstrip()
+
+    top, *alternatives = report.matches
+    lines += [
+        "",
+        f"Diagnosis: {top.id} {top.name}",
+        f"  Category: {top.category} | Severity: {top.severity.value} "
+        f"| Platforms: {', '.join(top.platforms)}",
+        *_matched_sections(top, style="text"),
+        *_evidence_lines(top, style="text"),
+    ]
+    lines += _recommendation_lines(top, style="text")
+    if top.references:
+        lines.append("  References:")
+        lines.extend(f"    - {ref.source}: {ref.url}" for ref in top.references)
+    if alternatives:
+        lines.append("")
+        lines.append("  Other candidates considered:")
+        for match in alternatives:
+            lines.append(
+                f"    - {match.id} {match.name} — {match.confidence_band.value} ({match.score}/100)"
+            )
     return "\n".join(lines).rstrip()
 
 

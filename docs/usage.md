@@ -57,7 +57,7 @@ Version:   0.1.0
 DEDOC-SPARK-001 selected with HIGH confidence (80/100) based on 3 evidence item(s).
 Observed error types: OutOfMemoryError, java.lang.OutOfMemoryError
 
-[DEDOC-SPARK-001] Executor Out of Memory
+Diagnosis: DEDOC-SPARK-001 Executor Out of Memory
   Category: spark.executor_oom | Severity: critical | Platforms: spark, databricks
   Matched exception types: OutOfMemoryError
   Matched signals: executor_oom
@@ -65,11 +65,16 @@ Observed error types: OutOfMemoryError, java.lang.OutOfMemoryError
   Confidence: HIGH (80/100)
   Evidence:
     - [error_signature] Exact error signature matched: executor_oom (+40)
+        > line 6: 24/10/08 13:10:12 INFO TaskSetManager: Starting task 42.0 ...
         > line 7: java.lang.OutOfMemoryError: Java heap space
     - [stacktrace_evidence] Declared exception observed in stack trace: OutOfMemoryError (+20)
     - [platform_match] Platform detected: spark (diagnosis supports: spark, databricks) (+20)
   ...
 ```
+
+When several diagnosis rules match, DEDoc prints a ranked **candidate scoreboard**
+first, then full evidence and actions for the top candidate. The other candidates
+get a compact one-liner under **Other candidates considered**.
 
 ```bash
 $ dedoc diagnose error.json --format markdown

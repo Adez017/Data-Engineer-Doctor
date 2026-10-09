@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#14b8a6"/>
+      <stop offset="1" stop-color="#0d9488"/>
+    </linearGradient>
+  </defs>
+  <rect x="0" y="0" width="64" height="64" rx="13" fill="url(#bg)"/>
+  <!-- Stethoscope ear tube: arc from top center down to chest piece -->
+  <path d="M32 12 v6 M32 18 a9 9 0 1 0 0 32 L32 50"
+        fill="none" stroke="#ffffff" stroke-width="5" stroke-linecap="round"/>
+  <!-- Chest piece -->
+  <circle cx="32" cy="46" r="8" fill="none" stroke="#ffffff" stroke-width="5"/>
+  <!-- Heartbeat line on the chest piece -->
+  <path d="M24 46 h4 l2 -5 l4 10 l3 -5 h3"
+        fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

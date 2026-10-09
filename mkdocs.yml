@@ -1,19 +1,59 @@
 site_name: Data Engineer Doctor (DEDoc)
 site_description: Open-source, evidence-driven diagnosis for modern data engineering failures
 site_author: Data Engineer Doctor contributors
-repo_name: data-engineer-doctor
 copyright: Copyright &copy; Data Engineer Doctor contributors
 
 theme:
-  name: readthedocs
-  highlightjs: true
+  name: material
+  logo: assets/logo.svg
+  favicon: assets/logo.svg
+  icon:
+    repo: fontawesome/brands/github
+  font: false
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.top
+    - navigation.instant
+    - navigation.expand
+    - search.highlight
+    - search.suggest
+    - content.code.copy
+    - content.tabs.link
+  palette:
+    - scheme: default
+      primary: teal
+      accent: teal
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - scheme: slate
+      primary: teal
+      accent: teal
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
 
 markdown_extensions:
-  - tables
   - admonition
-  - fenced_code
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - tables
   - toc:
       permalink: true
+
+plugins:
+  - search
+
+extra:
+  generator: false
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/Adez017/Data-Engineer-Doctor
 
 nav:
   - Home: index.md

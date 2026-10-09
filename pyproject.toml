@@ -36,6 +36,7 @@ dev = [
     "build>=1.2",
     "pip-audit>=2.7",
     "mkdocs>=1.6,<2",
+    "mkdocs-material>=9.5,<10",
 ]
 
 [project.scripts]
@@ -50,6 +51,7 @@ dev = [
     "build>=1.2",
     "pip-audit>=2.7",
     "mkdocs>=1.6,<2",
+    "mkdocs-material>=9.5,<10",
 ]
 
 [tool.hatch.build.targets.wheel]

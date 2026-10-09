@@ -9,6 +9,11 @@ The format is adapted from [Keep a Changelog](https://keepachangelog.com/).
 
 ### Added
 
+- **Readable text reports**: when multiple diagnosis rules match, the text
+  report leads with a ranked candidate scoreboard and renders full evidence and
+  actions for the top candidate, with compact one-liners for the alternatives.
+- **MkDocs site on Material for MkDocs**: modern navigation tabs, instant search
+  with highlighting, code-copy buttons, and a light/dark theme toggle.
 - **Contextual evidence excerpts**: each excerpt shows the matched line plus one
   line of surrounding context (redacted, clamped, labeled `line A-B`).
 - **Per-evidence excerpts**: signature evidence cites the signal line and
