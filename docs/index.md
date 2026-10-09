@@ -1,4 +1,4 @@
-# DEDoc — Data Engineer Doctor
+# DEDoc: Data Engineer Doctor
 
 <div class="dedoc-hero">
   <span class="dedoc-hero__kicker">Booted · Deterministic · No LLM</span>
@@ -21,7 +21,7 @@
   </div>
 </div>
 
-It works today **without any AI or LLM** — no API keys, no external model calls.
+It works today **without any AI or LLM**: no API keys, no external model calls.
 Every conclusion is repeatable, explainable, and auditable.
 
 ## Find your way around
@@ -93,10 +93,10 @@ it, the competing diagnoses considered, and concrete next steps.
 
 The deterministic MVP (v0.1) is the active build target:
 
-- **Phase 2 — knowledge base**: 33 diagnoses with fixtures, scoring, coverage.
-- **Phase 3 — deterministic pipeline**: analysis, evidence, reports.
-- **Phase 6 — integrations**: CLI, Python SDK, CI (GitHub Actions).
-- **Phase 8 — public launch**: docs, contribution toolkit, prepare-only release.
+- **Phase 2: knowledge base**. 33 diagnoses with fixtures, scoring, coverage.
+- **Phase 3: deterministic pipeline**. Analysis, evidence, reports.
+- **Phase 6: integrations**. CLI, Python SDK, CI (GitHub Actions).
+- **Phase 8: public launch**. Docs, contribution toolkit, prepare-only release.
 
 Agentic/AI investigation is a **later, optional** layer and is not required for
 any current feature.
@@ -123,7 +123,7 @@ packaged build. A change is not complete until it passes.
   <span class="dedoc-creator__avatar">AS</span>
   <span>
     <span class="dedoc-creator__name">Aditya Singh Rathore</span><br/>
-    <span class="dedoc-creator__role">Creator &amp; maintainer — Data Engineer Doctor</span><br/>
+    <span class="dedoc-creator__role">Creator &amp; maintainer of Data Engineer Doctor</span><br/>
     <span class="dedoc-creator__links">
       <a href="https://github.com/Adez017">GitHub</a> ·
       <a href="mailto:rathoreadityasingh40@gmail.com">Email</a>

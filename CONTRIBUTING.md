@@ -46,7 +46,7 @@ A diagnosis PR must contain:
 Every signal name used in a diagnosis YAML must be registered in
 `dedoc/analyzer/signals.py` (`SIGNAL_REGISTRY`, a `SignalDef(pattern, exact)`
 map); `make validate` rejects signals that have no extractor. Mark a signal
-`exact=True` only when its pattern is a verified error signature — exact
+`exact=True` only when its pattern is a verified error signature: exact
 signals score 40 (`ERROR_SIGNATURE`) instead of 15 (`CORRELATED_SIGNAL`).
 A diagnosis with declared positive signals only matches when at least one
 of them is observed (exception-only matches are allowed only when the

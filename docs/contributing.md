@@ -1,7 +1,7 @@
 # Contributing
 
 Contributions are welcome. The project is designed so that adding a diagnosis
-is possible without understanding the entire codebase. This page is a summary —
+is possible without understanding the entire codebase. This page is a summary;
 see `CONTRIBUTING.md` at the repository root for the full workflow.
 
 ## Ways to contribute
@@ -18,7 +18,7 @@ see `CONTRIBUTING.md` at the repository root for the full workflow.
 2. Register any new **signal** in `dedoc/analyzer/signals.py`
    (`SIGNAL_REGISTRY`). A signal is a named regular expression; `exact=True`
    marks it as a known, verified error signature (weight 40), otherwise it is a
-   correlated runtime signal (weight 15). Never invent error semantics — a
+   correlated runtime signal (weight 15). Never invent error semantics: a
    signature must be validated against real, official error wording or labelled
    as an unverified hypothesis.
 3. Write the YAML definition under `diagnoses/<category>/`, with:

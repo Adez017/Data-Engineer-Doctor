@@ -28,8 +28,10 @@ traceback). Files larger than 10 MiB are rejected.
 
 **Exit codes**
 
-- `0` — a report was produced (the status is `diagnosed` or `insufficient_evidence`).
-- `1` — input or configuration error (missing file, malformed JSON, no diagnoses).
+- `0` means a report was produced (the status is `diagnosed` or
+  `insufficient_evidence`).
+- `1` means an input or configuration error (missing file, malformed JSON, no
+  diagnoses).
 
 ### `dedoc list-diagnoses`
 
@@ -104,8 +106,8 @@ The excerpt is always redacted before rendering.
 ## Optional structured investigation (Phase 4)
 
 The deterministic engine works on the log file alone. When structured runtime
-context is available — pipeline runs, schema snapshots, metrics, a query plan,
-or additional logs — the **bounded investigation agent** inspects it through a
+context is available (pipeline runs, schema snapshots, metrics, a query plan,
+or additional logs), the **bounded investigation agent** inspects it through a
 read-only tool layer and attaches its findings to the report:
 
 ```bash
@@ -129,7 +131,7 @@ logs:
   - "24/10/08 13:10:12 WARN Adding partitioning column for full scan"
 ```
 
-The agent is **deterministic** — there is no AI and no API key. It:
+The agent is **deterministic**: there is no AI and no API key. It:
 
 - selects probes based on the top hypothesis and the data actually present
 - invokes only read-only, allowlisted tools (`get_metrics`, `get_schema`,
@@ -139,7 +141,7 @@ The agent is **deterministic** — there is no AI and no API key. It:
 - records corroborating signals as *supporting* findings
 - abstains (`insufficient_context`) when no context is provided
 - enforces hard limits: default **8 iterations**, **20 tool calls**, and a
-  **10 second** wall-clock deadline — every limit is configurable
+  **10 second** wall-clock deadline. Every limit is configurable
 
 The text/markdown report gains an **Investigation** section; JSON output adds an
 `investigation` object (`status`, `iterations`, `tool_calls`, `reason`,

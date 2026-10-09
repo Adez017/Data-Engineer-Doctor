@@ -24,7 +24,7 @@ assignees: ""
 - Expected diagnosis:
 - Example input:
 - Expected output:
-- Relevant official reference (URL — must be reachable):
+- Relevant official reference (URL; must be reachable):
 - Test requirements:
 - Documentation requirements:
 

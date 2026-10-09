@@ -5,7 +5,7 @@ Open-source, evidence-driven diagnosis for modern data engineering failures
 MASTER BUILD & IMPLEMENTATION PLAN
 
 ```
-North Star: Turn messy data-engineering failures into evidence-backed, actionable diagnoses — without turning the product into a generic AI wrapper.
+North Star: Turn messy data-engineering failures into evidence-backed, actionable diagnoses, without turning the product into a generic AI wrapper.
 ```
 
 Document purpose: This document is the implementation source of truth for Claude Code and human contributors. It defines product scope, architecture, AI/agentic behavior, validation, security, testing, contribution workflow, milestones, and release criteria.

@@ -28,9 +28,9 @@ for match in report.matches:
 
 `diagnose` raises:
 
-- `dedoc.core.errors.InputError` — the input file is missing, too large, or
+- `dedoc.core.errors.InputError`: the input file is missing, too large, or
   malformed.
-- `dedoc.core.errors.DiagnosisLoadError` — the diagnoses directory is missing,
+- `dedoc.core.errors.DiagnosisLoadError`: the diagnoses directory is missing,
   empty, or contains an invalid definition.
 
 Internally the `diagnose` string argument is always coerced to a `Path`.
@@ -75,11 +75,11 @@ tool ever runs.
 
 `diagnose` raises:
 
-- `dedoc.core.errors.InputError` — the input file is missing, too large, or
+- `dedoc.core.errors.InputError`: the input file is missing, too large, or
   malformed (also raised for an invalid investigation context mapping).
-- `dedoc.core.errors.DiagnosisLoadError` — the diagnoses directory is missing,
+- `dedoc.core.errors.DiagnosisLoadError`: the diagnoses directory is missing,
   empty, or contains an invalid definition.
-- `dedoc.core.errors.AgentConfigError` — the investigation `AgentConfig` has
+- `dedoc.core.errors.AgentConfigError`: the investigation `AgentConfig` has
   invalid hard limits.
 
 Internally the `diagnose` string argument is always coerced to a `Path`.
@@ -97,4 +97,4 @@ Only the names in `dedoc.__all__` are the public API:
 
 Everything else under `dedoc.*` is an implementation detail and may change
 without notice between releases. Public IDs (for example `DEDOC-SPARK-001`) are
-a stable API and are not renamed casually — see the diagnosis reference.
+a stable API and are not renamed casually. See the diagnosis reference.
