@@ -1,8 +1,9 @@
 name: docs
 
 # Builds the MkDocs site (Material theme) with the authoritative pipeline and
-# deploys it to GitHub Pages from a workflow. `configure-pages` with
-# `enablement: true` auto-enables Pages (source: GitHub Actions) on the first run.
+# deploys it to GitHub Pages from a workflow. Pages must be enabled once with
+# source "GitHub Actions" in the repository settings — the worklow token cannot
+# create a Pages site administratively.
 
 on:
   push:
@@ -43,8 +44,6 @@ jobs:
 
       - name: Configure Pages
         uses: actions/configure-pages@v5
-        with:
-          enablement: true
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
