@@ -1,5 +1,16 @@
 # Usage
 
+## Quick reference
+
+| Task | Command |
+| --- | --- |
+| Diagnose one log file | `dedoc diagnose path/to/error.log` |
+| Export machine-readable report | `dedoc diagnose path/to/error.log --format json` |
+| Export markdown report | `dedoc diagnose path/to/error.log --format markdown` |
+| Diagnose with structured context | `dedoc diagnose path/to/error.log --investigate --context context.yaml` |
+| Add optional AI explanation | `dedoc diagnose path/to/error.log --ai` |
+| List built-in diagnoses | `dedoc list-diagnoses --format text` |
+
 ## Command-line interface
 
 The `dedoc` command exposes two subcommands.
@@ -53,7 +64,7 @@ optional AI flags (`--ai`, `--provider`, `--ai-model`, `--ai-base-url`).
 JSON output is an array of objects with `id`, `name`, `category`, `severity`,
 and `platforms`.
 
-### Examples
+### Example output
 
 ```bash
 $ dedoc diagnose logs/executor-oom.log
@@ -107,12 +118,12 @@ The text report is written in plain language, conclusion-first:
 4. **Other candidates considered** — a one-liner per alternative when more than
    one rule matched.
 
-On a terminal, the status and confidence band are color-coded
+On terminals, the status and confidence band are color-coded
 (`diagnosed` green, `insufficient_evidence` yellow, HIGH green / MEDIUM yellow /
 LOW red). Pass `--color never` to force plain output, or `--color always` if
 you are piping to a pager that supports ANSI codes.
 
-When several diagnosis rules match, DEDoc prints a ranked **candidate scoreboard**
+When multiple diagnosis rules match, DEDoc prints a ranked **candidate scoreboard**
 first, then full evidence and actions for the top candidate.
 
 ```bash
@@ -138,7 +149,7 @@ The JSON output of `diagnose` contains:
 
 The excerpt is always redacted before rendering.
 
-## Optional structured investigation (Phase 4)
+## Structured investigation (optional, Phase 4)
 
 The deterministic engine works on the log file alone. When structured runtime
 context is available (pipeline runs, schema snapshots, metrics, a query plan,
@@ -166,7 +177,7 @@ logs:
   - "24/10/08 13:10:12 WARN Adding partitioning column for full scan"
 ```
 
-The agent is **deterministic**: there is no AI and no API key. It:
+The investigation agent is **deterministic**: there is no AI and no API key. It:
 
 - selects probes based on the top hypothesis and the data actually present
 - invokes only read-only, allowlisted tools (`get_metrics`, `get_schema`,
@@ -183,7 +194,7 @@ The text/markdown report gains an **Investigation** section; JSON output adds an
 `findings`, `contradictions`, `calls`). Tools never mutate production state and
 all log-derived text is redacted before it appears in a report.
 
-## Optional AI explanation (Phase 5)
+## AI explanation (optional, Phase 5)
 
 The deterministic engine never requires AI and never needs an API key. As an
 optional layer, DEDoc can ask an AI provider to explain the top diagnosis. AI

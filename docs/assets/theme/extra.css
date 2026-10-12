@@ -7,6 +7,10 @@
 
 /* Code blocks: gentle rounding, otherwise Material defaults
    (light background in light mode, slate in dark mode). */
+.md-grid {
+  max-width: 1200px;
+}
+
 .md-typeset pre > code,
 .md-typeset .highlight {
   border-radius: 8px;
@@ -14,6 +18,10 @@
 
 .md-typeset pre {
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+
+.md-typeset code {
+  word-break: break-word;
 }
 
 /* Admonitions */
