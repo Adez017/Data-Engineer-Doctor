@@ -54,9 +54,12 @@ Always test on TestPyPI first:
 5. Verify: https://pypi.org/project/data-engineer-doctor/
 
 !!! warning "A version can be uploaded only once"
-    PyPI does not allow re-uploading the same version. To fix a bad release,
-    bump the version and publish again; use a `.devN`/`.postN` or yank the
-    release on PyPI.
+    PyPI does not allow re-uploading the same version. The publish workflow uses
+    `skip-existing: true`, so re-running it for a version that is already
+    uploaded is a no-op (not a failure) — useful when a GitHub Release also
+    triggers the workflow. To ship a real fix, bump the version and publish
+    again; you can also use a `.devN`/`.postN` suffix or yank the release on
+    PyPI.
 
 ## Versioning
 
