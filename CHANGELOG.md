@@ -9,6 +9,27 @@ The format is adapted from [Keep a Changelog](https://keepachangelog.com/).
 
 ### Added
 
+- **AI Provider Layer (Phase 5)**: optional AI explanation of the top
+  diagnosis, fully isolated from the deterministic core (§13). No AI runs and
+  no API key is needed unless the user explicitly opts in.
+- **Provider abstraction** (`dedoc/providers/`): `ProviderConfig` (secret-free),
+  a `No AI`/`NullProvider` default, OpenAI, any OpenAI-compatible endpoint
+  (vLLM/LM Studio/gateways), local Ollama (no key), Azure OpenAI (deployment
+  URL + `api-key` header), and Anthropic (`/v1/messages`). All built on the
+  standard library — no runtime SDK dependencies.
+- **Environment-based configuration only**: `DEDOC_AI_PROVIDER`,
+  `DEDOC_AI_MODEL`, `DEDOC_AI_BASE_URL`, `DEDOC_OPENAI_API_KEY`,
+  `DEDOC_AZURE_OPENAI_API_KEY`/`DEDOC_AZURE_OPENAI_ENDPOINT`,
+  `DEDOC_ANTHROPIC_API_KEY`. API keys are never accepted as CLI arguments.
+- **Redaction before every external call**: prompt construction
+  (`dedoc/providers/prompt.py`) re-redacts and bounds the input excerpt; tests
+  prove secrets cannot survive into the bytes sent to a provider.
+- **Report schema v4** (`report_schema_version: "4"`): adds an `ai_explanation`
+  object (`provider`, `model`, `text`) rendered in text/markdown/JSON formats.
+- **CLI**: `dedoc diagnose --ai` plus `--provider`, `--ai-model`,
+  `--ai-base-url` overrides.
+- **SDK**: `dedoc.diagnose(..., ai=True)` and explicit
+  `ProviderConfig`; `ProviderConfig` and `AIExplanation` are public API.
 - **Bounded investigation agent (Phase 4)**: optional, deterministic inspection
   of structured runtime context (runs, schemas, metrics, query plan, logs)
   through a read-only allowlisted tool layer, with independent contradiction
@@ -44,6 +65,9 @@ The format is adapted from [Keep a Changelog](https://keepachangelog.com/).
 ### Changed
 
 - **Report schema** moved from `"2"` to `"3"` (adds `investigation`).
+- **Report schema** moved from `"3"` to `"4"` (adds `ai_explanation`).
+- **Security guide** documents exactly what leaves the local environment when
+  optional AI is enabled.
 - **Diagnostic knowledge base (33 diagnoses)** across six categories:
   - Schema (`DEDOC-SCHEMA-001`–`006`): missing column, data type mismatch,
     unexpected column, duplicate column, schema evolution failure, nested

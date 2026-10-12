@@ -15,6 +15,8 @@ from dedoc.models.diagnosis import (
     Reference,
 )
 
+__all__ = ["AIExplanation", "DiagnosisReport", "MatchedDiagnosis", "ReportStatus"]
+
 
 class ReportStatus(StrEnum):
     DIAGNOSED = "diagnosed"
@@ -39,11 +41,23 @@ class MatchedDiagnosis(BaseModel):
     references: list[Reference] = Field(default_factory=list)
 
 
+class AIExplanation(BaseModel):
+    """An optional AI-generated explanation of the top diagnosis (§13).
+
+    The explanation is produced from a redacted prompt and never contains
+    credentials. It is only present when the user explicitly enables AI.
+    """
+
+    provider: str
+    model: str | None = None
+    text: str
+
+
 class DiagnosisReport(BaseModel):
     """Structured result of one diagnosis run."""
 
     dedoc_version: str
-    report_schema_version: str = "3"
+    report_schema_version: str = "4"
     scoring_model_version: str = SCORING_MODEL_VERSION
     generated_at: datetime = Field(default_factory=lambda: datetime.now(UTC))
     input_source: str
@@ -55,3 +69,4 @@ class DiagnosisReport(BaseModel):
     matches: list[MatchedDiagnosis] = Field(default_factory=list)
     message: str = ""
     investigation: InvestigationRecord | None = None
+    ai_explanation: AIExplanation | None = None

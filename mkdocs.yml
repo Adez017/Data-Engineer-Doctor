@@ -2,10 +2,14 @@ site_name: Data Engineer Doctor (DEDoc)
 site_description: Open-source, evidence-driven diagnosis for modern data engineering failures
 site_author: Aditya Singh Rathore
 site_url: https://Adez017.github.io/Data-Engineer-Doctor/
+repo_url: https://github.com/Adez017/Data-Engineer-Doctor
+repo_name: Adez017/Data-Engineer-Doctor
+edit_uri: blob/main/docs/
 copyright: © 2026 Aditya Singh Rathore — Data Engineer Doctor
 
 theme:
   name: material
+  language: en
   logo: assets/logo.svg
   favicon: assets/logo.svg
   icon:
@@ -18,6 +22,7 @@ theme:
     - navigation.top
     - navigation.instant
     - navigation.expand
+    - content.action.edit
     - search.highlight
     - search.suggest
     - content.code.copy

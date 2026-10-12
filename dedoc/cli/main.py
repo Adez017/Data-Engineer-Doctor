@@ -103,6 +103,30 @@ def diagnose(
             help="Structured context file (YAML/JSON): runs, schemas, metrics, query plan, logs.",
         ),
     ] = None,
+    ai: Annotated[
+        bool,
+        typer.Option(
+            "--ai",
+            help="Attach an optional AI explanation. Provider and keys come from the "
+            "DEDOC_AI_* environment variables; see docs/usage.md.",
+        ),
+    ] = False,
+    provider: Annotated[
+        str | None,
+        typer.Option(
+            "--provider",
+            help="Override the AI provider: none, openai, openai_compatible, ollama, "
+            "azure_openai, or anthropic.",
+        ),
+    ] = None,
+    ai_model: Annotated[
+        str | None,
+        typer.Option("--ai-model", help="Override the AI model for the chosen provider."),
+    ] = None,
+    ai_base_url: Annotated[
+        str | None,
+        typer.Option("--ai-base-url", help="Override the provider base URL."),
+    ] = None,
 ) -> None:
     """Diagnose a failure log and print an evidence-backed report.
 
@@ -111,12 +135,23 @@ def diagnose(
     """
     try:
         context = _load_context(context_file) if context_file is not None else None
+        from dedoc.providers.base import ProviderConfig
+        from dedoc.providers.registry import provider_config_from_env
+
+        provider_config: ProviderConfig | None = None
+        if ai or provider is not None or ai_model is not None or ai_base_url is not None:
+            provider_config = provider_config_from_env(
+                provider=provider,
+                model=ai_model,
+                base_url=ai_base_url,
+            )
         report = diagnose_file(
             file,
             diagnoses_path=diagnoses_path,
             input_format=input_format,
             investigate=investigate,
             context=context,
+            provider_config=provider_config,
         )
     except DEDocError as exc:
         typer.echo(f"error: {exc}", err=True)

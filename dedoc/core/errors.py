@@ -21,3 +21,11 @@ class ToolError(DEDocError):
 
 class AgentConfigError(DEDocError):
     """The investigation agent configuration violates its hard bounds."""
+
+
+class ProviderConfigError(DEDocError):
+    """The AI provider configuration is invalid (unknown provider, bad bounds)."""
+
+
+class ProviderError(DEDocError):
+    """An AI provider could not complete an explanation request."""

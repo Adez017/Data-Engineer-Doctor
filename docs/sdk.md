@@ -29,9 +29,15 @@ for match in report.matches:
 `diagnose` raises:
 
 - `dedoc.core.errors.InputError`: the input file is missing, too large, or
-  malformed.
+  malformed (also raised for an invalid investigation context mapping).
 - `dedoc.core.errors.DiagnosisLoadError`: the diagnoses directory is missing,
   empty, or contains an invalid definition.
+- `dedoc.core.errors.AgentConfigError`: the investigation `AgentConfig` has
+  invalid hard limits.
+- `dedoc.core.errors.ProviderConfigError`: an explicitly configured
+  `ProviderConfig` is invalid (unknown provider or bad bounds).
+- `dedoc.core.errors.ProviderError`: an explicitly enabled AI provider could
+  not complete its request.
 
 Internally the `diagnose` string argument is always coerced to a `Path`.
 
@@ -71,18 +77,33 @@ if report.investigation is not None:
 Without `investigate=True` the report simply has `investigation: null` and no
 tool ever runs.
 
-## Errors
+## Optional AI explanation
 
-`diagnose` raises:
+AI is never on by default. Enable it with `ai=True` (environment defaults) or
+pass an explicit `ProviderConfig`:
 
-- `dedoc.core.errors.InputError`: the input file is missing, too large, or
-  malformed (also raised for an invalid investigation context mapping).
-- `dedoc.core.errors.DiagnosisLoadError`: the diagnoses directory is missing,
-  empty, or contains an invalid definition.
-- `dedoc.core.errors.AgentConfigError`: the investigation `AgentConfig` has
-  invalid hard limits.
+```python
+from dedoc import diagnose
+from dedoc.providers import ProviderConfig
 
-Internally the `diagnose` string argument is always coerced to a `Path`.
+# From DEDOC_AI_* environment variables
+report = diagnose("logs/executor-oom.log", ai=True)
+print(report.ai_explanation.text if report.ai_explanation else "no AI")
+
+# Explicit configuration (keys still come from the environment)
+report = diagnose(
+    "logs/executor-oom.log",
+    provider_config=ProviderConfig(provider="ollama", model="llama3.2"),
+)
+```
+
+`ProviderConfig` is secret-free ($13): never put an API key in it. Keys are read
+from `DEDOC_OPENAI_API_KEY`, `DEDOC_AZURE_OPENAI_API_KEY`, or
+`DEDOC_ANTHROPIC_API_KEY`, and the local Ollama provider needs none.
+
+If the provider is not available (missing key/model) the report is still
+produced normally with `ai_explanation: null`. Every prompt sent to a provider
+is redacted and bounded first (see the security guide).
 
 ## What is public
 
@@ -90,9 +111,10 @@ Only the names in `dedoc.__all__` are the public API:
 
 - `dedoc.diagnose(...)`
 - `dedoc.list_diagnoses(...)`
-- `dedoc.Diagnosis`, `dedoc.DiagnosisReport`
+- `dedoc.Diagnosis`, `dedoc.DiagnosisReport`, `dedoc.AIExplanation`
 - `dedoc.AgentConfig`, `dedoc.InvestigationContext`,
   `dedoc.InvestigationRecord`
+- `dedoc.ProviderConfig`
 - `dedoc.__version__`
 
 Everything else under `dedoc.*` is an implementation detail and may change

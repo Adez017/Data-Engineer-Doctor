@@ -13,17 +13,20 @@ if TYPE_CHECKING:
     from dedoc.agents.config import AgentConfig
     from dedoc.agents.models import InvestigationRecord
     from dedoc.models.diagnosis import Diagnosis
-    from dedoc.models.report import DiagnosisReport
+    from dedoc.models.report import AIExplanation, DiagnosisReport
     from dedoc.parser.input_parser import InputFormat
+    from dedoc.providers.base import ProviderConfig
     from dedoc.tools.context import InvestigationContext
 
 __all__ = [
     "__version__",
     "AgentConfig",
+    "AIExplanation",
     "Diagnosis",
     "DiagnosisReport",
     "InvestigationContext",
     "InvestigationRecord",
+    "ProviderConfig",
     "diagnose",
     "list_diagnoses",
 ]
@@ -56,6 +59,8 @@ def diagnose(
     investigate: bool = False,
     context: InvestigationContext | None = None,
     agent_config: AgentConfig | None = None,
+    ai: bool = False,
+    provider_config: ProviderConfig | None = None,
 ) -> DiagnosisReport:
     """Run the diagnosis pipeline on a failure log file.
 
@@ -68,20 +73,33 @@ def diagnose(
         context: optional structured context (runs/schemas/metrics/query
             plan/logs) that the tools read from.
         agent_config: optional hard limits for the investigation agent.
+        ai: when True and a provider is configured (env `DEDOC_AI_PROVIDER` or
+            ``provider_config``), attach an optional AI explanation (§13).
+        provider_config: optional explicit provider configuration; takes
+            precedence over the environment when AI is enabled.
 
     Returns:
         An evidence-backed ``DiagnosisReport`` (matches, score, confidence band,
-        optional investigation).
+        optional investigation and AI explanation).
 
     Raises:
         InputError: if the input file is missing or malformed.
         DiagnosisLoadError: if diagnosis knowledge cannot be loaded.
+        ProviderConfigError: if an explicitly configured provider is invalid.
+        ProviderError: if an explicitly enabled AI provider fails.
     """
     from dedoc.core.pipeline import diagnose_file
     from dedoc.parser.input_parser import InputFormat
+    from dedoc.providers.registry import provider_config_from_env
 
     if input_format is None:
         input_format = InputFormat.AUTO
+    if provider_config is not None:
+        resolved_provider = provider_config
+    elif ai:
+        resolved_provider = provider_config_from_env()
+    else:
+        resolved_provider = None
     return diagnose_file(
         Path(source),
         diagnoses_path=diagnoses_path,
@@ -89,4 +107,5 @@ def diagnose(
         investigate=investigate,
         context=context,
         agent_config=agent_config,
+        provider_config=resolved_provider,
     )

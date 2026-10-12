@@ -34,6 +34,11 @@ report, which makes debugging, testing, and auditing straightforward.
   extra logs) through read-only, allowlisted tools. It corroborates the top
   diagnosis or reports a contradiction, respects hard time and step limits, and
   abstains when it has too little context instead of guessing.
+- **Optional AI explanation**: the `--ai` flag asks an AI provider (OpenAI,
+  local Ollama, Azure OpenAI, or Anthropic) to explain the top diagnosis in
+  plain text. Outside AI is never contacted unless you opt in, keys only come
+  from environment variables, and prompts are redacted and bounded before they
+  leave your machine.
 - **No vendor lock-in**: plain logs and structured JSON events work out of the
   box, with a small Python SDK on top.
 - **Professional toolkit**: MkDocs documentation site, GitHub Actions CI on
@@ -89,8 +94,16 @@ for embedding in issue reports or dashboards.
 dedoc diagnose spark-failure.log --investigate --context context.yaml
 ```
 
-See [docs/usage.md](docs/usage.md) for the full CLI reference and the context
-file format.
+**Optional AI explanation (opt-in):**
+
+```bash
+export DEDOC_AI_PROVIDER=ollama
+export DEDOC_AI_MODEL=llama3.2
+dedoc diagnose spark-failure.log --ai
+```
+
+See [docs/usage.md](docs/usage.md) for the full CLI reference, the context file
+format, and the AI provider guide.
 
 ## Python SDK
 
@@ -107,8 +120,9 @@ for match in report.matches:
 ```
 
 The public API is deliberately tiny: `diagnose`, `list_diagnoses`,
-`Diagnosis`, `DiagnosisReport`, `AgentConfig`, `InvestigationContext`, and
-`InvestigationRecord`. See [docs/sdk.md](docs/sdk.md) for details.
+`Diagnosis`, `DiagnosisReport`, `AIExplanation`, `AgentConfig`,
+`InvestigationContext`, `InvestigationRecord`, and `ProviderConfig`. See
+[docs/sdk.md](docs/sdk.md) for details.
 
 ## Development
 

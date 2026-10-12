@@ -16,8 +16,11 @@ from dedoc.evidence import MIN_SCORE_FOR_DIAGNOSIS, score_match
 from dedoc.evidence.models import ConfidenceBand, EvidenceBundle
 from dedoc.models.diagnosis import severity_rank
 from dedoc.models.failure import FailureEvent
-from dedoc.models.report import DiagnosisReport, MatchedDiagnosis, ReportStatus
+from dedoc.models.report import AIExplanation, DiagnosisReport, MatchedDiagnosis, ReportStatus
 from dedoc.parser.input_parser import InputFormat, parse_input
+from dedoc.providers.base import ProviderConfig
+from dedoc.providers.prompt import build_user_prompt
+from dedoc.providers.registry import build_provider
 from dedoc.tools.context import InvestigationContext
 
 _NO_MATCH_MESSAGE = (
@@ -96,6 +99,7 @@ def diagnose_file(
     investigate: bool = False,
     context: InvestigationContext | None = None,
     agent_config: AgentConfig | None = None,
+    provider_config: ProviderConfig | None = None,
 ) -> DiagnosisReport:
     """Run the deterministic diagnosis pipeline on an input file.
 
@@ -104,9 +108,14 @@ def diagnose_file(
     ``context`` through the read-only tool layer and attaches its findings to
     the report.
 
+    When ``provider_config`` is enabled (§13) and the provider is available,
+    an optional AI explanation is generated from a redacted prompt and attached
+    to the report. AI never runs in the deterministic default path.
+
     Raises:
         InputError: if the input file is missing or malformed.
         DiagnosisLoadError: if diagnosis knowledge cannot be loaded.
+        ProviderError: if an explicitly enabled AI provider fails.
     """
     input_path = Path(path)
     if not input_path.exists():
@@ -132,7 +141,7 @@ def diagnose_file(
             config=agent_config,
         )
 
-    return DiagnosisReport(
+    report = DiagnosisReport(
         dedoc_version=__version__,
         input_source=str(input_path),
         platform=platform,
@@ -144,3 +153,16 @@ def diagnose_file(
         message=message,
         investigation=investigation,
     )
+
+    if provider_config is not None:
+        provider = build_provider(provider_config)
+        if provider.available():
+            prompt = build_user_prompt(report, text)
+            explanation = provider.explain(prompt)
+            report.ai_explanation = AIExplanation(
+                provider=provider.name,
+                model=provider.model,
+                text=explanation,
+            )
+
+    return report

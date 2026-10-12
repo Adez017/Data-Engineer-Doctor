@@ -15,6 +15,10 @@ Diagnose a failure log and print an evidence-backed report.
 | `--diagnoses-path` | Override the diagnosis YAML directory (for custom forks/experiments). |
 | `--investigate` | Run the bounded investigation agent over optional structured context. |
 | `--context`, `-c` | Structured context file (YAML/JSON): runs, schemas, metrics, query plan, logs. |
+| `--ai` | Attach an optional AI explanation. Provider and keys are read from `DEDOC_AI_*` environment variables. |
+| `--provider` | Override the AI provider: `none`, `openai`, `openai_compatible`, `ollama`, `azure_openai`, or `anthropic`. |
+| `--ai-model` | Override the AI model (for Azure OpenAI use the deployment name). |
+| `--ai-base-url` | Override the provider base URL. |
 | `--version`, `-V` | Print the version and exit. |
 
 **Input types**
@@ -147,3 +151,47 @@ The text/markdown report gains an **Investigation** section; JSON output adds an
 `investigation` object (`status`, `iterations`, `tool_calls`, `reason`,
 `findings`, `contradictions`, `calls`). Tools never mutate production state and
 all log-derived text is redacted before it appears in a report.
+
+## Optional AI explanation (Phase 5)
+
+The deterministic engine never requires AI and never needs an API key. As an
+optional layer, DEDoc can ask an AI provider to explain the top diagnosis. AI
+only runs when you explicitly opt in:
+
+```bash
+$ export DEDOC_AI_PROVIDER=ollama
+$ export DEDOC_AI_MODEL=llama3.2
+$ dedoc diagnose spark-failure.log --ai
+```
+
+Providers and their environment variables:
+
+| Provider | `--provider` | Required environment | Notes |
+| --- | --- | --- | --- |
+| No AI (default) | `none` | — | Fully deterministic. |
+| OpenAI | `openai` | `DEDOC_OPENAI_API_KEY` | |
+| OpenAI-compatible | `openai_compatible` | `DEDOC_AI_BASE_URL` (optional `DEDOC_OPENAI_API_KEY`) | vLLM, LM Studio, local gateways. |
+| Ollama (local) | `ollama` | none | No API key needed; `model` points at a pulled model. |
+| Azure OpenAI | `azure_openai` | `DEDOC_AZURE_OPENAI_API_KEY`, `DEDOC_AZURE_OPENAI_ENDPOINT` | `--ai-model` is the deployment name. |
+| Anthropic | `anthropic` | `DEDOC_ANTHROPIC_API_KEY` | |
+
+`DEDOC_AI_PROVIDER`, `DEDOC_AI_MODEL`, and `DEDOC_AI_BASE_URL` configure the
+defaults; the `--provider`, `--ai-model`, and `--ai-base-url` flags override
+them per run. API keys are **never** accepted as CLI arguments or in config
+files.
+
+Privacy guarantees:
+
+- Outside AI is never contacted unless `--ai` (or `ai=True` in the SDK) is set.
+- Before anything is sent, log content is re-redacted and bounded to a few
+  thousand characters. Secrets cannot survive into the bytes that leave your
+  machine.
+- The explanation is appended as an **AI explanation** section in text/markdown
+  output and as an `ai_explanation` object in JSON (`provider`, `model`,
+  `text`). If the provider is unavailable (missing key, no model), AI is simply
+  skipped — the deterministic report still succeeds.
+
+What leaves the machine in AI mode: the redacted report summary (status, top
+diagnosis, matched signals, evidence descriptions and excerpts, recommendations)
+plus a bounded, redacted excerpt of the input — and the API key in a request
+header to the provider only.

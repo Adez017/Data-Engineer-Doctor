@@ -1,7 +1,7 @@
 # DEDoc: Data Engineer Doctor
 
 <div class="dedoc-hero">
-  <span class="dedoc-hero__kicker">Booted · Deterministic · No LLM</span>
+  <span class="dedoc-hero__kicker">Deterministic · Explainable · Optional AI</span>
   <p class="dedoc-hero__lead">Evidence-driven diagnosis for <mark>data engineering failures</mark>.</p>
   <p class="dedoc-hero__sub">
     DEDoc accepts failure logs, error messages, and structured events; normalizes them into a
@@ -21,8 +21,10 @@
   </div>
 </div>
 
-It works today **without any AI or LLM**: no API keys, no external model calls.
-Every conclusion is repeatable, explainable, and auditable.
+It works today **without any required AI or LLM**: no API keys, no external
+model calls, nothing leaves your machine. Every conclusion is repeatable,
+explainable, and auditable. An optional AI layer can explain the top diagnosis
+when you explicitly opt in.
 
 ## Find your way around
 
@@ -91,15 +93,22 @@ it, the competing diagnoses considered, and concrete next steps.
 
 ## Status
 
-The deterministic MVP (v0.1) is the active build target:
+The deterministic core is complete and exercised by integration tests on every
+fixture. The current build contains:
 
 - **Phase 2: knowledge base**. 33 diagnoses with fixtures, scoring, coverage.
 - **Phase 3: deterministic pipeline**. Analysis, evidence, reports.
+- **Phase 4: bounded investigation agent**. Read-only, allowlisted tools that
+  probe structured runtime context without AI.
+- **Phase 5: optional AI provider layer**. Isolated providers (OpenAI, local
+  Ollama, Azure OpenAI, Anthropic) that explain a diagnosis only when you opt
+  in; the deterministic path never requires a key.
 - **Phase 6: integrations**. CLI, Python SDK, CI (GitHub Actions).
-- **Phase 8: public launch**. Docs, contribution toolkit, prepare-only release.
+- **Phase 8: public launch (partial)**. Docs, contribution toolkit,
+  prepare-only release workflow.
 
-Agentic/AI investigation is a **later, optional** layer and is not required for
-any current feature.
+AI and agentic investigation are optional layers; no current feature depends on
+them.
 
 ## Requirements
 
