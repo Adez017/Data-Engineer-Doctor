@@ -22,7 +22,7 @@ Checklist of common user questions and where each is answered.
 | 12 | How do I use AI explanation mode? | [Configuration](../how-to/configuration.md) |
 | 13 | Which AI providers are supported? | [Configuration](../how-to/configuration.md) |
 | 14 | Where do API keys go? | [Configuration](../how-to/configuration.md) |
-| 15 | Does data leave my machine? | [Privacy at a glance](../explanation/privacy-at-a-glance.md) |
+| 15 | Does data leave my machine? | [Security & privacy](../explanation/security-model.md) |
 | 16 | Can I use DEDoc in CI? | [Recipes](../how-to/recipes.md#4-ci-usage) |
 | 17 | How do I automate parsing in pipelines? | [Recipes](../how-to/recipes.md#5-json-automation) |
 | 18 | Where are all diagnosis IDs documented? | [Diagnosis catalog](diagnosis-catalog.md) |

@@ -51,7 +51,11 @@ theme:
 markdown_extensions:
   - admonition
   - pymdownx.details
-  - pymdownx.superfences
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
   - pymdownx.tabbed:
       alternate_style: true
   - pymdownx.tasklist:
@@ -76,7 +80,7 @@ extra_css:
 
 nav:
   - Home: index.md
-  - Tutorial:
+  - Getting started:
       - First diagnosis: tutorial/first-diagnosis.md
   - How-to guides:
       - Installation: how-to/installation.md
@@ -90,19 +94,19 @@ nav:
       - CLI reference: reference/cli.md
       - Python SDK reference: reference/sdk.md
       - Diagnosis catalog: reference/diagnosis-catalog.md
+      - Full diagnosis reference: reference/diagnosis-reference.md
       - Evaluation & benchmarks: reference/evaluation.md
       - Top 25 user queries map: reference/top-25-queries.md
-      - Full diagnosis reference: diagnosis-reference.md
   - Explanation:
       - Architecture overview: explanation/architecture.md
       - Confidence model: explanation/confidence-model.md
-      - Security model: explanation/security-model.md
-      - Data handling & privacy at a glance: explanation/privacy-at-a-glance.md
+      - Security & privacy: explanation/security-model.md
       - Versioning & compatibility: explanation/versioning-compatibility.md
   - Operations:
       - Production adoption checklist: operations/production-adoption-checklist.md
       - Docs review rubric: operations/docs-review-rubric.md
       - Release docs audit checklist: operations/release-docs-audit.md
       - Docs success metrics: operations/docs-success-metrics.md
+  - Contributing: contributing.md
 
 strict: true

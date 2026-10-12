@@ -21,7 +21,7 @@ Bundled deterministic diagnoses by category.
 | schema | 6 |
 | spark | 8 |
 
-See full IDs, names, and signal mappings in [the detailed reference](../diagnosis-reference.md).
+See full IDs, names, and signal mappings in [the detailed reference](diagnosis-reference.md).
 
 ## Expected behavior
 

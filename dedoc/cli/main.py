@@ -123,7 +123,7 @@ def diagnose(
         typer.Option(
             "--ai",
             help="Attach an optional AI explanation. Provider and keys come from the "
-            "DEDOC_AI_* environment variables; see docs/usage.md.",
+            "DEDOC_AI_* environment variables; see the CLI reference.",
         ),
     ] = False,
     provider: Annotated[

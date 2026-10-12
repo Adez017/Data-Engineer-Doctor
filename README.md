@@ -64,7 +64,7 @@ make verify
 
 ## Security
 
-See [docs/explanation/privacy-at-a-glance.md](docs/explanation/privacy-at-a-glance.md)
+See [docs/explanation/security-model.md](docs/explanation/security-model.md)
 and [SECURITY.md](SECURITY.md).
 
 ## License

@@ -111,6 +111,14 @@ The format is adapted from [Keep a Changelog](https://keepachangelog.com/).
 
 ### Changed
 
+- **Documentation restructure and expansion**: removed the duplicated orphan
+  pages and merged their content into the canonical ones (`usage.md` → CLI
+  reference, `sdk.md` → SDK reference, security + privacy → a single
+  **Security & privacy** page), moved the full diagnosis reference under
+  `reference/`, and added a **Contributing** section. The home, architecture,
+  confidence, security, and versioning pages were rewritten with more depth and
+  **Mermaid diagrams**. The CLI reference was corrected (`list-diagnoses` has no
+  `markdown`/`--color`; the `--ai` help now points at a real page).
 - **FastAPI-inspired docs theme**: clean, minimal Material for MkDocs styling
   with FastAPI's teal/amber palette, a three-way auto/light/dark toggle, Roboto +
   Roboto Mono typography, theme-following code blocks, and a slim plain-language
