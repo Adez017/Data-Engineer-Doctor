@@ -1,77 +1,23 @@
-# DEDoc: Data Engineer Doctor
+# Data Engineer Doctor (DEDoc)
 
-<div class="dedoc-hero">
-  <span class="dedoc-hero__kicker">Deterministic · Explainable · Optional AI</span>
-  <p class="dedoc-hero__lead">Evidence-driven diagnosis for <mark>data engineering failures</mark>.</p>
-  <p class="dedoc-hero__sub">
-    DEDoc accepts failure logs, error messages, and structured events; normalizes them into a
-    canonical failure model; applies deterministic diagnostic rules; scores the evidence; and
-    produces an actionable, evidence-backed report.
-  </p>
-  <div class="dedoc-badges">
-    <span class="dedoc-badge"><span class="dedoc-badge__dot"></span>33 diagnoses</span>
-    <span class="dedoc-badge"><span class="dedoc-badge__dot"></span>Apache-2.0</span>
-    <span class="dedoc-badge"><span class="dedoc-badge__dot"></span>Python 3.11 / 3.12</span>
-    <span class="dedoc-badge"><span class="dedoc-badge__dot"></span>Explainable scoring</span>
-  </div>
-  <div class="dedoc-buttons">
-    <a class="dedoc-btn dedoc-btn--primary" href="usage/">Quick start<span class="dedoc-btn__arrow">&rarr;</span></a>
-    <a class="dedoc-btn" href="diagnosis-reference/">Diagnosis reference</a>
-    <a class="dedoc-btn" href="https://github.com/Adez017/Data-Engineer-Doctor">GitHub</a>
-  </div>
+<small>Open-source, evidence-driven diagnosis for modern data engineering failures.</small>
+
+<div class="dedoc-badges">
+  <span class="dedoc-badge"><strong>33</strong> diagnoses</span>
+  <span class="dedoc-badge"><strong>Apache-2.0</strong></span>
+  <span class="dedoc-badge"><strong>Python 3.11 / 3.12</strong></span>
+  <span class="dedoc-badge"><strong>no</strong> AI or API keys required</span>
 </div>
 
-It works today **without any required AI or LLM**: no API keys, no external
-model calls, nothing leaves your machine. Every conclusion is repeatable,
-explainable, and auditable. An optional AI layer can explain the top diagnosis
-when you explicitly opt in.
+DEDoc turns failure logs into actionable, evidence-backed reports. It detects the
+data engineering platform, extracts exception types and error signatures, matches
+them against a versioned knowledge base of **33 deterministic diagnoses**, and
+scores the evidence into a confidence band — with concrete next steps.
 
-## Find your way around
-
-<div class="dedoc-grid">
-  <a class="dedoc-card" href="usage/">
-    <span class="dedoc-card__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg></span>
-    <span class="dedoc-card__title">Usage</span>
-    <span class="dedoc-card__desc">CLI commands, output formats, exit codes, and report walkthroughs.</span>
-  </a>
-  <a class="dedoc-card" href="diagnosis-reference/">
-    <span class="dedoc-card__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></span>
-    <span class="dedoc-card__title">Diagnosis reference</span>
-    <span class="dedoc-card__desc">Every bundled diagnosis, its signals, hypotheses, and scoring.</span>
-  </a>
-  <a class="dedoc-card" href="sdk/">
-    <span class="dedoc-card__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></span>
-    <span class="dedoc-card__title">Python SDK</span>
-    <span class="dedoc-card__desc">Use DEDoc as a library inside your own pipeline and tooling.</span>
-  </a>
-  <a class="dedoc-card" href="contributing/">
-    <span class="dedoc-card__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg></span>
-    <span class="dedoc-card__title">Contributing</span>
-    <span class="dedoc-card__desc">How to add a diagnosis, fixtures, verification, and documentation.</span>
-  </a>
-  <a class="dedoc-card" href="security/">
-    <span class="dedoc-card__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span>
-    <span class="dedoc-card__title">Security</span>
-    <span class="dedoc-card__desc">Secret redaction guarantees and the vulnerability reporting process.</span>
-  </a>
-  <a class="dedoc-card" href="https://github.com/Adez017/Data-Engineer-Doctor">
-    <span class="dedoc-card__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg></span>
-    <span class="dedoc-card__title">Open source</span>
-    <span class="dedoc-card__desc">Source code, issues, and releases on GitHub.</span>
-  </a>
-</div>
-
-## What it does
-
-- Detects the data engineering platform from raw failure text
-  (`spark`, `databricks`, or unknown).
-- Extracts exception types, error signatures, and correlated runtime signals.
-- Matches against a versioned, YAML-based diagnostic knowledge base
-  (**33 deterministic diagnoses** across schema, data quality, Spark, Delta,
-  connectivity, and performance).
-- Ranks hypotheses with an explicit, documented scoring model and a confidence
-  band (HIGH / MEDIUM / insufficient evidence).
-- Redacts secrets from any report output before it leaves the machine.
+It works today **without any required AI or LLM**: no API keys, no external model
+calls, nothing leaves your machine. Every conclusion is repeatable, explainable,
+and auditable. An optional AI layer can explain the top diagnosis when you
+explicitly opt in.
 
 ## Quick start
 
@@ -88,23 +34,70 @@ dedoc diagnose path/to/error.json --format json
 dedoc list-diagnoses --format json
 ```
 
-The report singles out a top candidate with its score, the evidence that drove
-it, the competing diagnoses considered, and concrete next steps.
+## Example
+
+```text
+$ dedoc diagnose logs/executor-oom.log
+
+What we found:
+  DEDOC-SPARK-001 Executor Out of Memory
+  Severity: critical | Platforms: spark, databricks
+  Confidence: HIGH (80/100)
+  Matched exception types: OutOfMemoryError
+  Possible causes: Executor Memory Exhausted; Data Skew Caused OOM
+
+Evidence:
+  1. Exact error signature matched: executor_oom (+40)
+      > line 6: 24/10/08 13:10:12 INFO TaskSetManager: Starting task 42.0 ...
+
+What to do next:
+  Immediate:
+    - Identify the failing task and stage; a single large partition or a skew often causes the failure.
+  Prevention:
+    - Enable and review AQE skew join optimization for joins on skewed keys.
+```
+
+## Features
+
+* **Deterministic core** — no AI dependency; identical input always produces the
+  same report.
+* **Explainable scoring** — every conclusion cites the evidence, its weight, and
+  a confidence band (HIGH / MEDIUM / insufficient evidence).
+* **Plain-language reports** — conclusion-first text output with color-coded
+  confidence; JSON and Markdown for machines and issue trackers.
+* **Secret redaction** — passwords, tokens, and keys are redacted from any report
+  output before it leaves the machine.
+* **Optional AI**, fully isolated — OpenAI, local Ollama, Azure OpenAI, and
+  Anthropic providers explain a diagnosis only when asked; keys are read only
+  from environment variables.
+* **Bounded investigation** — an optional, read-only tool layer probes structured
+  runtime context (runs, schemas, metrics, query plans) without AI.
+* **CLI + SDK + CI** — a `dedoc` command, a typed Python API, and GitHub Actions
+  running the single `make verify` gate.
+
+## Find your way around
+
+* [Usage](usage.md) — CLI commands, output formats, exit codes, and report walkthroughs.
+* [Diagnosis reference](diagnosis-reference.md) — every bundled diagnosis, its signals, hypotheses, and scoring.
+* [Python SDK](sdk.md) — use DEDoc as a library inside your own pipeline and tooling.
+* [Contributing](contributing.md) — how to add a diagnosis, fixtures, verification, and documentation.
+* [Security](security.md) — secret redaction guarantees and the vulnerability reporting process.
+* [GitHub](https://github.com/Adez017/Data-Engineer-Doctor) — source code, issues, and releases.
 
 ## Status
 
 The deterministic core is complete and exercised by integration tests on every
 fixture. The current build contains:
 
-- **Phase 2: knowledge base**. 33 diagnoses with fixtures, scoring, coverage.
-- **Phase 3: deterministic pipeline**. Analysis, evidence, reports.
-- **Phase 4: bounded investigation agent**. Read-only, allowlisted tools that
+* **Phase 2: knowledge base**. 33 diagnoses with fixtures, scoring, coverage.
+* **Phase 3: deterministic pipeline**. Analysis, evidence, reports.
+* **Phase 4: bounded investigation agent**. Read-only, allowlisted tools that
   probe structured runtime context without AI.
-- **Phase 5: optional AI provider layer**. Isolated providers (OpenAI, local
+* **Phase 5: optional AI provider layer**. Isolated providers (OpenAI, local
   Ollama, Azure OpenAI, Anthropic) that explain a diagnosis only when you opt
   in; the deterministic path never requires a key.
-- **Phase 6: integrations**. CLI, Python SDK, CI (GitHub Actions).
-- **Phase 8: public launch (partial)**. Docs, contribution toolkit,
+* **Phase 6: integrations**. CLI, Python SDK, CI (GitHub Actions).
+* **Phase 8: public launch (partial)**. Docs, contribution toolkit,
   prepare-only release workflow.
 
 AI and agentic investigation are optional layers; no current feature depends on
@@ -112,8 +105,8 @@ them.
 
 ## Requirements
 
-- Python 3.11 or 3.12
-- GNU Make (for the verification workflow)
+* Python 3.11 or 3.12
+* GNU Make (for the verification workflow)
 
 ## Development
 
@@ -128,17 +121,7 @@ packaged build. A change is not complete until it passes.
 
 ## Creator
 
-<div class="dedoc-creator">
-  <span class="dedoc-creator__avatar">AS</span>
-  <span>
-    <span class="dedoc-creator__name">Aditya Singh Rathore</span><br/>
-    <span class="dedoc-creator__role">Creator &amp; maintainer of Data Engineer Doctor</span><br/>
-    <span class="dedoc-creator__links">
-      <a href="https://github.com/Adez017">GitHub</a> ·
-      <a href="mailto:rathoreadityasingh40@gmail.com">Email</a>
-    </span>
-  </span>
-</div>
+<span class="dedoc-creator">Aditya Singh Rathore — [GitHub](https://github.com/Adez017) · [Email](mailto:rathoreadityasingh40@gmail.com)</span>
 
 ## License
 

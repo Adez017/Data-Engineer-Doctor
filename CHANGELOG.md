@@ -76,6 +76,11 @@ The format is adapted from [Keep a Changelog](https://keepachangelog.com/).
 
 ### Changed
 
+- **FastAPI-inspired docs theme**: clean, minimal Material for MkDocs styling
+  with FastAPI's teal/amber palette, a three-way auto/light/dark toggle, Roboto +
+  Roboto Mono typography, theme-following code blocks, and a slim plain-language
+  homepage (badge pills, short example, features list) replacing the heavier
+  n8n-style hero, button, and card layout.
 - **Report schema** moved from `"2"` to `"3"` (adds `investigation`).
 - **Report schema** moved from `"3"` to `"4"` (adds `ai_explanation`).
 - **Security guide** documents exactly what leaves the local environment when

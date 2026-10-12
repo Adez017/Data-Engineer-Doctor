@@ -14,32 +14,38 @@ theme:
   favicon: assets/logo.svg
   icon:
     repo: fontawesome/brands/github
-  font: false
   features:
     - navigation.tabs
-    - navigation.sections
+    - navigation.tabs.sticky
     - navigation.path
     - navigation.top
     - navigation.instant
-    - navigation.expand
+    - navigation.footer
+    - toc.follow
     - content.action.edit
     - search.highlight
     - search.suggest
     - content.code.copy
     - content.tabs.link
   palette:
-    - scheme: default
-      primary: deep-orange
-      accent: deep-orange
+    - media: "(prefers-color-scheme)"
       toggle:
-        icon: material/brightness-7
-        name: Switch to dark mode
-    - scheme: slate
-      primary: deep-orange
-      accent: deep-orange
-      toggle:
-        icon: material/brightness-4
+        icon: material/lightbulb-auto
         name: Switch to light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: teal
+      accent: amber
+      toggle:
+        icon: material/lightbulb
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: teal
+      accent: amber
+      toggle:
+        icon: material/lightbulb-outline
+        name: Switch to system preference
 
 markdown_extensions:
   - admonition
