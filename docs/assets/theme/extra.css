@@ -42,45 +42,99 @@
   padding-left: 1.5rem;
 }
 
-/* Home page badge pills (slim, outline style) */
+/* Home page */
 .dedoc-hero {
   text-align: center;
-  margin: 0.5rem 0 1.25rem;
+  margin: 0.5rem 0 1.5rem;
 }
 
-.dedoc-hero-logo {
-  width: 96px;
-  height: 96px;
+.dedoc-hero-wordmark {
+  width: min(100%, 560px);
+  height: auto;
   object-fit: contain;
-  margin: 0 auto 0.5rem;
+  margin: 0 auto 0.75rem;
   display: block;
 }
 
-.dedoc-badges {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 0.5rem;
-  margin: 0.6rem 0 1rem;
+.dedoc-tagline {
+  margin: 0 auto 1rem;
+  max-width: 760px;
+  font-size: 1.15rem;
+  color: var(--md-default-fg-color--light);
 }
 
-.dedoc-badge {
+.dedoc-hero-actions {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 0.25rem;
+}
+
+.dedoc-cta {
   display: inline-flex;
   align-items: center;
-  gap: 0.35rem;
-  padding: 0.22rem 0.6rem;
-  border: 1px solid var(--md-default-fg-color--lightest);
-  border-radius: 999px;
-  color: var(--md-default-fg-color--light);
-  font-size: 0.78rem;
-  font-weight: 500;
-  letter-spacing: 0.01em;
-  background-color: var(--md-default-bg-color);
+  justify-content: center;
+  min-width: 10rem;
+  padding: 0.55rem 1rem;
+  border-radius: 0.5rem;
+  border: 1px solid transparent;
+  text-decoration: none !important;
+  font-weight: 700;
+  transition: transform 120ms ease;
 }
 
-.dedoc-badge strong {
-  color: var(--md-default-fg-color);
-  font-weight: 700;
+.dedoc-cta:hover {
+  transform: translateY(-1px);
+}
+
+.dedoc-cta-primary {
+  background-color: #009688;
+  color: #fff !important;
+}
+
+.dedoc-cta-secondary {
+  border-color: var(--md-default-fg-color--lightest);
+  color: var(--md-default-fg-color) !important;
+}
+
+.dedoc-grid {
+  display: grid;
+  gap: 0.9rem;
+  margin: 1rem 0 1.35rem;
+}
+
+.dedoc-grid-feature {
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+.dedoc-grid-metrics {
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+}
+
+.dedoc-card {
+  border: 1px solid var(--md-default-fg-color--lightest);
+  border-radius: 0.6rem;
+  padding: 0.8rem 0.9rem;
+  background: var(--md-default-bg-color);
+}
+
+.dedoc-card h3 {
+  margin: 0 0 0.3rem;
+}
+
+.dedoc-card p {
+  margin: 0;
+  color: var(--md-default-fg-color--light);
+}
+
+.dedoc-metric {
+  text-align: center;
+}
+
+.dedoc-metric h3 {
+  margin-bottom: 0.15rem;
+  color: #009688;
 }
 
 /* Footnote-style creator line */
