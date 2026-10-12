@@ -21,6 +21,7 @@ theme:
     - navigation.top
     - navigation.instant
     - navigation.footer
+    - navigation.indexes
     - toc.follow
     - content.action.edit
     - search.highlight
@@ -75,10 +76,31 @@ extra_css:
 
 nav:
   - Home: index.md
-  - Usage: usage.md
-  - Diagnosis reference: diagnosis-reference.md
-  - Python SDK: sdk.md
-  - Contributing: contributing.md
-  - Security: security.md
+  - Tutorial:
+      - First diagnosis: tutorial/first-diagnosis.md
+  - How-to guides:
+      - Installation: how-to/installation.md
+      - Configuration: how-to/configuration.md
+      - Recipes: how-to/recipes.md
+      - Troubleshooting: how-to/troubleshooting.md
+      - FAQ: how-to/faq.md
+      - When to use DEDoc: how-to/when-to-use.md
+  - Reference:
+      - CLI reference: reference/cli.md
+      - Python SDK reference: reference/sdk.md
+      - Diagnosis catalog: reference/diagnosis-catalog.md
+      - Top 25 user queries map: reference/top-25-queries.md
+      - Full diagnosis reference: diagnosis-reference.md
+  - Explanation:
+      - Architecture overview: explanation/architecture.md
+      - Confidence model: explanation/confidence-model.md
+      - Security model: explanation/security-model.md
+      - Data handling & privacy at a glance: explanation/privacy-at-a-glance.md
+      - Versioning & compatibility: explanation/versioning-compatibility.md
+  - Operations:
+      - Production adoption checklist: operations/production-adoption-checklist.md
+      - Docs review rubric: operations/docs-review-rubric.md
+      - Release docs audit checklist: operations/release-docs-audit.md
+      - Docs success metrics: operations/docs-success-metrics.md
 
 strict: true
