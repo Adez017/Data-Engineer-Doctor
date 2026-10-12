@@ -9,6 +9,10 @@ The format is adapted from [Keep a Changelog](https://keepachangelog.com/).
 
 ### Added
 
+- **PyPI publishing via Trusted Publishing**: a new
+  `.github/workflows/publish.yml` builds, `twine check`s, and publishes to
+  TestPyPI or PyPI using OIDC — no stored API tokens. Adds `RELEASING.md`, PyPI
+  `Project-URL`s, and PEP 639 license metadata (`Apache-2.0`).
 - **Examples and benchmark scaffolding**: `examples/logs/` ships runnable sample
   inputs (Spark, Delta, Schema, ADF, and a benign log) with a documented
   expected outcome each, plus `make examples` to diagnose them all.

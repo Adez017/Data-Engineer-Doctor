@@ -7,25 +7,33 @@ name = "data-engineer-doctor"
 version = "0.1.0"
 description = "Open-source, evidence-driven diagnosis for modern data engineering failures"
 readme = "README.md"
-license = { file = "LICENSE" }
+license = "Apache-2.0"
+license-files = ["LICENSE"]
 requires-python = ">=3.11"
-authors = [{ name = "Data Engineer Doctor contributors" }]
+authors = [{ name = "Aditya Singh Rathore", email = "rathoreadityasingh40@gmail.com" }]
 keywords = ["data-engineering", "spark", "pyspark", "databricks", "diagnostics", "troubleshooting"]
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Developers",
-    "License :: OSI Approved :: Apache Software License",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Topic :: Software Development :: Debuggers",
     "Topic :: System :: Systems Administration",
 ]
+
 dependencies = [
     "typer>=0.12,<1",
     "pydantic>=2.6,<3",
     "PyYAML>=6,<7",
 ]
+
+[project.urls]
+Homepage = "https://github.com/Adez017/Data-Engineer-Doctor"
+Documentation = "https://Adez017.github.io/Data-Engineer-Doctor/"
+Repository = "https://github.com/Adez017/Data-Engineer-Doctor"
+Issues = "https://github.com/Adez017/Data-Engineer-Doctor/issues"
+Changelog = "https://github.com/Adez017/Data-Engineer-Doctor/blob/main/CHANGELOG.md"
 
 [project.optional-dependencies]
 dev = [
@@ -34,6 +42,7 @@ dev = [
     "mypy>=1.10",
     "types-PyYAML",
     "build>=1.2",
+    "twine>=5",
     "pip-audit>=2.7",
     "mkdocs>=1.6,<2",
     "mkdocs-material>=9.5,<10",
@@ -49,6 +58,7 @@ dev = [
     "mypy>=1.10",
     "types-PyYAML",
     "build>=1.2",
+    "twine>=5",
     "pip-audit>=2.7",
     "mkdocs>=1.6,<2",
     "mkdocs-material>=9.5,<10",
@@ -72,6 +82,7 @@ include = [
     "BUILD_PLAN.md",
     "README.md",
     "CONTRIBUTING.md",
+    "RELEASING.md",
     "SECURITY.md",
     "LICENSE",
     "Makefile",
