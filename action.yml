@@ -1,0 +1,74 @@
+name: Data Engineer Doctor
+
+description: >-
+  Evidence-driven diagnosis for modern data engineering failures. Diagnose Spark,
+  Databricks and related platform logs in CI and get an evidence-backed report.
+
+author: Data Engineer Doctor contributors
+
+branding:
+  icon: activity
+  color: teal
+
+inputs:
+  path:
+    description: Log file, directory, or glob pattern to diagnose.
+    required: true
+  format:
+    description: Report format to emit (text, markdown, or json).
+    required: false
+    default: markdown
+  output:
+    description: >-
+      File to append reports to. Defaults to the GitHub step summary when one is
+      available, otherwise the log.
+    required: false
+    default: ""
+  fail-on:
+    description: "When to fail the job: never, diagnosed, or error."
+    required: false
+    default: never
+  version:
+    description: Package version to install (e.g. 0.1.0). Defaults to the latest release.
+    required: false
+    default: ""
+  install:
+    description: Set to "false" to skip installation and use an existing `dedoc` command.
+    required: false
+    default: "true"
+  color:
+    description: "Color mode for text output: auto, always, or never."
+    required: false
+    default: never
+  diagnoses-path:
+    description: Override the diagnoses directory.
+    required: false
+    default: ""
+
+runs:
+  using: composite
+  steps:
+    - name: Install Data Engineer Doctor
+      if: ${{ inputs.install == 'true' }}
+      shell: bash
+      env:
+        DEDOC_VERSION: ${{ inputs.version }}
+      run: |
+        set -euo pipefail
+        python -m pip install --upgrade pip >/dev/null
+        if [ -n "${DEDOC_VERSION}" ]; then
+          python -m pip install "data-engineer-doctor==${DEDOC_VERSION}"
+        else
+          python -m pip install data-engineer-doctor
+        fi
+
+    - name: Diagnose
+      shell: bash
+      env:
+        DEDOC_INPUT_PATH: ${{ inputs.path }}
+        DEDOC_FORMAT: ${{ inputs.format }}
+        DEDOC_OUTPUT: ${{ inputs.output }}
+        DEDOC_FAIL_ON: ${{ inputs.fail-on }}
+        DEDOC_COLOR: ${{ inputs.color }}
+        DEDOC_DIAGNOSES_PATH: ${{ inputs.diagnoses-path }}
+      run: bash "${{ github.action_path }}/actions/entrypoint.sh"
