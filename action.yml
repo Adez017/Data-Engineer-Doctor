@@ -7,7 +7,7 @@ author: Data Engineer Doctor contributors
 
 branding:
   icon: activity
-  color: teal
+  color: blue
 
 inputs:
   path:
