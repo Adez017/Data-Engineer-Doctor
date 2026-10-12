@@ -1,0 +1,56 @@
+id: DEDOC-ADF-002
+name: Integration Runtime Unavailable
+category: adf.integration_runtime
+
+severity:
+  default: high
+
+platforms:
+  - adf
+
+patterns:
+  exception_types: []
+
+signals:
+  positive:
+    - adf_integration_runtime_unavailable
+
+hypotheses:
+  - self_hosted_ir_offline
+  - ir_node_deallocated_or_restarted
+  - network_or_proxy_blocking_ir
+
+recommendations:
+  immediate:
+    - >-
+      Confirm the self-hosted integration runtime (SHIR) service is running on
+      its host VM and shows "Running" in the Data Factory "Integration
+      runtimes" page.
+    - >-
+      If the IR is offline, restart the Microsoft Integration Runtime service or
+      re-register the node with a fresh authentication key.
+  recommended:
+    - >-
+      Check the host for pending OS updates, reboots, or firewall/proxy rules
+      that block outbound access to Azure Service Bus (used for IR
+      communication).
+    - >-
+      Add a second SHIR node for high availability so a single host going down
+      does not block pipelines.
+  prevention:
+    - >-
+      Monitor SHIR node availability and alert when the IR has no online nodes.
+    - >-
+      Pin the IR to a maintenance window and automate health checks after host
+      patching.
+
+references:
+  - source: official documentation - Self-hosted integration runtime troubleshooting
+    url: https://learn.microsoft.com/en-us/azure/data-factory/self-hosted-integration-runtime-troubleshoot-guide
+  - source: official documentation - Create and configure a self-hosted integration runtime
+    url: https://learn.microsoft.com/en-us/azure/data-factory/create-self-hosted-integration-runtime
+
+tests:
+  fixtures:
+    - positive/adf-integration-runtime-offline
+    - negative/adf-benign-pipeline-log

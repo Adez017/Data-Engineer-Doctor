@@ -239,9 +239,59 @@ SIGNAL_REGISTRY: dict[str, SignalDef] = {
         exact=False,
         flags=re.MULTILINE,
     ),
+    # -- azure data factory ------------------------------------------------
+    "adf_linked_service_error": _sig(
+        r"linked\s+service[^\n]*(failed|error|invalid|unable|cannot|not\s+found)"
+        r"|fail(ed|ure)?\s+to\s+connect\s+to\s+(the\s+)?linked\s+service"
+        r"|cannot\s+connect\s+to\s+(the\s+)?linked\s+service"
+        r"|LinkedServiceConnectionFailed",
+        exact=True,
+    ),
+    "adf_integration_runtime_unavailable": _sig(
+        r"self[- ]?hosted\s+integration\s+runtime|SelfHostedIntegrationRuntime"
+        r"|integration\s+runtime[^\n]*(not\s+available|unavailable|offline|not\s+running"
+        r"|cannot\s+be\s+reached|is\s+down|no\s+active\s+node)"
+        r"|integration\s+runtime\s+node\s+is\s+unreachable",
+        exact=True,
+    ),
+    "adf_dataset_not_found": _sig(
+        r"(dataset|data\s+set|blob\s+path|file\s+path|source\s+path)[^\n]*\bnot\s+found"
+        r"|DataFactoryDatasetNotFound|DatasetNotFound"
+        r"|(cannot|could\s+not)\s+find\s+the\s+dataset",
+        exact=True,
+    ),
+    "adf_activity_timeout": _sig(
+        r"activity[^\n]*(timed?\s*out|exceeded\s+its\s+timeout)"
+        r"|ActivityTimeout"
+        r"|the\s+activity\s+did\s+not\s+complete\s+within\s+the\s+configured\s+timeout",
+        exact=True,
+    ),
+    "adf_parameter_error": _sig(
+        r"missing\s+required\s+parameter[s]?"
+        r"|required\s+parameter[s]?\s+(is|are)\s+(missing|not\s+(found|provided|specified))"
+        r"|parameter\s+[`'\"][^`'\"]+[`'\"]\s+(is\s+not\s+found|does\s+not\s+exist)"
+        r"|template\s+parameter[s]?\s+validation\s+failed"
+        r"|InvalidTemplate",
+        exact=True,
+    ),
+    "adf_throttling": _sig(
+        r"too\s+many\s+requests|HTTP\s+429"
+        r"|throttl(ed|ing)"
+        r"|exceeded\s+the\s+(allowed\s+)?(rate|request)\s+limit",
+        exact=True,
+    ),
 }
 
 _DATABRICKS_MARKERS = ("databricks", "dbr/", "com.databricks")
+_ADF_MARKERS = (
+    "azure data factory",
+    "data factory",
+    "datafactory",
+    "microsoft.datafactory",
+    "selfhostedintegrationruntime",
+    "self-hosted integration runtime",
+    "integration runtime",
+)
 _SPARK_MARKERS = (
     "org.apache.spark",
     "pyspark",
@@ -275,6 +325,8 @@ def detect_platform(text: str) -> str:
     lowered = text.lower()
     if any(marker in lowered for marker in _DATABRICKS_MARKERS):
         return "databricks"
+    if any(marker in lowered for marker in _ADF_MARKERS):
+        return "adf"
     if any(marker in lowered for marker in _SPARK_MARKERS):
         return "spark"
     return "unknown"

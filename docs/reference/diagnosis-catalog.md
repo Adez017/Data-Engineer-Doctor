@@ -6,13 +6,14 @@ Bundled deterministic diagnoses by category.
 
 ## Counts
 
-- Total diagnoses: **33**
-- Categories: connectivity, delta, performance, quality, schema, spark
+- Total diagnoses: **39**
+- Categories: adf, connectivity, delta, performance, quality, schema, spark
 
 ## Category coverage
 
 | Category | Count |
 | --- | --- |
+| adf | 6 |
 | connectivity | 5 |
 | delta | 5 |
 | performance | 4 |

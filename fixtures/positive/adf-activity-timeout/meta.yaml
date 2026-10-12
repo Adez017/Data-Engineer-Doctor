@@ -1,0 +1,11 @@
+name: adf-activity-timeout
+kind: positive
+description: >-
+  A long-running Azure Data Factory activity exceeds its configured timeout and
+  fails.
+expected:
+  status: diagnosed
+  exit_code: 0
+  confidence_band: MEDIUM
+  diagnosis_ids:
+    - DEDOC-ADF-004

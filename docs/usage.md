@@ -62,7 +62,7 @@ The default text output groups diagnoses by category with a per-group count and
 a human-readable category name, so you can scan the knowledge base quickly:
 
 ```text
-Data Engineer Doctor — 33 diagnosis definition(s)
+Data Engineer Doctor — 39 diagnosis definition(s)
 
 Schema (6)
   DEDOC-SCHEMA-001   Missing Column            medium   spark, databricks

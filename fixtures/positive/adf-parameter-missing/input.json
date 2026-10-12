@@ -1,0 +1,8 @@
+{
+  "platform": "adf",
+  "service": "Azure Data Factory",
+  "job": "PL_MonthlyReport",
+  "severity": "ERROR",
+  "message": "Azure Data Factory pipeline validation failed for PL_MonthlyReport: required parameters are missing. The parameter 'runDate' is not found in the pipeline run. ErrorCode: InvalidTemplate.",
+  "error_type": "AzureDataFactoryPipelineValidationError"
+}

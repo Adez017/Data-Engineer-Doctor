@@ -1,0 +1,11 @@
+name: adf-integration-runtime-offline
+kind: positive
+description: >-
+  A pipeline using a self-hosted integration runtime fails because the IR node
+  is offline / cannot be reached.
+expected:
+  status: diagnosed
+  exit_code: 0
+  confidence_band: MEDIUM
+  diagnosis_ids:
+    - DEDOC-ADF-002

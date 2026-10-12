@@ -1,0 +1,11 @@
+name: adf-linked-service-auth
+kind: positive
+description: >-
+  An Azure Data Factory copy activity fails because it cannot connect to a
+  linked service (invalid credentials or unreachable endpoint).
+expected:
+  status: diagnosed
+  exit_code: 0
+  confidence_band: MEDIUM
+  diagnosis_ids:
+    - DEDOC-ADF-001

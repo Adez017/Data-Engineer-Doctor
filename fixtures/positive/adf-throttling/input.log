@@ -1,0 +1,4 @@
+2026-03-04 13:05:55.377 Azure Data Factory pipeline PL_ExportActivity activity 'CopyToSql' failed.
+2026-03-04 13:05:55.378 The request was throttled by the sink. Received HTTP 429 Too Many Requests from the destination endpoint; the subscription has exceeded the allowed rate limit.
+2026-03-04 13:05:55.379 ErrorCode: UserErrorThrottled
+2026-03-04 13:05:55.380 Add a retry policy or reduce the degree of copy parallelism.

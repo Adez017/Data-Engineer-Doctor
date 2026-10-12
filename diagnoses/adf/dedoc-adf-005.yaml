@@ -1,0 +1,55 @@
+id: DEDOC-ADF-005
+name: Missing or Invalid Pipeline Parameter
+category: adf.parameter_error
+
+severity:
+  default: medium
+
+platforms:
+  - adf
+
+patterns:
+  exception_types: []
+
+signals:
+  positive:
+    - adf_parameter_error
+
+hypotheses:
+  - required_parameter_not_passed
+  - parameter_name_mismatch
+  - trigger_or_pipeline_expression_invalid
+
+recommendations:
+  immediate:
+    - >-
+      Compare the parameters declared on the pipeline or dataset with the
+      values the caller (trigger, parent pipeline, or manual run) supplies.
+    - >-
+      Check that the error's parameter name matches exactly, including
+      capitalization, and that required parameters are not empty.
+  recommended:
+    - >-
+      When a trigger or parent pipeline calls the pipeline, pass every required
+      parameter explicitly with @pipeline().parameters.* expressions.
+    - >-
+      Validate dynamic expressions with the "Add dynamic content" builder to
+      catch typos or wrong function signatures before publishing.
+  prevention:
+    - >-
+      Give parameters clear defaults where sensible, and validate them with an
+      If Condition or validation activity at pipeline start.
+    - >-
+      Add a CI step that validates ARM templates (for example az deployment
+      what-if) before deploying to catch template parameter errors early.
+
+references:
+  - source: official documentation - Pipeline parameters and variables
+    url: https://learn.microsoft.com/en-us/azure/data-factory/concepts-pipelines-activities
+  - source: official documentation - Expression language and functions
+    url: https://learn.microsoft.com/en-us/azure/data-factory/control-flow-expression-language-functions
+
+tests:
+  fixtures:
+    - positive/adf-parameter-missing
+    - negative/adf-benign-pipeline-log

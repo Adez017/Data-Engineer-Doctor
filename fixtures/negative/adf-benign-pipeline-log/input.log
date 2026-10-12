@@ -1,0 +1,4 @@
+2026-03-04 08:00:00.001 Azure Data Factory pipeline run started: PL_IngestCustomers (RunId=8f2c).
+2026-03-04 08:00:01.220 Activity 'LookupConfig' Status=Succeeded Duration=00:00:01.
+2026-03-04 08:04:12.540 Activity 'CopyCustomers' Status=Succeeded RowsRead=142003 RowsWritten=142003.
+2026-03-04 08:04:13.001 Azure Data Factory pipeline run completed successfully: PL_IngestCustomers.

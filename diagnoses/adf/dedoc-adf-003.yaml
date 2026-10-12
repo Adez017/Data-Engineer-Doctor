@@ -1,0 +1,56 @@
+id: DEDOC-ADF-003
+name: Dataset or Path Not Found
+category: adf.dataset_not_found
+
+severity:
+  default: medium
+
+platforms:
+  - adf
+
+patterns:
+  exception_types: []
+
+signals:
+  positive:
+    - adf_dataset_not_found
+
+hypotheses:
+  - dataset_missing_in_factory
+  - source_path_or_container_missing
+  - parameterized_path_resolved_wrong
+
+recommendations:
+  immediate:
+    - >-
+      Confirm the dataset referenced by the activity still exists in the
+      factory and is spelled exactly as the pipeline references it.
+    - >-
+      Verify the container, folder, and file path exist in the source store
+      (for example a renamed or deleted blob or folder).
+  recommended:
+    - >-
+      Check dataset parameters and pipeline expressions (for example
+      @pipeline().parameters.path) for values that resolve to an empty or
+      wrong path.
+    - >-
+      Confirm the linked service identity still has list/read access to the
+      parent container or directory.
+  prevention:
+    - >-
+      Add a validation activity or a "Get Metadata" check before the copy so
+      missing paths fail with a clear message.
+    - >-
+      Avoid hard-coded paths; centralize them in dataset parameters or global
+      parameters.
+
+references:
+  - source: official documentation - Datasets in Azure Data Factory
+    url: https://learn.microsoft.com/en-us/azure/data-factory/concepts-datasets-linked-services
+  - source: official documentation - Copy activity troubleshooting
+    url: https://learn.microsoft.com/en-us/azure/data-factory/connector-troubleshoot-guide
+
+tests:
+  fixtures:
+    - positive/adf-dataset-not-found
+    - negative/adf-benign-pipeline-log

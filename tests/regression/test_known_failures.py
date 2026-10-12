@@ -53,4 +53,5 @@ def test_diagnosis_ids_are_stable(fixtures_dir: Path) -> None:
     assert "DEDOC-SCHEMA-002" in diagnoses
     assert diagnoses["DEDOC-SCHEMA-002"].name == "Data Type Mismatch"
     assert "DEDOC-QUALITY-001" in diagnoses
-    assert len(diagnoses) == 33
+    assert "DEDOC-ADF-001" in diagnoses
+    assert len(diagnoses) == 39

@@ -23,6 +23,16 @@ pip install -e ".[dev]"
 dedoc diagnose path/to/error.log
 ```
 
+Run it in CI with the reusable GitHub Action (`fail-on: diagnosed` turns a
+diagnosed failure into a failed check):
+
+```yaml
+- uses: Adez017/Data-Engineer-Doctor@main
+  with:
+    path: logs/*.log
+    fail-on: diagnosed
+```
+
 ## Documentation
 
 The full documentation site is the source of truth and follows a task-first
@@ -31,16 +41,20 @@ layout inspired by clean API docs:
 - [Home](docs/index.md)
 - [Tutorial: first diagnosis](docs/tutorial/first-diagnosis.md)
 - [How-to guides](docs/how-to/installation.md)
+- [Use in GitHub Actions](docs/how-to/github-action.md)
 - [CLI reference](docs/reference/cli.md)
 - [Python SDK reference](docs/reference/sdk.md)
+- [Evaluation & benchmarks](docs/reference/evaluation.md)
 - [Troubleshooting](docs/how-to/troubleshooting.md)
 - [Top 25 user queries map](docs/reference/top-25-queries.md)
 
 ## Coverage snapshot
 
-- 33 deterministic diagnoses across Spark, Delta, Schema, Data Quality,
-  Connectivity, and Performance domains.
+- 39 deterministic diagnoses across Spark, Delta, Schema, Data Quality,
+  Connectivity, Performance, and Azure Data Factory domains.
 - Structured outputs for text, JSON, and Markdown workflows.
+- A first-class evaluation framework (`make evaluate`) with a committed
+  regression baseline and published benchmark results.
 
 ## Development
 

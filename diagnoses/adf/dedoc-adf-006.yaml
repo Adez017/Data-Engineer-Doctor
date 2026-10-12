@@ -1,0 +1,55 @@
+id: DEDOC-ADF-006
+name: Service Throttling or Rate Limit
+category: adf.throttling
+
+severity:
+  default: medium
+
+platforms:
+  - adf
+
+patterns:
+  exception_types: []
+
+signals:
+  positive:
+    - adf_throttling
+
+hypotheses:
+  - data_store_request_limits_exceeded
+  - too_many_concurrent_activities
+  - burst_without_retry_policy
+
+recommendations:
+  immediate:
+    - >-
+      Identify the throttled store from the activity and error code (for
+      example HTTP 429) and reduce the activity's degree of copy parallelism.
+    - >-
+      Re-run the activity once the store's throttling window clears; transient
+      throttling usually succeeds on retry.
+  recommended:
+    - >-
+      Add a retry policy with a sensible interval on copy activities so
+      throttled requests back off automatically.
+    - >-
+      Spread load: stagger trigger schedules and cap concurrent pipeline runs
+      with a concurrency limit.
+  prevention:
+    - >-
+      Check the target service's documented request/throughput limits and size
+      parallel copies to stay under them.
+    - >-
+      Use managed virtual network / private endpoints and the store's scaling
+      features when sustained volume exceeds default limits.
+
+references:
+  - source: official documentation - Copy activity performance and scalability
+    url: https://learn.microsoft.com/en-us/azure/data-factory/copy-activity-performance
+  - source: official documentation - Activity retry policy
+    url: https://learn.microsoft.com/en-us/azure/data-factory/concepts-pipelines-activities
+
+tests:
+  fixtures:
+    - positive/adf-throttling
+    - negative/adf-benign-pipeline-log

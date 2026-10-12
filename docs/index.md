@@ -26,7 +26,7 @@
 
 <div class="dedoc-grid dedoc-grid-metrics">
   <div class="dedoc-card dedoc-metric">
-    <h3>33</h3>
+    <h3>39</h3>
     <p>bundled diagnoses</p>
   </div>
   <div class="dedoc-card dedoc-metric">

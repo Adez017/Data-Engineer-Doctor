@@ -110,15 +110,16 @@ def test_list_diagnoses_text(cli: CliRunner) -> None:
     assert "Schema (6)" in result.output
     assert "Data quality (5)" in result.output
     assert "Spark (8)" in result.output
-    assert "33 diagnosis definition(s)" in result.output
+    assert "Azure Data Factory (6)" in result.output
+    assert "39 diagnosis definition(s)" in result.output
 
 
 def test_list_diagnoses_json(cli: CliRunner) -> None:
     result = cli.invoke(app, ["list-diagnoses", "--format", "json"])
     assert result.exit_code == 0
     rows = json.loads(result.output)
-    assert len(rows) == 33
-    assert rows[0]["id"] == "DEDOC-CONN-001"
+    assert len(rows) == 39
+    assert rows[0]["id"] == "DEDOC-ADF-001"
     assert {row["category"].split(".")[0] for row in rows} == {
         "schema",
         "quality",
@@ -126,4 +127,5 @@ def test_list_diagnoses_json(cli: CliRunner) -> None:
         "delta",
         "connectivity",
         "performance",
+        "adf",
     }

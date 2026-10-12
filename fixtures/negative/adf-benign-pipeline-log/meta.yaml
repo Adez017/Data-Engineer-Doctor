@@ -1,0 +1,9 @@
+name: adf-benign-pipeline-log
+kind: negative
+description: >-
+  A successful Azure Data Factory pipeline run must not be diagnosed as any
+  failure (false-positive guard for the ADF platform adapter).
+expected:
+  status: insufficient_evidence
+  exit_code: 0
+  diagnosis_ids: []

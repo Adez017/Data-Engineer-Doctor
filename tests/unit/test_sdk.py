@@ -20,7 +20,7 @@ def test_list_diagnoses_returns_all_sorted(fixtures_dir: Path) -> None:
     diagnoses = list_diagnoses()
     ids = [d.id for d in diagnoses]
     assert ids == sorted(ids)
-    assert len(ids) == 33
+    assert len(ids) == 39
     # every diagnosis ships its own positive fixture; the contact is enforced
     assert any(d.id == "DEDOC-PERF-004" for d in diagnoses)
 

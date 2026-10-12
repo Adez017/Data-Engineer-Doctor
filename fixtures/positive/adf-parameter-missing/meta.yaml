@@ -1,0 +1,10 @@
+name: adf-parameter-missing
+kind: positive
+description: >-
+  A pipeline run fails validation because a required parameter is missing.
+expected:
+  status: diagnosed
+  exit_code: 0
+  confidence_band: MEDIUM
+  diagnosis_ids:
+    - DEDOC-ADF-005

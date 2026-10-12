@@ -1,0 +1,56 @@
+id: DEDOC-ADF-004
+name: Activity Timeout
+category: adf.activity_timeout
+
+severity:
+  default: high
+
+platforms:
+  - adf
+
+patterns:
+  exception_types: []
+
+signals:
+  positive:
+    - adf_activity_timeout
+
+hypotheses:
+  - activity_timeout_too_low
+  - source_or_sink_slow_or_throttled
+  - long_running_query_or_stored_procedure
+
+recommendations:
+  immediate:
+    - >-
+      Identify the timed-out activity and its configured timeout, then check
+      the activity run duration in the Data Factory monitor to see how far it
+      got.
+    - >-
+      Raise the activity timeout (or the pipeline's policy timeout) only after
+      confirming the source/sink is healthy.
+  recommended:
+    - >-
+      For copy activities, enable parallel copies or increase the degree of
+      copy parallelism and check the data store's throughput limits.
+    - >-
+      For database activities, inspect the query plan and add indexes or reduce
+      the result set fetched in a single run.
+  prevention:
+    - >-
+      Set realistic per-activity timeouts and alert on activities that
+      consistently run near their limit.
+    - >-
+      Split very large moves into partitioned or chunked activities instead of
+      one long-running copy.
+
+references:
+  - source: official documentation - Activity run monitoring and timeouts
+    url: https://learn.microsoft.com/en-us/azure/data-factory/monitor-visually
+  - source: official documentation - Copy activity performance and tuning
+    url: https://learn.microsoft.com/en-us/azure/data-factory/copy-activity-performance
+
+tests:
+  fixtures:
+    - positive/adf-activity-timeout
+    - negative/adf-benign-pipeline-log

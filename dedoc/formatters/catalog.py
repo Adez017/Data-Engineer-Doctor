@@ -5,13 +5,22 @@ from __future__ import annotations
 from dedoc.models.diagnosis import Diagnosis
 
 #: Preferred display order; unknown groups are appended in first-seen order.
-_GROUP_ORDER = ["schema", "quality", "spark", "delta", "connectivity", "performance"]
+_GROUP_ORDER = [
+    "schema",
+    "quality",
+    "spark",
+    "delta",
+    "adf",
+    "connectivity",
+    "performance",
+]
 
 _GROUP_LABELS = {
     "schema": "Schema",
     "quality": "Data quality",
     "spark": "Spark",
     "delta": "Delta",
+    "adf": "Azure Data Factory",
     "connectivity": "Connectivity",
     "performance": "Performance",
 }

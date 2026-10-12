@@ -1,0 +1,11 @@
+name: adf-dataset-not-found
+kind: positive
+description: >-
+  A copy activity fails because the referenced dataset or source path does not
+  exist in the store.
+expected:
+  status: diagnosed
+  exit_code: 0
+  confidence_band: MEDIUM
+  diagnosis_ids:
+    - DEDOC-ADF-003

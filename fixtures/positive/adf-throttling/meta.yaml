@@ -1,0 +1,11 @@
+name: adf-throttling
+kind: positive
+description: >-
+  A copy activity is throttled by the target store and receives HTTP 429
+  responses.
+expected:
+  status: diagnosed
+  exit_code: 0
+  confidence_band: MEDIUM
+  diagnosis_ids:
+    - DEDOC-ADF-006

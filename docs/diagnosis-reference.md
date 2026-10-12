@@ -21,6 +21,12 @@ from BUILD_PLAN.md §10.
 
 | ID | Name | Category | Severity | Positive signals |
 | --- | --- | --- | --- | --- |
+| DEDOC-ADF-001 | Linked Service Connection Failure | `adf.linked_service` | high | `adf_linked_service_error` |
+| DEDOC-ADF-002 | Integration Runtime Unavailable | `adf.integration_runtime` | high | `adf_integration_runtime_unavailable` |
+| DEDOC-ADF-003 | Dataset or Path Not Found | `adf.dataset_not_found` | medium | `adf_dataset_not_found` |
+| DEDOC-ADF-004 | Activity Timeout | `adf.activity_timeout` | high | `adf_activity_timeout` |
+| DEDOC-ADF-005 | Missing or Invalid Pipeline Parameter | `adf.parameter_error` | medium | `adf_parameter_error` |
+| DEDOC-ADF-006 | Service Throttling or Rate Limit | `adf.throttling` | medium | `adf_throttling` |
 | DEDOC-CONN-001 | Authentication Failure | `connectivity.authentication` | high | `authentication_failure` |
 | DEDOC-CONN-002 | Connection Timeout | `connectivity.connection_timeout` | high | `connection_timeout` |
 | DEDOC-CONN-003 | DNS Failure | `connectivity.dns_failure` | high | `dns_failure` |
@@ -58,7 +64,8 @@ from BUILD_PLAN.md §10.
 
 ## Counts
 
-- **33** deterministic diagnoses across six categories:
+- **39** deterministic diagnoses across seven categories:
+- `adf`: **6**
 - `connectivity`: **5**
 - `delta`: **5**
 - `performance`: **4**

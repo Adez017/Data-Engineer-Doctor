@@ -1,0 +1,4 @@
+2026-03-04 10:03:11.002 Azure Data Factory pipeline PL_OnPremCopy failed.
+2026-03-04 10:03:11.003 Activity 'MoveFiles' failed: The self-hosted integration runtime 'shir-onprem-01' is not available. The integration runtime node is unreachable or the service is stopped.
+2026-03-04 10:03:11.004 ErrorCode: IntegrationRuntimeUnavailable
+2026-03-04 10:03:11.005 Please ensure the Microsoft Integration Runtime service is running on the host machine.

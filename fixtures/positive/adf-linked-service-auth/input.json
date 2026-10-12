@@ -1,0 +1,8 @@
+{
+  "platform": "adf",
+  "service": "Azure Data Factory",
+  "job": "PL_IngestCustomers",
+  "severity": "ERROR",
+  "error_type": "AzureDataFactoryActivityError",
+  "message": "Azure Data Factory activity 'CopyFromBlob' failed: Failed to connect to linked service 'AzureBlobStorageLS'. The provided credentials are invalid or the endpoint cannot be reached. ErrorCode: LinkedServiceConnectionFailed."
+}

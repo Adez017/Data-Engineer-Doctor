@@ -1,0 +1,55 @@
+id: DEDOC-ADF-001
+name: Linked Service Connection Failure
+category: adf.linked_service
+
+severity:
+  default: high
+
+platforms:
+  - adf
+
+patterns:
+  exception_types: []
+
+signals:
+  positive:
+    - adf_linked_service_error
+
+hypotheses:
+  - invalid_linked_service_credentials
+  - linked_service_endpoint_unreachable
+  - expired_secret_or_managed_identity
+
+recommendations:
+  immediate:
+    - >-
+      Open the failing linked service in Azure Data Factory Studio and use
+      "Test connection" to reproduce the error in isolation.
+    - >-
+      Verify the connection string, endpoint, and credentials (or the managed
+      identity / Key Vault secret the linked service references).
+  recommended:
+    - >-
+      Re-enter secrets in Key Vault and confirm the ADF managed identity has
+      "Get" and "List" permissions on the vault.
+    - >-
+      Confirm the firewall or private endpoint of the target store allows the
+      Azure Integration Runtime (or self-hosted IR) to connect.
+  prevention:
+    - >-
+      Store all credentials in Key Vault and reference them from linked
+      services instead of inlining secrets.
+    - >-
+      Add a smoke-test pipeline that runs "Test connection" on critical linked
+      services after every deployment.
+
+references:
+  - source: official documentation - Connector troubleshooting guide
+    url: https://learn.microsoft.com/en-us/azure/data-factory/connector-troubleshoot-guide
+  - source: official documentation - Linked services in Azure Data Factory
+    url: https://learn.microsoft.com/en-us/azure/data-factory/concepts-linked-services
+
+tests:
+  fixtures:
+    - positive/adf-linked-service-auth
+    - negative/adf-benign-pipeline-log
