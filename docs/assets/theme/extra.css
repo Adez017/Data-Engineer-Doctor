@@ -43,9 +43,23 @@
 }
 
 /* Home page badge pills (slim, outline style) */
+.dedoc-hero {
+  text-align: center;
+  margin: 0.5rem 0 1.25rem;
+}
+
+.dedoc-hero-logo {
+  width: 96px;
+  height: 96px;
+  object-fit: contain;
+  margin: 0 auto 0.5rem;
+  display: block;
+}
+
 .dedoc-badges {
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
   gap: 0.5rem;
   margin: 0.6rem 0 1rem;
 }

@@ -2,6 +2,15 @@
 
 Open-source, evidence-driven diagnosis for data engineering failures.
 
+<div class="dedoc-hero">
+  <img src="assets/logo.svg" alt="Data Engineer Doctor logo" class="dedoc-hero-logo" />
+  <div class="dedoc-badges">
+    <span class="dedoc-badge"><strong>Deterministic</strong> by default</span>
+    <span class="dedoc-badge"><strong>33</strong> bundled diagnoses</span>
+    <span class="dedoc-badge"><strong>Python</strong> 3.11 / 3.12</span>
+  </div>
+</div>
+
 ## What it is
 
 DEDoc reads failure logs and returns deterministic, explainable diagnoses with
