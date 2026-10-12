@@ -37,6 +37,19 @@ def test_markdown_contains_diagnosis(fixtures_dir: Path) -> None:
     assert "References" in markdown
 
 
+def test_markdown_friendly_sections(fixtures_dir: Path) -> None:
+    fixture = fixtures_dir / "positive" / "spark-schema-mismatch-resolved-column" / "input.log"
+    markdown = format_markdown(diagnose_file(fixture))
+    # Conclusion-first ordering: heading, then evidence, then actions.
+    assert markdown.index("## DEDOC-SCHEMA-001") < markdown.index("### Evidence:")
+    assert markdown.index("### Evidence:") < markdown.index("### What to do next")
+    # Plain-language signals/hypotheses, same as the text report.
+    assert "- **Matched signals:** Resolved Column Not Found" in markdown
+    assert "- **Possible causes:** Missing Column" in markdown
+    # Repeated long excerpts are deduplicated.
+    assert "(same lines as evidence item 1)" in markdown
+
+
 def test_text_contains_diagnosis(fixtures_dir: Path) -> None:
     fixture = fixtures_dir / "positive" / "spark-schema-mismatch-resolved-column" / "input.log"
     text = format_text(diagnose_file(fixture))

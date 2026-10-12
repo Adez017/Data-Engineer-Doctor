@@ -59,43 +59,43 @@ def format_json(report: DiagnosisReport) -> str:
     return json.dumps(report.model_dump(mode="json"), indent=2, ensure_ascii=False)
 
 
-def _matched_sections(match: MatchedDiagnosis, style: str) -> list[str]:
+def _first_excerpt(excerpt: str | None) -> str:
+    """First line of a contextual excerpt, clamped for readability."""
+    if not excerpt:
+        return ""
+    return excerpt.split(" | ")[0].strip()[:160]
+
+
+def _matched_markdown_sections(match: MatchedDiagnosis) -> list[str]:
     lines: list[str] = []
     entries = [
         ("Matched exception types", match.matched_exception_types),
-        ("Matched signals", match.matched_signals),
-        ("Hypotheses", match.hypotheses),
+        ("Matched signals", [_humanize(s) for s in match.matched_signals]),
+        ("Possible causes", [_humanize(h) for h in match.hypotheses]),
     ]
     for label, values in entries:
-        if not values:
-            continue
-        joined = ", ".join(values)
-        if style == "markdown":
-            lines.append(f"- **{label}:** {joined}")
-        else:
-            lines.append(f"  {label}: {joined}")
+        if values:
+            lines.append(f"- **{label}:** {', '.join(values)}")
     return lines
 
 
-def _evidence_lines(match: MatchedDiagnosis, style: str) -> list[str]:
-    lines: list[str] = []
-    confidence = f"{match.confidence_band.value} ({match.score}/100)"
-    if style == "markdown":
-        lines.append(f"- **Confidence:** {confidence}")
-        if match.evidence:
-            lines.append("- **Evidence:**")
-            for item in match.evidence:
-                lines.append(f"  - `{item.type.value}` {item.description} (+{item.weight})")
-                if item.excerpt:
-                    lines.append(f"    > {item.excerpt}")
-    else:
-        lines.append(f"  Confidence: {confidence}")
-        if match.evidence:
-            lines.append("  Evidence:")
-            for item in match.evidence:
-                lines.append(f"    - [{item.type.value}] {item.description} (+{item.weight})")
-                if item.excerpt:
-                    lines.append(f"        > {item.excerpt}")
+def _evidence_markdown_lines(match: MatchedDiagnosis) -> list[str]:
+    lines = ["", "### Evidence:"]
+    if not match.evidence:
+        lines += ["", "No observable evidence recorded."]
+        return lines
+    seen: dict[str, int] = {}
+    for rank, item in enumerate(match.evidence, start=1):
+        lines += ["", f"{rank}. **{item.description}** (+{item.weight})"]
+        first_line = _first_excerpt(item.excerpt)
+        if first_line:
+            if first_line not in seen:
+                seen[first_line] = rank
+                lines.append(f"   > {first_line}")
+            else:
+                lines.append(f"   > (same lines as evidence item {seen[first_line]})")
+        else:
+            lines.append(f"   > source: {item.source}")
     return lines
 
 
@@ -213,16 +213,18 @@ def format_markdown(report: DiagnosisReport) -> str:
             "",
             f"## {match.id} — {match.name}",
             "",
-            f"- **Category:** {match.category}",
             f"- **Severity:** {match.severity.value}",
             f"- **Platforms:** {', '.join(match.platforms)}",
-            *_matched_sections(match, style="markdown"),
-            *_evidence_lines(match, style="markdown"),
+            f"- **Category:** {match.category}",
+            f"- **Confidence:** {match.confidence_band.value} ({match.score}/100)",
+            *_matched_markdown_sections(match),
+            *_evidence_markdown_lines(match),
             "",
+            "### What to do next",
         ]
         lines += _recommendation_lines(match, style="markdown")
         if match.references:
-            lines.append("**References**")
+            lines += ["### References", ""]
             lines.extend(f"- [{ref.source}]({ref.url})" for ref in match.references)
             lines.append("")
     if report.investigation is not None:
@@ -255,9 +257,8 @@ def _evidence_text_lines(match: MatchedDiagnosis) -> list[str]:
     seen_excerpts: dict[str, int] = {}
     for rank, item in enumerate(match.evidence, start=1):
         lines.append(f"  {rank}. {item.description} (+{item.weight})")
-        excerpt = item.excerpt.strip() if item.excerpt else ""
-        if excerpt:
-            first_line = excerpt.split(" | ")[0].strip()[:160]
+        first_line = _first_excerpt(item.excerpt)
+        if first_line:
             if first_line not in seen_excerpts:
                 seen_excerpts[first_line] = rank
                 lines.append(f"      > {first_line}")
@@ -314,17 +315,10 @@ def format_text(report: DiagnosisReport, color: bool = False) -> str:
     ]
     lines += _matched_text_sections(top)
     lines += [""] + _evidence_text_lines(top)
-    if top.recommendations:
+    rec = top.recommendations
+    if rec.immediate or rec.recommended or rec.prevention:
         lines += ["", "What to do next:"]
-        if top.recommendations.immediate:
-            lines += ["  Immediate:"]
-            lines += [f"    - {r}" for r in top.recommendations.immediate]
-        if top.recommendations.recommended:
-            lines += ["  Recommended:"]
-            lines += [f"    - {r}" for r in top.recommendations.recommended]
-        if top.recommendations.prevention:
-            lines += ["  Prevention:"]
-            lines += [f"    - {r}" for r in top.recommendations.prevention]
+        lines += _recommendation_lines(top, style="text")
     if top.references:
         lines += ["", "  References:"]
         lines.extend(f"    - {ref.source}: {ref.url}" for ref in top.references)

@@ -14,7 +14,7 @@ from dedoc import __version__
 from dedoc.core.errors import DEDocError, InputError
 from dedoc.core.pipeline import diagnose_file
 from dedoc.diagnosis.loader import load_diagnoses
-from dedoc.formatters import render
+from dedoc.formatters import format_diagnosis_catalog, render
 from dedoc.parser.input_parser import InputFormat
 from dedoc.tools.context import InvestigationContext, context_from_mapping
 
@@ -209,11 +209,7 @@ def list_diagnoses_command(
         ]
         typer.echo(json.dumps(rows, indent=2))
         return
-    header = f"{'ID':<18} {'CATEGORY':<28} {'SEVERITY':<10} NAME"
-    typer.echo(header)
-    typer.echo("-" * len(header))
-    for d in diagnoses.values():
-        typer.echo(f"{d.id:<18} {d.category:<28} {d.severity.default:<10} {d.name}")
+    typer.echo(format_diagnosis_catalog(diagnoses))
 
 
 if __name__ == "__main__":

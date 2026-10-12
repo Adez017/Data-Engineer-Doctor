@@ -106,6 +106,11 @@ def test_list_diagnoses_text(cli: CliRunner) -> None:
     assert result.exit_code == 0
     assert "DEDOC-SCHEMA-001" in result.output
     assert "Missing Column" in result.output
+    # Grouped by human-readable category, with per-group counts.
+    assert "Schema (6)" in result.output
+    assert "Data quality (5)" in result.output
+    assert "Spark (8)" in result.output
+    assert "33 diagnosis definition(s)" in result.output
 
 
 def test_list_diagnoses_json(cli: CliRunner) -> None:

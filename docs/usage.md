@@ -30,6 +30,7 @@ Diagnose a failure log and print an evidence-backed report.
 | `--provider` | Override the AI provider: `none`, `openai`, `openai_compatible`, `ollama`, `azure_openai`, or `anthropic`. |
 | `--ai-model` | Override the AI model (for Azure OpenAI use the deployment name). |
 | `--ai-base-url` | Override the provider base URL. |
+| `--color` | Colorize the text report: `auto` (default; only on a terminal), `always`, or `never`. |
 | `--version`, `-V` | Print the version and exit. |
 
 **Input types**
@@ -54,15 +55,22 @@ List every bundled diagnosis definition.
 
 | Option | Meaning |
 | --- | --- |
-| `--format`, `-f` | `text` (default), `markdown`, or `json`. |
+| `--format`, `-f` | `text` (default) or `json`. |
 | `--diagnoses-path` | Override the diagnosis YAML directory. |
-| `--color` | `auto` (default; colors only on a terminal), `always`, or `never`. |
 
-The `diagnose` options also include `--investigate`, `--context`, and the
-optional AI flags (`--ai`, `--provider`, `--ai-model`, `--ai-base-url`).
+The default text output groups diagnoses by category with a per-group count and
+a human-readable category name, so you can scan the knowledge base quickly:
+
+```text
+Data Engineer Doctor — 33 diagnosis definition(s)
+
+Schema (6)
+  DEDOC-SCHEMA-001   Missing Column            medium   spark, databricks
+  ...
+```
 
 JSON output is an array of objects with `id`, `name`, `category`, `severity`,
-and `platforms`.
+and `platforms` (unchanged, machine-stable).
 
 ### Example output
 

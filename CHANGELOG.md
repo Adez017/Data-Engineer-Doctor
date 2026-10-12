@@ -9,6 +9,13 @@ The format is adapted from [Keep a Changelog](https://keepachangelog.com/).
 
 ### Added
 
+- **Conclusion-first Markdown reports**: `--format markdown` now mirrors the text
+  layout — diagnosis, severity/platforms, confidence, plain-language signals and
+  possible causes, deduplicated evidence (`### Evidence:`), then
+  `### What to do next` and `### References` per match.
+- **Grouped `list-diagnoses` output**: the default text listing groups diagnoses
+  by human-readable category (e.g. `Schema (6)`, `Data quality (5)`) with a total
+  count; `--format json` is unchanged.
 - **Conclusion-first text reports**: the text format now reads *What we found* →
   *Evidence* → *What to do next* → *Other candidates considered*, so the most
   actionable information comes first.
