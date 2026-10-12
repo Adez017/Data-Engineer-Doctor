@@ -1,0 +1,9 @@
+{
+  "platform": "spark",
+  "service": "databricks",
+  "job": "nightly_orders",
+  "stage": "17",
+  "error_type": "pyspark.sql.utils.AnalysisException",
+  "message": "AnalysisException: [UNRESOLVED_COLUMN.WITH_SUGGESTION] cannot resolve 'customer_id' given input columns: [order_id, order_ts, amount, currency]. The column is not present in the schema of the input DataFrame.",
+  "stacktrace": "Traceback (most recent call last):\n  File \"jobs/nightly_orders.py\", line 42, in <module>\n    df.select('customer_id')"
+}

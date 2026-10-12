@@ -1,0 +1,6 @@
+26/03/04 09:15:02 WARN TaskSetManager: Lost task 3.0 in stage 12.0 (TID 4321, executor 2): java.lang.OutOfMemoryError: Java heap space
+	at org.apache.spark.sql.execution.Sort$.createSorter(Sort.scala:210)
+	at org.apache.spark.sql.execution.Sort$.mergeWithAggregation(Sort.scala:98)
+26/03/04 09:15:04 ERROR Executor: Exception in task 3.0 in stage 12.0 (TID 4321)
+java.lang.OutOfMemoryError: Java heap space
+26/03/04 09:15:04 WARN TaskSetManager: Lost task 3.1 in stage 12.0 (TID 4322, executor 3): java.lang.OutOfMemoryError: Java heap space

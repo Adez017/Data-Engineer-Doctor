@@ -7,7 +7,7 @@ UV := $(shell command -v uv 2>/dev/null || echo $(HOME)/.local/bin/uv)
 
 .DEFAULT_GOAL := help
 
-.PHONY: help setup format format-check lint typecheck test validate link-check docs audit build verify clean
+.PHONY: help setup format format-check lint typecheck test validate evaluate benchmark examples link-check docs audit build verify clean
 
 help:
 	@echo "Targets:"
@@ -18,6 +18,9 @@ help:
 	@echo "  typecheck    Type check (mypy, strict)"
 	@echo "  test         Unit, integration, regression, fixture tests (pytest)"
 	@echo "  validate     Validate all diagnosis YAML definitions"
+	@echo "  evaluate     Grade the pipeline against the fixtures corpus (§19)"
+	@echo "  benchmark    Write benchmark results + regression baseline to benchmarks/"
+	@echo "  examples     Diagnose every sample input in examples/logs"
 	@echo "  link-check   HTTP-check every reference URL in diagnosis YAMLs"
 	@echo "  docs         Build the MkDocs site (strict)"
 	@echo "  audit        Dependency security audit (pip-audit)"
@@ -50,6 +53,18 @@ test:
 validate:
 	"$(PYTHON)" -m dedoc.diagnosis.validate
 
+evaluate:
+	"$(PYTHON)" -m dedoc.evaluation --strict --baseline benchmarks/baseline.json
+
+benchmark:
+	"$(PYTHON)" -m dedoc.evaluation --output benchmarks/results.json --write-baseline benchmarks/baseline.json
+
+examples:
+	@for f in examples/logs/*; do \
+		echo "==> $$f"; \
+		"$(PYTHON)" -m dedoc.cli.main diagnose "$$f" || true; \
+	done
+
 link-check:
 	"$(PYTHON)" -m dedoc.diagnosis.validate --links
 
@@ -62,7 +77,7 @@ audit:
 build:
 	"$(PYTHON)" -m build
 
-verify: format-check lint typecheck test validate link-check docs audit build
+verify: format-check lint typecheck test validate evaluate link-check docs audit build
 	@echo "verify: PASSED"
 
 clean:

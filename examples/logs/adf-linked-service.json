@@ -1,0 +1,7 @@
+{
+  "platform": "adf",
+  "service": "Azure Data Factory",
+  "job": "PL_IngestCustomers",
+  "severity": "ERROR",
+  "message": "Activity 'CopyFromBlob' failed: Failed to connect to linked service 'AzureBlobStorageLS'. The Service Principal secret referenced from Key Vault is invalid or expired. ErrorCode: LinkedServiceConnectionFailed."
+}

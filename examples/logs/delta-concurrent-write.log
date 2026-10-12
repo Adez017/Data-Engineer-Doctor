@@ -1,0 +1,5 @@
+26/03/04 02:11:44 WARN DeltaLog: ConcurrentAppendException: Files were added to the root of the table by a concurrent update. Please try the operation again.
+26/03/04 02:11:44 ERROR WriteIntoDelta: Failed to write to table main.silver.orders due to a concurrent modification.
+	at org.apache.spark.sql.delta.DeltaErrors$.concurrentAppendException(DeltaErrors.scala:401)
+26/03/04 02:11:45 ERROR JobScheduler: Error running job streaming job.
+ConcurrentAppendException: Concurrent writes detected on the Delta table.

@@ -81,6 +81,7 @@ nav:
   - How-to guides:
       - Installation: how-to/installation.md
       - Configuration: how-to/configuration.md
+      - Use in GitHub Actions: how-to/github-action.md
       - Recipes: how-to/recipes.md
       - Troubleshooting: how-to/troubleshooting.md
       - FAQ: how-to/faq.md
@@ -89,6 +90,7 @@ nav:
       - CLI reference: reference/cli.md
       - Python SDK reference: reference/sdk.md
       - Diagnosis catalog: reference/diagnosis-catalog.md
+      - Evaluation & benchmarks: reference/evaluation.md
       - Top 25 user queries map: reference/top-25-queries.md
       - Full diagnosis reference: diagnosis-reference.md
   - Explanation:

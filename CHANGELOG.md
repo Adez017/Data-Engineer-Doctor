@@ -9,6 +9,34 @@ The format is adapted from [Keep a Changelog](https://keepachangelog.com/).
 
 ### Added
 
+- **Examples and benchmark scaffolding**: `examples/logs/` ships runnable sample
+  inputs (Spark, Delta, Schema, ADF, and a benign log) with a documented
+  expected outcome each, plus `make examples` to diagnose them all.
+  `benchmarks/README.md` documents the graded `fixtures/` corpus, the metrics,
+  and how `baseline.json` / `results.json` are regenerated and published.
+- **Azure Data Factory platform adapter (Phase 7)**: six new deterministic
+  diagnoses (`DEDOC-ADF-001` … `DEDOC-ADF-006`) covering linked-service
+  connection failures, integration-runtime unavailability, missing datasets or
+  paths, activity timeouts, missing/invalid pipeline parameters, and store
+  throttling. Adds ADF signals and platform detection, positive/negative
+  fixtures, and reference docs. The knowledge base is now **39 diagnoses**.
+- **Reusable GitHub Action (Phase 6)**: `uses: Adez017/Data-Engineer-Doctor@main`
+  diagnoses a log, directory, or glob (`path`), writes a `text`/`markdown`/`json`
+  report to the job summary or a file, and can fail the job when a failure is
+  diagnosed (`fail-on: diagnosed`), on unparseable input (`error`), or never
+  (default). No AI key required. See
+  [Use DEDoc in CI](docs/how-to/github-action.md).
+- **Evaluation framework (§19)**: `python -m dedoc.evaluation` (`make evaluate`)
+  grades the pipeline against the `fixtures/` corpus and reports diagnosis
+  accuracy, precision, recall, abstention quality, confidence calibration,
+  evidence coverage, unsupported-claim rate, remediation coverage and
+  regression rate. It is wired into `make verify` as a strict CI gate with a
+  committed regression baseline (`benchmarks/baseline.json`) and a published
+  `benchmarks/results.json`. See the new
+  [Evaluation & benchmarks](docs/reference/evaluation.md) reference.
+- **Batch diagnosis loading**: `dedoc.core.pipeline.diagnose_file` accepts
+  pre-loaded `diagnoses`, so callers grading many inputs (the evaluation harness)
+  load the knowledge base once instead of per file.
 - **Conclusion-first Markdown reports**: `--format markdown` now mirrors the text
   layout — diagnosis, severity/platforms, confidence, plain-language signals and
   possible causes, deduplicated evidence (`### Evidence:`), then
