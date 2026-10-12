@@ -1,32 +1,51 @@
-# Data Engineer Doctor (DEDoc)
-
-Open-source, evidence-driven diagnosis for data engineering failures.
+# Data Engineer Doctor
 
 <div class="dedoc-hero">
-  <img src="assets/logo.svg" alt="Data Engineer Doctor logo" class="dedoc-hero-logo" />
-  <div class="dedoc-badges">
-    <span class="dedoc-badge"><strong>Deterministic</strong> by default</span>
-    <span class="dedoc-badge"><strong>33</strong> bundled diagnoses</span>
-    <span class="dedoc-badge"><strong>Python</strong> 3.11 / 3.12</span>
+  <img src="assets/logowithtext.png" alt="Data Engineer Doctor" class="dedoc-hero-wordmark" />
+  <p class="dedoc-tagline">Evidence-driven diagnosis for data engineering failures.</p>
+  <div class="dedoc-hero-actions">
+    <a class="dedoc-cta dedoc-cta-primary" href="tutorial/first-diagnosis/">Get started</a>
+    <a class="dedoc-cta dedoc-cta-secondary" href="reference/cli/">CLI reference</a>
   </div>
 </div>
 
-## What it is
+<div class="dedoc-grid dedoc-grid-feature">
+  <div class="dedoc-card">
+    <h3>Fast to diagnose</h3>
+    <p>Turn failure logs into deterministic root-cause signals in one command.</p>
+  </div>
+  <div class="dedoc-card">
+    <h3>Easy to adopt</h3>
+    <p>Start with CLI defaults and add investigation or AI explanation only when needed.</p>
+  </div>
+  <div class="dedoc-card">
+    <h3>Production-ready outputs</h3>
+    <p>Use text, JSON, and Markdown reports to plug directly into runbooks and workflows.</p>
+  </div>
+</div>
 
-DEDoc reads failure logs and returns deterministic, explainable diagnoses with
-confidence scoring and concrete next steps.
+<div class="dedoc-grid dedoc-grid-metrics">
+  <div class="dedoc-card dedoc-metric">
+    <h3>33</h3>
+    <p>bundled diagnoses</p>
+  </div>
+  <div class="dedoc-card dedoc-metric">
+    <h3>Deterministic</h3>
+    <p>by default</p>
+  </div>
+  <div class="dedoc-card dedoc-metric">
+    <h3>Python</h3>
+    <p>3.11 / 3.12</p>
+  </div>
+</div>
 
-- Deterministic mode (default): no AI, no API key, same input -> same output
-- Investigation mode (optional): read-only context probes for extra evidence
-- AI explanation mode (optional): provider-based plain-language explanation
-
-## Install
+## Installation
 
 ```bash
 pip install -e ".[dev]"
 ```
 
-## First successful diagnosis
+## First diagnosis
 
 ```bash
 dedoc diagnose path/to/error.log
@@ -37,18 +56,12 @@ Expected result:
 - `Status: diagnosed` or `Status: insufficient_evidence`
 - Top confidence band and recommended next actions
 
-## Next actions
+## Learn more
 
-- New here? Start with [Tutorial: first diagnosis](tutorial/first-diagnosis.md)
-- Need commands? Use [CLI reference](reference/cli.md)
-- Want practical scenarios? Go to [Recipes](how-to/recipes.md)
-- Running into issues? Open [Troubleshooting](how-to/troubleshooting.md)
-
-
-## Search tips
-
-Common terms users search for: `spark oom`, `schema mismatch`, `delta conflict`,
-`insufficient evidence`, `dedoc json output`, `dedoc ai mode`, `inputerror`.
+- [Tutorial: first diagnosis](tutorial/first-diagnosis.md)
+- [How-to guides](how-to/installation.md)
+- [Reference docs](reference/cli.md)
+- [Troubleshooting](how-to/troubleshooting.md)
 
 !!! tip "See also"
     - [When to use DEDoc](how-to/when-to-use.md)
