@@ -1,4 +1,10 @@
-"""Report rendering: JSON / Markdown / text (§9 step 11, M1)."""
+"""Report rendering: JSON / Markdown / text (§9 step 11, M1).
+
+The text renderer leads with the conclusion ("what we found"), then the actions
+("what to do next"), then the evidence ("why we think so") so a user can act
+without reading the whole report. Internal keys (signals, hypotheses) are shown
+in plain language; machine-facing detail lives in the JSON output.
+"""
 
 from __future__ import annotations
 
@@ -6,7 +12,43 @@ import json
 
 from dedoc.agents.models import InvestigationRecord
 from dedoc.evidence.models import ConfidenceBand
-from dedoc.models.report import DiagnosisReport, MatchedDiagnosis
+from dedoc.models.report import DiagnosisReport, MatchedDiagnosis, ReportStatus
+
+_GREEN = "\x1b[32m"
+_YELLOW = "\x1b[33m"
+_RED = "\x1b[31m"
+_RESET = "\x1b[0m"
+
+_BAND_COLOR: dict[str, str] = {
+    ConfidenceBand.HIGH.value: _GREEN,
+    ConfidenceBand.MEDIUM.value: _YELLOW,
+    ConfidenceBand.LOW.value: _RED,
+}
+
+#: Word expansions so snake_case keys read as plain language ("executor_oom" -> "Executor OOM").
+_HUMAN_WORDS = {
+    "oom": "OOM",
+    "sql": "SQL",
+    "api": "API",
+    "uri": "URI",
+    "dns": "DNS",
+    "sas": "SAS",
+    "id": "ID",
+    "pat": "PAT",
+    "dfs": "DFS",
+}
+
+
+def _wrap(text: str, code: str, enabled: bool) -> str:
+    return f"{code}{text}{_RESET}" if enabled and code else text
+
+
+def _humanize(key: str) -> str:
+    words = [w for w in (_HUMAN_WORDS.get(part, part.capitalize()) for part in key.split("_")) if w]
+    if not words:
+        return key
+    label = " ".join(words)
+    return label[0].upper() + label[1:]
 
 
 def _band_label(band: ConfidenceBand | None) -> str:
@@ -204,13 +246,50 @@ def _text_scoreboard(report: DiagnosisReport) -> list[str]:
     return lines + [""]
 
 
-def format_text(report: DiagnosisReport) -> str:
+def _evidence_text_lines(match: MatchedDiagnosis) -> list[str]:
+    """Compact, deduplicated evidence ("why we think so")."""
+    lines = ["Evidence:"]
+    if not match.evidence:
+        lines.append("  No observable evidence recorded.")
+        return lines
+    seen_excerpts: dict[str, int] = {}
+    for rank, item in enumerate(match.evidence, start=1):
+        lines.append(f"  {rank}. {item.description} (+{item.weight})")
+        excerpt = item.excerpt.strip() if item.excerpt else ""
+        if excerpt:
+            first_line = excerpt.split(" | ")[0].strip()[:160]
+            if first_line not in seen_excerpts:
+                seen_excerpts[first_line] = rank
+                lines.append(f"      > {first_line}")
+            else:
+                lines.append(f"      > (same lines as evidence item {seen_excerpts[first_line]})")
+        else:
+            lines.append(f"      > source: {item.source}")
+    return lines
+
+
+def _matched_text_sections(match: MatchedDiagnosis) -> list[str]:
+    """Plain-language match provenance for the top candidate."""
+    lines = [
+        f"  Matched exception types: {', '.join(match.matched_exception_types) or 'n/a'}",
+        f"  Matched signals: {', '.join(_humanize(s) for s in match.matched_signals) or 'n/a'}",
+    ]
+    if match.hypotheses:
+        lines.append(f"  Possible causes: {'; '.join(_humanize(h) for h in match.hypotheses)}")
+    return lines
+
+
+def format_text(report: DiagnosisReport, color: bool = False) -> str:
+    top_band = report.top_confidence_band
+    band_color = _BAND_COLOR.get(top_band.value, "") if top_band else ""
+    status = report.status.value if report.status else "n/a"
+    status_code = _GREEN if report.status is ReportStatus.DIAGNOSED else _YELLOW
     lines = [
         "Data Engineer Doctor",
         f"Input:     {report.input_source}",
         f"Platform:  {report.platform}",
-        f"Status:    {report.status.value}",
-        f"Confidence: {_band_label(report.top_confidence_band)}",
+        f"Status:    {_wrap(status, status_code, color)}",
+        f"Confidence: {_wrap(_band_label(top_band), band_color, color)}",
         f"Events:    {report.event_count}",
         f"Version:   {report.dedoc_version}",
         "",
@@ -223,21 +302,34 @@ def format_text(report: DiagnosisReport) -> str:
         return "\n".join(lines).rstrip()
 
     top, *alternatives = report.matches
+    top_band_color = _BAND_COLOR.get(top.confidence_band.value, "")
     lines += [
         "",
-        f"Diagnosis: {top.id} {top.name}",
-        f"  Category: {top.category} | Severity: {top.severity.value} "
-        f"| Platforms: {', '.join(top.platforms)}",
-        *_matched_sections(top, style="text"),
-        *_evidence_lines(top, style="text"),
+        "What we found:",
+        f"  {top.id} {top.name}",
+        f"  Severity: {top.severity.value} | Platforms: {', '.join(top.platforms)}",
+        "  Confidence: "
+        f"{_wrap(top.confidence_band.value, top_band_color, color)} "
+        f"({top.score}/100)",
     ]
-    lines += _recommendation_lines(top, style="text")
+    lines += _matched_text_sections(top)
+    lines += [""] + _evidence_text_lines(top)
+    if top.recommendations:
+        lines += ["", "What to do next:"]
+        if top.recommendations.immediate:
+            lines += ["  Immediate:"]
+            lines += [f"    - {r}" for r in top.recommendations.immediate]
+        if top.recommendations.recommended:
+            lines += ["  Recommended:"]
+            lines += [f"    - {r}" for r in top.recommendations.recommended]
+        if top.recommendations.prevention:
+            lines += ["  Prevention:"]
+            lines += [f"    - {r}" for r in top.recommendations.prevention]
     if top.references:
-        lines.append("  References:")
+        lines += ["", "  References:"]
         lines.extend(f"    - {ref.source}: {ref.url}" for ref in top.references)
     if alternatives:
-        lines.append("")
-        lines.append("  Other candidates considered:")
+        lines += ["", "  Other candidates considered:"]
         for match in alternatives:
             lines.append(
                 f"    - {match.id} {match.name} — {match.confidence_band.value} ({match.score}/100)"
@@ -249,9 +341,9 @@ def format_text(report: DiagnosisReport) -> str:
     return "\n".join(lines).rstrip()
 
 
-def render(report: DiagnosisReport, output_format: str) -> str:
+def render(report: DiagnosisReport, output_format: str, color: bool = False) -> str:
     if output_format == "json":
         return format_json(report)
     if output_format == "markdown":
         return format_markdown(report)
-    return format_text(report)
+    return format_text(report, color=color)

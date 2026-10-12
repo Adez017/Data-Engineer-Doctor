@@ -80,6 +80,32 @@ def test_abstention_output(fixtures_dir: Path) -> None:
         assert "insufficient evidence" in rendered.lower()
 
 
+def test_text_report_friendly_sections(fixtures_dir: Path) -> None:
+    fixture = fixtures_dir / "positive" / "spark-executor-oom" / "input.log"
+    text = format_text(diagnose_file(fixture))
+    assert text.index("What we found:") < text.index("Evidence:")
+    assert text.index("Evidence:") < text.index("What to do next:")
+    assert (
+        "Possible causes: Executor Memory Exhausted; Data Skew Caused OOM; Oversized Partition"
+        in text
+    )
+    assert "Immediate:" in text and "Prevention:" in text
+    # The redundant long excerpt is shown once; later items reference it instead.
+    assert "(same lines as evidence item 1)" in text
+
+
+def test_text_color_gating(fixtures_dir: Path) -> None:
+    fixture = fixtures_dir / "positive" / "spark-executor-oom" / "input.log"
+    report = diagnose_file(fixture)
+    colored = format_text(report, color=True)
+    assert chr(27) in colored
+    assert "Status:    \x1b[32mdiagnosed\x1b[0m" in colored
+    plain = format_text(report, color=False)
+    assert chr(27) not in plain
+    assert render(report, "text", color=True) == colored
+    assert render(report, "text", color=False) == plain
+
+
 def test_render_dispatch() -> None:
     fixture_report = DiagnosisReport(
         dedoc_version="0.1.0",

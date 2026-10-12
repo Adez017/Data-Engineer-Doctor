@@ -9,6 +9,18 @@ The format is adapted from [Keep a Changelog](https://keepachangelog.com/).
 
 ### Added
 
+- **Conclusion-first text reports**: the text format now reads *What we found* →
+  *Evidence* → *What to do next* → *Other candidates considered*, so the most
+  actionable information comes first.
+- **Plain-language details**: matched signals and hypotheses (e.g.
+  `executor_oom`, `data_skew_caused_oom`) are translated into everyday terms in
+  the text report; raw keys remain in the JSON output for machines.
+- **Deduplicated evidence excerpts**: when multiple evidence items cite the same
+  log lines, the long excerpt is shown once and later items reference it as
+  "(same lines as evidence item N)".
+- **`--color` CLI flag** for `dedoc diagnose`: `auto` (default; color only on a
+  terminal), `always`, or `never`. The status line and confidence band are
+  green/yellow/red on a terminal.
 - **AI Provider Layer (Phase 5)**: optional AI explanation of the top
   diagnosis, fully isolated from the deterministic core (§13). No AI runs and
   no API key is needed unless the user explicitly opts in.

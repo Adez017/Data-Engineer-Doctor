@@ -43,8 +43,12 @@ List every bundled diagnosis definition.
 
 | Option | Meaning |
 | --- | --- |
-| `--format`, `-f` | `text` (default) or `json`. |
+| `--format`, `-f` | `text` (default), `markdown`, or `json`. |
 | `--diagnoses-path` | Override the diagnosis YAML directory. |
+| `--color` | `auto` (default; colors only on a terminal), `always`, or `never`. |
+
+The `diagnose` options also include `--investigate`, `--context`, and the
+optional AI flags (`--ai`, `--provider`, `--ai-model`, `--ai-base-url`).
 
 JSON output is an array of objects with `id`, `name`, `category`, `severity`,
 and `platforms`.
@@ -65,24 +69,51 @@ Version:   0.1.0
 DEDOC-SPARK-001 selected with HIGH confidence (80/100) based on 3 evidence item(s).
 Observed error types: OutOfMemoryError, java.lang.OutOfMemoryError
 
-Diagnosis: DEDOC-SPARK-001 Executor Out of Memory
-  Category: spark.executor_oom | Severity: critical | Platforms: spark, databricks
-  Matched exception types: OutOfMemoryError
-  Matched signals: executor_oom
-  Hypotheses: executor_memory_exhausted, data_skew_caused_oom, oversized_partition
+What we found:
+  DEDOC-SPARK-001 Executor Out of Memory
+  Severity: critical | Platforms: spark, databricks
   Confidence: HIGH (80/100)
-  Evidence:
-    - [error_signature] Exact error signature matched: executor_oom (+40)
-        > line 6: 24/10/08 13:10:12 INFO TaskSetManager: Starting task 42.0 ...
-        > line 7: java.lang.OutOfMemoryError: Java heap space
-    - [stacktrace_evidence] Declared exception observed in stack trace: OutOfMemoryError (+20)
-    - [platform_match] Platform detected: spark (diagnosis supports: spark, databricks) (+20)
+  Matched exception types: OutOfMemoryError
+  Matched signals: Executor OOM
+  Possible causes: Executor Memory Exhausted; Data Skew Caused OOM; Oversized Partition
+
+Evidence:
+  1. Exact error signature matched: executor_oom (+40)
+      > line 6: 24/10/08 13:10:12 INFO TaskSetManager: Starting task 42.0 ...
+  2. Declared exception observed in stack trace: OutOfMemoryError (+20)
+      > (same lines as evidence item 1)
+  3. Platform detected: spark (diagnosis supports: spark, databricks) (+20)
+      > (same lines as evidence item 1)
+
+What to do next:
+  Immediate:
+    - Identify the failing task and stage; a single large partition or a skew often causes the failure.
+    - Retry with more executor memory (spark.executor.memory and spark.executor.memoryOverhead) ...
+  Recommended:
+    - Increase parallelism (spark.sql.shuffle.partitions) so tasks process less data per partition.
+  Prevention:
+    - Enable and review AQE skew join optimization for joins on skewed keys.
   ...
 ```
 
+The text report is written in plain language, conclusion-first:
+
+1. **What we found** — the top diagnosis, its confidence, and what evidence
+   matched (signals and hypotheses translated into everyday terms).
+2. **Evidence** — each observation with its weight; repeated long excerpts are
+   shown once and referenced afterward.
+3. **What to do next** — actionable guidance, ordered Immediate / Recommended /
+   Prevention.
+4. **Other candidates considered** — a one-liner per alternative when more than
+   one rule matched.
+
+On a terminal, the status and confidence band are color-coded
+(`diagnosed` green, `insufficient_evidence` yellow, HIGH green / MEDIUM yellow /
+LOW red). Pass `--color never` to force plain output, or `--color always` if
+you are piping to a pager that supports ANSI codes.
+
 When several diagnosis rules match, DEDoc prints a ranked **candidate scoreboard**
-first, then full evidence and actions for the top candidate. The other candidates
-get a compact one-liner under **Other candidates considered**.
+first, then full evidence and actions for the top candidate.
 
 ```bash
 $ dedoc diagnose error.json --format markdown

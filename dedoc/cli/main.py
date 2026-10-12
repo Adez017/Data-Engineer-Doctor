@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import sys
 from enum import StrEnum
 from pathlib import Path
 from typing import Annotated
@@ -34,6 +35,20 @@ class OutputFormat(StrEnum):
 class ListFormat(StrEnum):
     TEXT = "text"
     JSON = "json"
+
+
+class ColorMode(StrEnum):
+    AUTO = "auto"
+    ALWAYS = "always"
+    NEVER = "never"
+
+
+def _use_color(mode: ColorMode) -> bool:
+    if mode is ColorMode.ALWAYS:
+        return True
+    if mode is ColorMode.NEVER:
+        return False
+    return bool(sys.stdout.isatty())
 
 
 def _version_callback(value: bool) -> None:
@@ -127,6 +142,13 @@ def diagnose(
         str | None,
         typer.Option("--ai-base-url", help="Override the provider base URL."),
     ] = None,
+    color: Annotated[
+        ColorMode,
+        typer.Option(
+            "--color",
+            help="Colorize the text report: auto (on a terminal), always, or never.",
+        ),
+    ] = ColorMode.AUTO,
 ) -> None:
     """Diagnose a failure log and print an evidence-backed report.
 
@@ -156,7 +178,7 @@ def diagnose(
     except DEDocError as exc:
         typer.echo(f"error: {exc}", err=True)
         raise typer.Exit(code=1) from exc
-    typer.echo(render(report, output_format.value))
+    typer.echo(render(report, output_format.value, color=_use_color(color)))
 
 
 @app.command(name="list-diagnoses")
