@@ -3,6 +3,7 @@ bounded investigation agent (step 6) over structured context (Phase 4)."""
 
 from __future__ import annotations
 
+from collections.abc import Mapping
 from pathlib import Path
 
 from dedoc import __version__
@@ -14,7 +15,7 @@ from dedoc.diagnosis.engine import RuleMatch, match_rules, resolve_platform
 from dedoc.diagnosis.loader import load_diagnoses
 from dedoc.evidence import MIN_SCORE_FOR_DIAGNOSIS, score_match
 from dedoc.evidence.models import ConfidenceBand, EvidenceBundle
-from dedoc.models.diagnosis import severity_rank
+from dedoc.models.diagnosis import Diagnosis, severity_rank
 from dedoc.models.failure import FailureEvent
 from dedoc.models.report import AIExplanation, DiagnosisReport, MatchedDiagnosis, ReportStatus
 from dedoc.parser.input_parser import InputFormat, parse_input
@@ -95,6 +96,7 @@ def diagnose_file(
     path: str | Path,
     *,
     diagnoses_path: str | Path | None = None,
+    diagnoses: Mapping[str, Diagnosis] | None = None,
     input_format: InputFormat = InputFormat.AUTO,
     investigate: bool = False,
     context: InvestigationContext | None = None,
@@ -112,6 +114,11 @@ def diagnose_file(
     an optional AI explanation is generated from a redacted prompt and attached
     to the report. AI never runs in the deterministic default path.
 
+    Args:
+        diagnoses: optional pre-loaded diagnosis definitions (id -> Diagnosis).
+            When omitted, they are loaded from ``diagnoses_path`` (or the
+            default location). Supplying them lets batch callers load once.
+
     Raises:
         InputError: if the input file is missing or malformed.
         DiagnosisLoadError: if diagnosis knowledge cannot be loaded.
@@ -123,7 +130,8 @@ def diagnose_file(
     if not input_path.is_file():
         raise InputError(f"not a file: {input_path}")
 
-    diagnoses = load_diagnoses(diagnoses_path)
+    if diagnoses is None:
+        diagnoses = load_diagnoses(diagnoses_path)
     events = parse_input(input_path, input_format)
     text = events_to_text(events)
     platform = resolve_platform(events, text)

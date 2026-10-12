@@ -1,0 +1,876 @@
+{
+  "dedoc_version": "0.1.0",
+  "corpus": "fixtures",
+  "ok": true,
+  "metrics": {
+    "total": 46,
+    "passed": 46,
+    "positive": 40,
+    "negative": 3,
+    "malformed": 3,
+    "accuracy": 1.0,
+    "precision": 1.0,
+    "recall": 1.0,
+    "abstention_quality": 1.0,
+    "confidence_calibration": 1.0,
+    "evidence_coverage": 1.0,
+    "unsupported_claim_rate": 0.0,
+    "remediation_coverage": 1.0,
+    "regression_rate": null,
+    "tool_efficiency": null
+  },
+  "baseline": null,
+  "regressions": [],
+  "cases": [
+    {
+      "name": "binary-garbage",
+      "kind": "malformed",
+      "label": "malformed/binary-garbage",
+      "ok": true,
+      "expected_status": "insufficient_evidence",
+      "predicted_status": "insufficient_evidence",
+      "expected_diagnosis_ids": [],
+      "matched_ids": [],
+      "top_confidence_band": null,
+      "top_score": null,
+      "has_evidence": false,
+      "has_remediation": false,
+      "notes": []
+    },
+    {
+      "name": "empty-file",
+      "kind": "malformed",
+      "label": "malformed/empty-file",
+      "ok": true,
+      "expected_status": "insufficient_evidence",
+      "predicted_status": "insufficient_evidence",
+      "expected_diagnosis_ids": [],
+      "matched_ids": [],
+      "top_confidence_band": null,
+      "top_score": null,
+      "has_evidence": false,
+      "has_remediation": false,
+      "notes": []
+    },
+    {
+      "name": "truncated-json",
+      "kind": "malformed",
+      "label": "malformed/truncated-json",
+      "ok": true,
+      "expected_status": "input_error",
+      "predicted_status": "input_error",
+      "expected_diagnosis_ids": [],
+      "matched_ids": [],
+      "top_confidence_band": null,
+      "top_score": null,
+      "has_evidence": false,
+      "has_remediation": false,
+      "notes": []
+    },
+    {
+      "name": "adf-benign-pipeline-log",
+      "kind": "negative",
+      "label": "negative/adf-benign-pipeline-log",
+      "ok": true,
+      "expected_status": "insufficient_evidence",
+      "predicted_status": "insufficient_evidence",
+      "expected_diagnosis_ids": [],
+      "matched_ids": [],
+      "top_confidence_band": null,
+      "top_score": null,
+      "has_evidence": false,
+      "has_remediation": false,
+      "notes": []
+    },
+    {
+      "name": "no-signal-log",
+      "kind": "negative",
+      "label": "negative/no-signal-log",
+      "ok": true,
+      "expected_status": "insufficient_evidence",
+      "predicted_status": "insufficient_evidence",
+      "expected_diagnosis_ids": [],
+      "matched_ids": [],
+      "top_confidence_band": null,
+      "top_score": null,
+      "has_evidence": false,
+      "has_remediation": false,
+      "notes": []
+    },
+    {
+      "name": "unrelated-python-error",
+      "kind": "negative",
+      "label": "negative/unrelated-python-error",
+      "ok": true,
+      "expected_status": "insufficient_evidence",
+      "predicted_status": "insufficient_evidence",
+      "expected_diagnosis_ids": [],
+      "matched_ids": [],
+      "top_confidence_band": null,
+      "top_score": null,
+      "has_evidence": false,
+      "has_remediation": false,
+      "notes": []
+    },
+    {
+      "name": "adf-activity-timeout",
+      "kind": "positive",
+      "label": "positive/adf-activity-timeout",
+      "ok": true,
+      "expected_status": "diagnosed",
+      "predicted_status": "diagnosed",
+      "expected_diagnosis_ids": [
+        "DEDOC-ADF-004"
+      ],
+      "matched_ids": [
+        "DEDOC-ADF-004"
+      ],
+      "top_confidence_band": "MEDIUM",
+      "top_score": 60,
+      "has_evidence": true,
+      "has_remediation": true,
+      "notes": []
+    },
+    {
+      "name": "adf-dataset-not-found",
+      "kind": "positive",
+      "label": "positive/adf-dataset-not-found",
+      "ok": true,
+      "expected_status": "diagnosed",
+      "predicted_status": "diagnosed",
+      "expected_diagnosis_ids": [
+        "DEDOC-ADF-003"
+      ],
+      "matched_ids": [
+        "DEDOC-ADF-003"
+      ],
+      "top_confidence_band": "MEDIUM",
+      "top_score": 60,
+      "has_evidence": true,
+      "has_remediation": true,
+      "notes": []
+    },
+    {
+      "name": "adf-integration-runtime-offline",
+      "kind": "positive",
+      "label": "positive/adf-integration-runtime-offline",
+      "ok": true,
+      "expected_status": "diagnosed",
+      "predicted_status": "diagnosed",
+      "expected_diagnosis_ids": [
+        "DEDOC-ADF-002"
+      ],
+      "matched_ids": [
+        "DEDOC-ADF-002"
+      ],
+      "top_confidence_band": "MEDIUM",
+      "top_score": 60,
+      "has_evidence": true,
+      "has_remediation": true,
+      "notes": []
+    },
+    {
+      "name": "adf-linked-service-auth",
+      "kind": "positive",
+      "label": "positive/adf-linked-service-auth",
+      "ok": true,
+      "expected_status": "diagnosed",
+      "predicted_status": "diagnosed",
+      "expected_diagnosis_ids": [
+        "DEDOC-ADF-001"
+      ],
+      "matched_ids": [
+        "DEDOC-ADF-001"
+      ],
+      "top_confidence_band": "MEDIUM",
+      "top_score": 65,
+      "has_evidence": true,
+      "has_remediation": true,
+      "notes": []
+    },
+    {
+      "name": "adf-parameter-missing",
+      "kind": "positive",
+      "label": "positive/adf-parameter-missing",
+      "ok": true,
+      "expected_status": "diagnosed",
+      "predicted_status": "diagnosed",
+      "expected_diagnosis_ids": [
+        "DEDOC-ADF-005"
+      ],
+      "matched_ids": [
+        "DEDOC-ADF-005"
+      ],
+      "top_confidence_band": "MEDIUM",
+      "top_score": 65,
+      "has_evidence": true,
+      "has_remediation": true,
+      "notes": []
+    },
+    {
+      "name": "adf-throttling",
+      "kind": "positive",
+      "label": "positive/adf-throttling",
+      "ok": true,
+      "expected_status": "diagnosed",
+      "predicted_status": "diagnosed",
+      "expected_diagnosis_ids": [
+        "DEDOC-ADF-006"
+      ],
+      "matched_ids": [
+        "DEDOC-ADF-006"
+      ],
+      "top_confidence_band": "MEDIUM",
+      "top_score": 60,
+      "has_evidence": true,
+      "has_remediation": true,
+      "notes": []
+    },
+    {
+      "name": "connectivity-auth-failure",
+      "kind": "positive",
+      "label": "positive/connectivity-auth-failure",
+      "ok": true,
+      "expected_status": "diagnosed",
+      "predicted_status": "diagnosed",
+      "expected_diagnosis_ids": [
+        "DEDOC-CONN-001"
+      ],
+      "matched_ids": [
+        "DEDOC-CONN-001"
+      ],
+      "top_confidence_band": "HIGH",
+      "top_score": 80,
+      "has_evidence": true,
+      "has_remediation": true,
+      "notes": []
+    },
+    {
+      "name": "connectivity-connection-timeout",
+      "kind": "positive",
+      "label": "positive/connectivity-connection-timeout",
+      "ok": true,
+      "expected_status": "diagnosed",
+      "predicted_status": "diagnosed",
+      "expected_diagnosis_ids": [
+        "DEDOC-CONN-002"
+      ],
+      "matched_ids": [
+        "DEDOC-CONN-002"
+      ],
+      "top_confidence_band": "HIGH",
+      "top_score": 80,
+      "has_evidence": true,
+      "has_remediation": true,
+      "notes": []
+    },
+    {
+      "name": "connectivity-dns-failure",
+      "kind": "positive",
+      "label": "positive/connectivity-dns-failure",
+      "ok": true,
+      "expected_status": "diagnosed",
+      "predicted_status": "diagnosed",
+      "expected_diagnosis_ids": [
+        "DEDOC-CONN-003"
+      ],
+      "matched_ids": [
+        "DEDOC-CONN-003"
+      ],
+      "top_confidence_band": "HIGH",
+      "top_score": 80,
+      "has_evidence": true,
+      "has_remediation": true,
+      "notes": []
+    },
+    {
+      "name": "connectivity-endpoint-unavailable",
+      "kind": "positive",
+      "label": "positive/connectivity-endpoint-unavailable",
+      "ok": true,
+      "expected_status": "diagnosed",
+      "predicted_status": "diagnosed",
+      "expected_diagnosis_ids": [
+        "DEDOC-CONN-005"
+      ],
+      "matched_ids": [
+        "DEDOC-CONN-005"
+      ],
+      "top_confidence_band": "HIGH",
+      "top_score": 80,
+      "has_evidence": true,
+      "has_remediation": true,
+      "notes": []
+    },
+    {
+      "name": "connectivity-permission-denied",
+      "kind": "positive",
+      "label": "positive/connectivity-permission-denied",
+      "ok": true,
+      "expected_status": "diagnosed",
+      "predicted_status": "diagnosed",
+      "expected_diagnosis_ids": [
+        "DEDOC-CONN-004"
+      ],
+      "matched_ids": [
+        "DEDOC-CONN-004"
+      ],
+      "top_confidence_band": "HIGH",
+      "top_score": 80,
+      "has_evidence": true,
+      "has_remediation": true,
+      "notes": []
+    },
+    {
+      "name": "delta-concurrent-modification",
+      "kind": "positive",
+      "label": "positive/delta-concurrent-modification",
+      "ok": true,
+      "expected_status": "diagnosed",
+      "predicted_status": "diagnosed",
+      "expected_diagnosis_ids": [
+        "DEDOC-DELTA-001"
+      ],
+      "matched_ids": [
+        "DEDOC-DELTA-001"
+      ],
+      "top_confidence_band": "HIGH",
+      "top_score": 80,
+      "has_evidence": true,
+      "has_remediation": true,
+      "notes": []
+    },
+    {
+      "name": "delta-invalid-partition",
+      "kind": "positive",
+      "label": "positive/delta-invalid-partition",
+      "ok": true,
+      "expected_status": "diagnosed",
+      "predicted_status": "diagnosed",
+      "expected_diagnosis_ids": [
+        "DEDOC-DELTA-004"
+      ],
+      "matched_ids": [
+        "DEDOC-DELTA-004"
+      ],
+      "top_confidence_band": "HIGH",
+      "top_score": 80,
+      "has_evidence": true,
+      "has_remediation": true,
+      "notes": []
+    },
+    {
+      "name": "delta-not-a-delta-table",
+      "kind": "positive",
+      "label": "positive/delta-not-a-delta-table",
+      "ok": true,
+      "expected_status": "diagnosed",
+      "predicted_status": "diagnosed",
+      "expected_diagnosis_ids": [
+        "DEDOC-DELTA-003"
+      ],
+      "matched_ids": [
+        "DEDOC-DELTA-003"
+      ],
+      "top_confidence_band": "MEDIUM",
+      "top_score": 55,
+      "has_evidence": true,
+      "has_remediation": true,
+      "notes": []
+    },
+    {
+      "name": "delta-schema-mismatch",
+      "kind": "positive",
+      "label": "positive/delta-schema-mismatch",
+      "ok": true,
+      "expected_status": "diagnosed",
+      "predicted_status": "diagnosed",
+      "expected_diagnosis_ids": [
+        "DEDOC-DELTA-002"
+      ],
+      "matched_ids": [
+        "DEDOC-DELTA-002"
+      ],
+      "top_confidence_band": "HIGH",
+      "top_score": 80,
+      "has_evidence": true,
+      "has_remediation": true,
+      "notes": []
+    },
+    {
+      "name": "delta-table-not-found",
+      "kind": "positive",
+      "label": "positive/delta-table-not-found",
+      "ok": true,
+      "expected_status": "diagnosed",
+      "predicted_status": "diagnosed",
+      "expected_diagnosis_ids": [
+        "DEDOC-DELTA-003"
+      ],
+      "matched_ids": [
+        "DEDOC-DELTA-003"
+      ],
+      "top_confidence_band": "HIGH",
+      "top_score": 80,
+      "has_evidence": true,
+      "has_remediation": true,
+      "notes": []
+    },
+    {
+      "name": "delta-transaction-conflict",
+      "kind": "positive",
+      "label": "positive/delta-transaction-conflict",
+      "ok": true,
+      "expected_status": "diagnosed",
+      "predicted_status": "diagnosed",
+      "expected_diagnosis_ids": [
+        "DEDOC-DELTA-005"
+      ],
+      "matched_ids": [
+        "DEDOC-DELTA-005"
+      ],
+      "top_confidence_band": "HIGH",
+      "top_score": 100,
+      "has_evidence": true,
+      "has_remediation": true,
+      "notes": []
+    },
+    {
+      "name": "performance-excessive-shuffle",
+      "kind": "positive",
+      "label": "positive/performance-excessive-shuffle",
+      "ok": true,
+      "expected_status": "diagnosed",
+      "predicted_status": "diagnosed",
+      "expected_diagnosis_ids": [
+        "DEDOC-PERF-002"
+      ],
+      "matched_ids": [
+        "DEDOC-PERF-002"
+      ],
+      "top_confidence_band": "MEDIUM",
+      "top_score": 40,
+      "has_evidence": true,
+      "has_remediation": true,
+      "notes": []
+    },
+    {
+      "name": "performance-missing-partition-pruning",
+      "kind": "positive",
+      "label": "positive/performance-missing-partition-pruning",
+      "ok": true,
+      "expected_status": "diagnosed",
+      "predicted_status": "diagnosed",
+      "expected_diagnosis_ids": [
+        "DEDOC-PERF-003"
+      ],
+      "matched_ids": [
+        "DEDOC-PERF-003"
+      ],
+      "top_confidence_band": "MEDIUM",
+      "top_score": 40,
+      "has_evidence": true,
+      "has_remediation": true,
+      "notes": []
+    },
+    {
+      "name": "performance-oversized-broadcast",
+      "kind": "positive",
+      "label": "positive/performance-oversized-broadcast",
+      "ok": true,
+      "expected_status": "diagnosed",
+      "predicted_status": "diagnosed",
+      "expected_diagnosis_ids": [
+        "DEDOC-PERF-004"
+      ],
+      "matched_ids": [
+        "DEDOC-PERF-004"
+      ],
+      "top_confidence_band": "MEDIUM",
+      "top_score": 40,
+      "has_evidence": true,
+      "has_remediation": true,
+      "notes": []
+    },
+    {
+      "name": "performance-small-files",
+      "kind": "positive",
+      "label": "positive/performance-small-files",
+      "ok": true,
+      "expected_status": "diagnosed",
+      "predicted_status": "diagnosed",
+      "expected_diagnosis_ids": [
+        "DEDOC-PERF-001"
+      ],
+      "matched_ids": [
+        "DEDOC-PERF-001"
+      ],
+      "top_confidence_band": "MEDIUM",
+      "top_score": 40,
+      "has_evidence": true,
+      "has_remediation": true,
+      "notes": []
+    },
+    {
+      "name": "quality-duplicate-keys",
+      "kind": "positive",
+      "label": "positive/quality-duplicate-keys",
+      "ok": true,
+      "expected_status": "diagnosed",
+      "predicted_status": "diagnosed",
+      "expected_diagnosis_ids": [
+        "DEDOC-QUALITY-002"
+      ],
+      "matched_ids": [
+        "DEDOC-QUALITY-002"
+      ],
+      "top_confidence_band": "HIGH",
+      "top_score": 80,
+      "has_evidence": true,
+      "has_remediation": true,
+      "notes": []
+    },
+    {
+      "name": "quality-invalid-date",
+      "kind": "positive",
+      "label": "positive/quality-invalid-date",
+      "ok": true,
+      "expected_status": "diagnosed",
+      "predicted_status": "diagnosed",
+      "expected_diagnosis_ids": [
+        "DEDOC-QUALITY-003"
+      ],
+      "matched_ids": [
+        "DEDOC-QUALITY-003"
+      ],
+      "top_confidence_band": "HIGH",
+      "top_score": 80,
+      "has_evidence": true,
+      "has_remediation": true,
+      "notes": []
+    },
+    {
+      "name": "quality-invalid-numeric",
+      "kind": "positive",
+      "label": "positive/quality-invalid-numeric",
+      "ok": true,
+      "expected_status": "diagnosed",
+      "predicted_status": "diagnosed",
+      "expected_diagnosis_ids": [
+        "DEDOC-QUALITY-004"
+      ],
+      "matched_ids": [
+        "DEDOC-QUALITY-004"
+      ],
+      "top_confidence_band": "HIGH",
+      "top_score": 80,
+      "has_evidence": true,
+      "has_remediation": true,
+      "notes": []
+    },
+    {
+      "name": "quality-merge-cardinality",
+      "kind": "positive",
+      "label": "positive/quality-merge-cardinality",
+      "ok": true,
+      "expected_status": "diagnosed",
+      "predicted_status": "diagnosed",
+      "expected_diagnosis_ids": [
+        "DEDOC-QUALITY-005"
+      ],
+      "matched_ids": [
+        "DEDOC-QUALITY-005"
+      ],
+      "top_confidence_band": "HIGH",
+      "top_score": 80,
+      "has_evidence": true,
+      "has_remediation": true,
+      "notes": []
+    },
+    {
+      "name": "quality-null-violation",
+      "kind": "positive",
+      "label": "positive/quality-null-violation",
+      "ok": true,
+      "expected_status": "diagnosed",
+      "predicted_status": "diagnosed",
+      "expected_diagnosis_ids": [
+        "DEDOC-QUALITY-001"
+      ],
+      "matched_ids": [
+        "DEDOC-QUALITY-001"
+      ],
+      "top_confidence_band": "HIGH",
+      "top_score": 80,
+      "has_evidence": true,
+      "has_remediation": true,
+      "notes": []
+    },
+    {
+      "name": "spark-broadcast-failure",
+      "kind": "positive",
+      "label": "positive/spark-broadcast-failure",
+      "ok": true,
+      "expected_status": "diagnosed",
+      "predicted_status": "diagnosed",
+      "expected_diagnosis_ids": [
+        "DEDOC-SPARK-007"
+      ],
+      "matched_ids": [
+        "DEDOC-SPARK-007"
+      ],
+      "top_confidence_band": "HIGH",
+      "top_score": 80,
+      "has_evidence": true,
+      "has_remediation": true,
+      "notes": []
+    },
+    {
+      "name": "spark-data-skew",
+      "kind": "positive",
+      "label": "positive/spark-data-skew",
+      "ok": true,
+      "expected_status": "diagnosed",
+      "predicted_status": "diagnosed",
+      "expected_diagnosis_ids": [
+        "DEDOC-SPARK-005"
+      ],
+      "matched_ids": [
+        "DEDOC-SPARK-005"
+      ],
+      "top_confidence_band": "MEDIUM",
+      "top_score": 40,
+      "has_evidence": true,
+      "has_remediation": true,
+      "notes": []
+    },
+    {
+      "name": "spark-driver-oom",
+      "kind": "positive",
+      "label": "positive/spark-driver-oom",
+      "ok": true,
+      "expected_status": "diagnosed",
+      "predicted_status": "diagnosed",
+      "expected_diagnosis_ids": [
+        "DEDOC-SPARK-002"
+      ],
+      "matched_ids": [
+        "DEDOC-SPARK-002"
+      ],
+      "top_confidence_band": "MEDIUM",
+      "top_score": 55,
+      "has_evidence": true,
+      "has_remediation": true,
+      "notes": []
+    },
+    {
+      "name": "spark-duplicate-column",
+      "kind": "positive",
+      "label": "positive/spark-duplicate-column",
+      "ok": true,
+      "expected_status": "diagnosed",
+      "predicted_status": "diagnosed",
+      "expected_diagnosis_ids": [
+        "DEDOC-SCHEMA-004"
+      ],
+      "matched_ids": [
+        "DEDOC-SCHEMA-004"
+      ],
+      "top_confidence_band": "HIGH",
+      "top_score": 80,
+      "has_evidence": true,
+      "has_remediation": true,
+      "notes": []
+    },
+    {
+      "name": "spark-executor-lost",
+      "kind": "positive",
+      "label": "positive/spark-executor-lost",
+      "ok": true,
+      "expected_status": "diagnosed",
+      "predicted_status": "diagnosed",
+      "expected_diagnosis_ids": [
+        "DEDOC-SPARK-003"
+      ],
+      "matched_ids": [
+        "DEDOC-SPARK-003"
+      ],
+      "top_confidence_band": "HIGH",
+      "top_score": 80,
+      "has_evidence": true,
+      "has_remediation": true,
+      "notes": []
+    },
+    {
+      "name": "spark-executor-oom",
+      "kind": "positive",
+      "label": "positive/spark-executor-oom",
+      "ok": true,
+      "expected_status": "diagnosed",
+      "predicted_status": "diagnosed",
+      "expected_diagnosis_ids": [
+        "DEDOC-SPARK-001"
+      ],
+      "matched_ids": [
+        "DEDOC-SPARK-001"
+      ],
+      "top_confidence_band": "HIGH",
+      "top_score": 80,
+      "has_evidence": true,
+      "has_remediation": true,
+      "notes": []
+    },
+    {
+      "name": "spark-nested-schema-field",
+      "kind": "positive",
+      "label": "positive/spark-nested-schema-field",
+      "ok": true,
+      "expected_status": "diagnosed",
+      "predicted_status": "diagnosed",
+      "expected_diagnosis_ids": [
+        "DEDOC-SCHEMA-006"
+      ],
+      "matched_ids": [
+        "DEDOC-SCHEMA-006"
+      ],
+      "top_confidence_band": "HIGH",
+      "top_score": 80,
+      "has_evidence": true,
+      "has_remediation": true,
+      "notes": []
+    },
+    {
+      "name": "spark-repeated-task-failure",
+      "kind": "positive",
+      "label": "positive/spark-repeated-task-failure",
+      "ok": true,
+      "expected_status": "diagnosed",
+      "predicted_status": "diagnosed",
+      "expected_diagnosis_ids": [
+        "DEDOC-SPARK-004"
+      ],
+      "matched_ids": [
+        "DEDOC-SPARK-004"
+      ],
+      "top_confidence_band": "HIGH",
+      "top_score": 80,
+      "has_evidence": true,
+      "has_remediation": true,
+      "notes": []
+    },
+    {
+      "name": "spark-schema-evolution-blocked",
+      "kind": "positive",
+      "label": "positive/spark-schema-evolution-blocked",
+      "ok": true,
+      "expected_status": "diagnosed",
+      "predicted_status": "diagnosed",
+      "expected_diagnosis_ids": [
+        "DEDOC-SCHEMA-005"
+      ],
+      "matched_ids": [
+        "DEDOC-SCHEMA-005"
+      ],
+      "top_confidence_band": "HIGH",
+      "top_score": 80,
+      "has_evidence": true,
+      "has_remediation": true,
+      "notes": []
+    },
+    {
+      "name": "spark-schema-mismatch-datatype",
+      "kind": "positive",
+      "label": "positive/spark-schema-mismatch-datatype",
+      "ok": true,
+      "expected_status": "diagnosed",
+      "predicted_status": "diagnosed",
+      "expected_diagnosis_ids": [
+        "DEDOC-SCHEMA-002"
+      ],
+      "matched_ids": [
+        "DEDOC-SCHEMA-002"
+      ],
+      "top_confidence_band": "HIGH",
+      "top_score": 80,
+      "has_evidence": true,
+      "has_remediation": true,
+      "notes": []
+    },
+    {
+      "name": "spark-schema-mismatch-resolved-column",
+      "kind": "positive",
+      "label": "positive/spark-schema-mismatch-resolved-column",
+      "ok": true,
+      "expected_status": "diagnosed",
+      "predicted_status": "diagnosed",
+      "expected_diagnosis_ids": [
+        "DEDOC-SCHEMA-001"
+      ],
+      "matched_ids": [
+        "DEDOC-SCHEMA-001"
+      ],
+      "top_confidence_band": "HIGH",
+      "top_score": 80,
+      "has_evidence": true,
+      "has_remediation": true,
+      "notes": []
+    },
+    {
+      "name": "spark-shuffle-fetch-failure",
+      "kind": "positive",
+      "label": "positive/spark-shuffle-fetch-failure",
+      "ok": true,
+      "expected_status": "diagnosed",
+      "predicted_status": "diagnosed",
+      "expected_diagnosis_ids": [
+        "DEDOC-SPARK-006"
+      ],
+      "matched_ids": [
+        "DEDOC-SPARK-006"
+      ],
+      "top_confidence_band": "HIGH",
+      "top_score": 80,
+      "has_evidence": true,
+      "has_remediation": true,
+      "notes": []
+    },
+    {
+      "name": "spark-stage-failure",
+      "kind": "positive",
+      "label": "positive/spark-stage-failure",
+      "ok": true,
+      "expected_status": "diagnosed",
+      "predicted_status": "diagnosed",
+      "expected_diagnosis_ids": [
+        "DEDOC-SPARK-008"
+      ],
+      "matched_ids": [
+        "DEDOC-SPARK-008"
+      ],
+      "top_confidence_band": "HIGH",
+      "top_score": 80,
+      "has_evidence": true,
+      "has_remediation": true,
+      "notes": []
+    },
+    {
+      "name": "spark-unexpected-column",
+      "kind": "positive",
+      "label": "positive/spark-unexpected-column",
+      "ok": true,
+      "expected_status": "diagnosed",
+      "predicted_status": "diagnosed",
+      "expected_diagnosis_ids": [
+        "DEDOC-SCHEMA-003"
+      ],
+      "matched_ids": [
+        "DEDOC-SCHEMA-003"
+      ],
+      "top_confidence_band": "HIGH",
+      "top_score": 80,
+      "has_evidence": true,
+      "has_remediation": true,
+      "notes": []
+    }
+  ]
+}
