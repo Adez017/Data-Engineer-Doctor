@@ -7,6 +7,8 @@ The format is adapted from [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
 
+## [0.1.1] - 2026-10-12
+
 ### Added
 
 - **PyPI publishing via Trusted Publishing**: a new
@@ -162,7 +164,7 @@ The format is adapted from [Keep a Changelog](https://keepachangelog.com/).
 - **OSS toolkit**: Apache-2.0 license, code of conduct, issue templates,
   pull-request template, security policy, changelog.
 
-## [0.1.0] - unreleased
+## [0.1.0] - 2026-10-08
 
 Initial deterministic MVP: evidence-driven diagnosis for Spark/Databricks
 failures with no AI/LLM dependency.
