@@ -1,8 +1,7 @@
 name: Data Engineer Doctor
 
 description: >-
-  Evidence-driven diagnosis for modern data engineering failures. Diagnose Spark,
-  Databricks and related platform logs in CI and get an evidence-backed report.
+  Evidence-driven diagnosis of Spark, Databricks, and data platform failures in CI, with actionable, evidence-backed reports.
 
 author: Data Engineer Doctor contributors
 
