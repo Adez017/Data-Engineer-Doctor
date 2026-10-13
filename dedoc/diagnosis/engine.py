@@ -76,15 +76,36 @@ def resolve_platform(events: list[FailureEvent], text: str) -> str:
 
 
 def _excerpt_block(lines: list[tuple[int, str]], index: int | None) -> str | None:
-    """Redact and clamp a context window around the matched line."""
+    """Redact and clamp a context window, with the matched line first.
+
+    Ordering the matched line first means the formatter's single-line preview
+    always cites the error line itself (not the preceding context line), while
+    the surrounding context is still available to structured consumers.
+    """
     if index is None:
         return None
-    start = max(0, index - _EXCERPT_CONTEXT)
-    end = min(len(lines), index + _EXCERPT_CONTEXT + 1)
-    block = " | ".join(f"line {no}: {redact(line)}" for no, line in lines[start:end])
+    neighbours = [
+        lines[i]
+        for offset in range(1, _EXCERPT_CONTEXT + 1)
+        for i in (index - offset, index + offset)
+        if 0 <= i < len(lines)
+    ]
+    block = " | ".join(f"line {no}: {redact(line)}" for no, line in (lines[index], *neighbours))
     if len(block) > _EXCERPT_MAX:
         block = block[: _EXCERPT_MAX - 3] + "..."
     return block
+
+
+def _excerpt_source_text(events: list[FailureEvent], fallback: str) -> str:
+    """Text whose line numbers evidence excerpts should cite.
+
+    The text parser stores the whole file in ``raw_payload``; citing it keeps
+    evidence line numbers aligned with the input file. The synthetic
+    ``events_to_text`` concatenates message, stack trace and payload, which
+    shifts every line number. Structured inputs (dict payloads) fall back to it.
+    """
+    payloads = [event.raw_payload for event in events if isinstance(event.raw_payload, str)]
+    return "\n".join(payloads) if payloads else fallback
 
 
 def _signal_line_index(
@@ -180,7 +201,7 @@ def match_rules(
             continue
 
         signal_excerpt, exception_excerpt = _find_excerpts(
-            text, matched_signals, matched_exceptions
+            _excerpt_source_text(events, text), matched_signals, matched_exceptions
         )
         matches.append(
             RuleMatch(

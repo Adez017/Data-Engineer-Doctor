@@ -169,3 +169,30 @@ def test_exception_excerpt_skips_stack_frames_when_picking_target() -> None:
     assert excerpt is not None
     assert "line 3: org.apache.spark.sql.AnalysisException" in excerpt
     assert not excerpt.startswith("line 1:")
+
+
+def test_evidence_excerpt_cites_source_file_line_numbers(tmp_path: Path) -> None:
+    """Evidence must cite real input-file line numbers, on the matched line.
+
+    Regression: excerpts were numbered over the synthetic ``events_to_text``
+    concatenation (message + stack trace + payload) and the formatter showed the
+    preceding context line, so citations pointed at the wrong line and content.
+    """
+    log = tmp_path / "schema.log"
+    log.write_text(
+        "26/10/13 03:05:11 INFO SparkContext: Running Spark version 3.5.1\n"
+        "26/10/13 03:05:29 INFO HiveExternalCatalog: Loading table customers\n"
+        "org.apache.spark.sql.AnalysisException: cannot resolve 'total_spend' "
+        "given input columns: [id, name]\n"
+        "    at org.apache.spark.sql.catalyst.analysis.Analyzer.check(Analyzer.scala:1)\n",
+        encoding="utf-8",
+    )
+    events = parse_input(log)
+    rules = match_rules(events, _diagnoses(), "spark")
+    matched = [rule for rule in rules if rule.diagnosis.id == "DEDOC-SCHEMA-001"]
+    assert matched
+    excerpt = matched[0].signal_excerpt
+    assert excerpt is not None
+    first = excerpt.split(" | ")[0]
+    assert first.startswith("line 3: ")  # third line of the file, not the first
+    assert "cannot resolve 'total_spend'" in first

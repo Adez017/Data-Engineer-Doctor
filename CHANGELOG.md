@@ -9,6 +9,11 @@ The format is adapted from [Keep a Changelog](https://keepachangelog.com/).
 
 ### Fixed
 
+- **Evidence citations pointed at the wrong line.** Excerpts were numbered over
+  the synthetic `events_to_text` concatenation (message + stack trace + payload)
+  and the text formatter showed the preceding context line, so reports cited an
+  offset line number and the wrong content. Excerpts now cite the real input
+  line on the matched line.
 - **Catastrophic regex backtracking in the `driver_oom` signal.** The pattern
   used `re.DOTALL` with leading `(?=.*...)` lookaheads, which is O(n^2) on logs
   that lack `OutOfMemoryError`; a 9 MiB log went from hanging indefinitely to
