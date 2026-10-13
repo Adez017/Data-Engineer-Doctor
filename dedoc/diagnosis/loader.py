@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from functools import lru_cache
 from pathlib import Path
 from typing import Any
 
@@ -43,13 +44,22 @@ def _load_file(path: Path) -> Diagnosis:
 def load_diagnoses(path: str | Path | None = None) -> dict[str, Diagnosis]:
     """Load and validate every diagnosis YAML under the diagnoses directory.
 
+    The parse is cached per resolved directory, so callers that diagnose many
+    inputs in one process (SDK loops, evaluation) pay the YAML/validation cost
+    once. The returned mapping is a fresh copy; definitions are shared and must
+    be treated as read-only.
+
     Returns:
         Mapping of diagnosis id -> Diagnosis, sorted by id.
 
     Raises:
         DiagnosisLoadError: if the directory is missing/empty or any file is invalid.
     """
-    root = resolve_diagnoses_path(path)
+    return dict(_load_diagnoses_cached(resolve_diagnoses_path(path).resolve()))
+
+
+@lru_cache(maxsize=16)
+def _load_diagnoses_cached(root: Path) -> dict[str, Diagnosis]:
     files = sorted([*root.rglob("*.yaml"), *root.rglob("*.yml")])
     if not files:
         raise DiagnosisLoadError(f"no diagnosis YAML files found under {root}")

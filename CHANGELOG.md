@@ -25,6 +25,17 @@ The format is adapted from [Keep a Changelog](https://keepachangelog.com/).
   the classic Spark wording `cannot resolve '<col>' given input columns: [...]`,
   in addition to the bracket error classes, with positive and negative fixtures.
 
+### Performance
+
+- **Cached diagnosis loading.** `load_diagnoses` now parses and validates the
+  YAML set once per resolved directory for the life of a process (returning an
+  isolated copy), so batch callers no longer re-read ~40 definitions per input:
+  in-process corpus throughput rose from 1.2 to 15.4 files/s (per-file mean
+  ~850 ms -> ~65 ms).
+- **Deferred CLI imports.** The `diagnose` and `list-diagnoses` commands import
+  the pipeline, loader, and formatters lazily, so `dedoc --version`/`--help`
+  no longer pay to load them.
+
 ## [0.1.3] - 2026-10-13
 
 ### Added

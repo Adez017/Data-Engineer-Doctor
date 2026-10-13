@@ -43,6 +43,15 @@ def test_loads_from_explicit_path(tmp_path: Path) -> None:
     assert list(diagnoses) == ["DEDOC-TEST-001"]
 
 
+def test_repeated_loads_return_isolated_mappings(tmp_path: Path) -> None:
+    """Cached loads hand back fresh mappings, so callers cannot corrupt the cache."""
+    _write(tmp_path, "d.yaml", VALID_YAML)
+    first = load_diagnoses(tmp_path)
+    first.clear()
+    second = load_diagnoses(tmp_path)
+    assert list(second) == ["DEDOC-TEST-001"]
+
+
 def test_env_var_override(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     _write(tmp_path, "d.yaml", VALID_YAML)
     monkeypatch.setenv("DEDOC_DIAGNOSES_PATH", str(tmp_path))

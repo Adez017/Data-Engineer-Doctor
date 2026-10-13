@@ -6,17 +6,16 @@ import json
 import sys
 from enum import StrEnum
 from pathlib import Path
-from typing import Annotated
+from typing import TYPE_CHECKING, Annotated
 
 import typer
 
 from dedoc import __version__
 from dedoc.core.errors import DEDocError, InputError
-from dedoc.core.pipeline import diagnose_file
-from dedoc.diagnosis.loader import load_diagnoses
-from dedoc.formatters import format_diagnosis_catalog, render
 from dedoc.parser.input_parser import InputFormat
-from dedoc.tools.context import InvestigationContext, context_from_mapping
+
+if TYPE_CHECKING:
+    from dedoc.tools.context import InvestigationContext
 
 app = typer.Typer(
     name="dedoc",
@@ -60,6 +59,8 @@ def _version_callback(value: bool) -> None:
 def _load_context(path: Path) -> InvestigationContext:
     """Read a YAML/JSON context file into an InvestigationContext."""
     import yaml
+
+    from dedoc.tools.context import context_from_mapping
 
     try:
         raw_text = path.read_text(encoding="utf-8")
@@ -156,6 +157,9 @@ def diagnose(
     1 = input or configuration error.
     """
     try:
+        from dedoc.core.pipeline import diagnose_file
+        from dedoc.formatters import render
+
         context = _load_context(context_file) if context_file is not None else None
         from dedoc.providers.base import ProviderConfig
         from dedoc.providers.registry import provider_config_from_env
@@ -191,6 +195,9 @@ def list_diagnoses_command(
     ] = None,
 ) -> None:
     """List available diagnosis definitions (id, name, category, severity)."""
+    from dedoc.diagnosis.loader import load_diagnoses
+    from dedoc.formatters import format_diagnosis_catalog
+
     try:
         diagnoses = load_diagnoses(diagnoses_path)
     except DEDocError as exc:
