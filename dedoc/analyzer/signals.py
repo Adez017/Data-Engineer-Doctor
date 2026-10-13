@@ -34,6 +34,16 @@ def _sig(pattern: str, *, exact: bool, flags: int = re.IGNORECASE) -> SignalDef:
     return SignalDef(pattern=re.compile(pattern, flags), exact=exact)
 
 
+#: Driver-context markers for the ``driver_oom`` signal. Kept order-independent
+#: and anchored (no leading ``.*`` lookahead) so matching stays linear even when
+#: the text has no ``OutOfMemoryError`` at all (see the O(n^2) note below).
+_DRIVER_OOM_HINT = (
+    r"call\s+to\s+\S+\.collect|\btoPandas\b|spark\.driver\.memory"
+    r"|driver\s+stack\s+trace|driver\s+(?:node|process|oom|out\s+of\s+memory)"
+    r"|out\s+of\s+memory\s+on\s+the\s+driver"
+)
+
+
 #: Named signal -> definition. Patterns are case-insensitive unless noted.
 SIGNAL_REGISTRY: dict[str, SignalDef] = {
     # -- schema ------------------------------------------------------------
@@ -41,7 +51,8 @@ SIGNAL_REGISTRY: dict[str, SignalDef] = {
         r"\[RESOLVED_COLUMN_NOT_FOUND\]"
         r"|\[UNRESOLVED_COLUMN"
         r"|column\s+[`'\"][^`'\"]+[`'\"]\s+cannot\s+be\s+resolved"
-        r"|cannot\s+resolve\s+[`'\"][^`'\"]+[`'\"]\s+in\s+given\s+schema",
+        r"|cannot\s+resolve\s+[`'\"][^`'\"]+[`'\"]\s+in\s+given\s+schema"
+        r"|cannot\s+resolve\s+[`'\"][^`'\"]+[`'\"]\s+given\s+input\s+columns",
         exact=True,
     ),
     "datatype_mismatch": _sig(
@@ -140,12 +151,10 @@ SIGNAL_REGISTRY: dict[str, SignalDef] = {
         exact=True,
     ),
     "driver_oom": _sig(
-        r"(?=.*OutOfMemoryError)"
-        r"(?=.*(?:call\s+to\s+\S+\.collect|\btoPandas\b|spark\.driver\.memory"
-        r"|driver\s+stack\s+trace|driver\s+(node|process|oom|out\s+of\s+memory)"
-        r"|out\s+of\s+memory\s+on\s+the\s+driver))",
+        rf"OutOfMemoryError[\s\S]*?(?:{_DRIVER_OOM_HINT})"
+        rf"|(?:{_DRIVER_OOM_HINT})[\s\S]*?OutOfMemoryError",
         exact=False,
-        flags=re.IGNORECASE | re.DOTALL,
+        flags=re.IGNORECASE,
     ),
     "executor_lost": _sig(
         r"ExecutorLostFailure"

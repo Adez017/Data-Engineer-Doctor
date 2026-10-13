@@ -3,10 +3,10 @@
   "corpus": "fixtures",
   "ok": true,
   "metrics": {
-    "total": 46,
-    "passed": 46,
-    "positive": 40,
-    "negative": 3,
+    "total": 48,
+    "passed": 48,
+    "positive": 41,
+    "negative": 4,
     "malformed": 3,
     "accuracy": 1.0,
     "precision": 1.0,
@@ -86,6 +86,21 @@
       "name": "no-signal-log",
       "kind": "negative",
       "label": "negative/no-signal-log",
+      "ok": true,
+      "expected_status": "insufficient_evidence",
+      "predicted_status": "insufficient_evidence",
+      "expected_diagnosis_ids": [],
+      "matched_ids": [],
+      "top_confidence_band": null,
+      "top_score": null,
+      "has_evidence": false,
+      "has_remediation": false,
+      "notes": []
+    },
+    {
+      "name": "spark-schema-benign-input-columns",
+      "kind": "negative",
+      "label": "negative/spark-schema-benign-input-columns",
       "ok": true,
       "expected_status": "insufficient_evidence",
       "predicted_status": "insufficient_evidence",
@@ -789,6 +804,25 @@
       ],
       "matched_ids": [
         "DEDOC-SCHEMA-002"
+      ],
+      "top_confidence_band": "HIGH",
+      "top_score": 80,
+      "has_evidence": true,
+      "has_remediation": true,
+      "notes": []
+    },
+    {
+      "name": "spark-schema-mismatch-given-input-columns",
+      "kind": "positive",
+      "label": "positive/spark-schema-mismatch-given-input-columns",
+      "ok": true,
+      "expected_status": "diagnosed",
+      "predicted_status": "diagnosed",
+      "expected_diagnosis_ids": [
+        "DEDOC-SCHEMA-001"
+      ],
+      "matched_ids": [
+        "DEDOC-SCHEMA-001"
       ],
       "top_confidence_band": "HIGH",
       "top_score": 80,

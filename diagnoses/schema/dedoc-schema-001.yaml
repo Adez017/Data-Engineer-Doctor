@@ -63,8 +63,10 @@ references:
 tests:
   fixtures:
     - positive/spark-schema-mismatch-resolved-column
+    - positive/spark-schema-mismatch-given-input-columns
     - negative/unrelated-python-error
     - negative/no-signal-log
+    - negative/spark-schema-benign-input-columns
     - malformed/truncated-json
     - malformed/empty-file
     - malformed/binary-garbage

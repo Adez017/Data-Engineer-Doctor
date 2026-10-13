@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import time
+
 from dedoc.analyzer.signals import (
     SIGNAL_REGISTRY,
     detect_platform,
@@ -47,6 +49,11 @@ def test_signal_resolved_column_not_found() -> None:
 
 def test_signal_resolved_column_not_found_classic_wording() -> None:
     text = "AnalysisException: cannot resolve 'total_amt' in given schema: struct<id:bigint>"
+    assert "resolved_column_not_found" in extract_signals(text)
+
+
+def test_signal_resolved_column_not_found_given_input_columns() -> None:
+    text = "AnalysisException: cannot resolve 'total_spend' given input columns: [id, name]"
     assert "resolved_column_not_found" in extract_signals(text)
 
 
@@ -104,3 +111,29 @@ def test_events_to_text() -> None:
     ]
     text = events_to_text(events)
     assert "msg1" in text and "trace1" in text and "payload1" in text and "msg2" in text
+
+
+def test_signal_driver_oom_requires_oom_and_driver_marker() -> None:
+    # OOM followed by a driver marker.
+    assert "driver_oom" in extract_signals(
+        "java.lang.OutOfMemoryError: Java heap space\nspark.driver.memory=2g"
+    )
+    # Driver marker followed by OOM (order-independent).
+    assert "driver_oom" in extract_signals(
+        "Job aborted: call to df.collect() failed\nCaused by: java.lang.OutOfMemoryError"
+    )
+    # A bare OOM is not driver-specific.
+    assert "driver_oom" not in extract_signals("java.lang.OutOfMemoryError: Java heap space")
+    # A driver marker without an OOM is not a driver OOM.
+    assert "driver_oom" not in extract_signals("spark.driver.memory is set to 4g")
+
+
+def test_driver_oom_pattern_is_linear_on_no_match_text() -> None:
+    # Regression guard: the old pattern used re.DOTALL with leading ``(?=.*...)``
+    # lookaheads, which rescan from every offset on logs lacking OutOfMemoryError
+    # (O(n^2)). This must stay fast on large non-matching inputs.
+    pattern = SIGNAL_REGISTRY["driver_oom"].pattern
+    text = "executor task finished successfully on host\n" * 40000  # ~1.4 MB
+    start = time.perf_counter()
+    assert pattern.search(text) is None
+    assert time.perf_counter() - start < 1.0

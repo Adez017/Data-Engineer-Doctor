@@ -1,0 +1,8 @@
+26/10/13 03:05:11 INFO SparkContext: Running Spark version 3.5.1
+26/10/13 03:05:12 INFO SparkContext: Submitted application: customer_360_build
+26/10/13 03:05:29 INFO HiveExternalCatalog: Loading table `analytics`.`customers`
+26/10/13 03:05:41 ERROR ApplicationMaster: User class threw exception: org.apache.spark.sql.AnalysisException: cannot resolve 'total_spend' given input columns: [customer_id, first_name, last_name, email, signup_date, lifetime_value]; line 7 pos 12;
+'Project [customer_id#12L, total_spend#99]
++- Relation[analytics.customers] parquet
+	at org.apache.spark.sql.catalyst.analysis.package$AnalysisErrorAt.failAnalysis(AnalysisException.scala:256)
+26/10/13 03:05:41 INFO SparkContext: Invoking stop() from shutdown hook

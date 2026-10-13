@@ -1,0 +1,10 @@
+name: spark-schema-benign-input-columns
+kind: negative
+description: >-
+  A benign log that mentions "input columns" in a success message must not be
+  mistaken for a missing-column failure (specificity guard for the classic
+  "cannot resolve ... given input columns" wording).
+expected:
+  status: insufficient_evidence
+  exit_code: 0
+  diagnosis_ids: []

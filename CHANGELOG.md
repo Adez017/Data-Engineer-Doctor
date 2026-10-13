@@ -7,6 +7,19 @@ The format is adapted from [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
 
+### Fixed
+
+- **Catastrophic regex backtracking in the `driver_oom` signal.** The pattern
+  used `re.DOTALL` with leading `(?=.*...)` lookaheads, which is O(n^2) on logs
+  that lack `OutOfMemoryError`; a 9 MiB log went from hanging indefinitely to
+  ~44 s. Rewritten as an equivalent, order-independent pattern.
+
+### Added
+
+- **Missing-column signal coverage.** `resolved_column_not_found` now matches
+  the classic Spark wording `cannot resolve '<col>' given input columns: [...]`,
+  in addition to the bracket error classes, with positive and negative fixtures.
+
 ## [0.1.3] - 2026-10-13
 
 ### Added

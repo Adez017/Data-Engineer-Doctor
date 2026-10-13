@@ -1,0 +1,12 @@
+name: spark-schema-mismatch-given-input-columns
+kind: positive
+description: >-
+  Spark reads a column that is absent from the source schema using the classic
+  "cannot resolve '<col>' given input columns: [...]" wording (no bracket error
+  class), which must still map to the missing-column diagnosis.
+expected:
+  status: diagnosed
+  exit_code: 0
+  confidence_band: HIGH
+  diagnosis_ids:
+    - DEDOC-SCHEMA-001
