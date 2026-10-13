@@ -7,6 +7,23 @@ The format is adapted from [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
 
+## [0.1.3] - 2026-10-13
+
+### Added
+
+- **Claude Code development system** (`.claude/`): specialist agents
+  (`architect`, `backend-engineer`, `diagnosis-engineer`, `ai-agent-engineer`,
+  `test-engineer`, `security-reviewer`, `documentation-engineer`,
+  `oss-maintainer`), workflow skills (`add-diagnosis`, `add-platform`,
+  `run-evals`, `security-review`, `release`), and `settings.json` permissions.
+
+### Changed
+
+- The publish workflow now passes `skip-existing`, so re-publishing an
+  already-uploaded version (for example when a GitHub Release also triggers it)
+  is a no-op instead of a failure.
+- GitHub Action branding color updated.
+
 ## [0.1.1] - 2026-10-12
 
 ### Added

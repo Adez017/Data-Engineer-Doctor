@@ -90,6 +90,21 @@ Fixture rules (enforced by `tests/unit/test_fixtures.py`):
 - Malformed fixtures: `status: input_error` with `exit_code: 1`, or
   `status: insufficient_evidence` with `exit_code: 0`; never a traceback.
 
+## AI development system (`.claude/`)
+
+The repository ships a Claude Code development system (BUILD_PLAN.md §17) that
+encodes the rules above as reusable agents and skills:
+
+- `.claude/agents/` — specialist roles: `architect`, `backend-engineer`,
+  `diagnosis-engineer`, `ai-agent-engineer`, `test-engineer`,
+  `security-reviewer`, `documentation-engineer`, `oss-maintainer`.
+- `.claude/skills/` — repeatable workflows: `add-diagnosis`, `add-platform`,
+  `run-evals`, `security-review`, `release`.
+- `.claude/settings.json` — permissions that allow the safe `make` targets and
+  prompt before `git commit`/`git tag`/`git push`.
+
+These are conveniences; the same rules apply whether you use them or not.
+
 ## Pull requests
 
 - Keep PRs small and focused.

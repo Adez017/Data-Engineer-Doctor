@@ -61,7 +61,7 @@ Platform:  spark
 Status:    diagnosed
 Confidence: HIGH
 Events:    1
-Version:   0.1.1
+Version:   0.1.3
 
 DEDOC-SPARK-001 selected with HIGH confidence (80/100) based on 3 evidence item(s).
 Observed error types: OutOfMemoryError, java.lang.OutOfMemoryError
