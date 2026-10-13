@@ -7,6 +7,8 @@ The format is adapted from [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
 
+## [0.1.4] - 2026-10-13
+
 ### Fixed
 
 - **Evidence citations pointed at the wrong line.** Excerpts were numbered over
